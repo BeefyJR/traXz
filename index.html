@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
-:root{--bg:#f6f6f4;--surf:#ffffff;--surf2:#ececea;--text:#111;--mute:#77777a;--acc:#ff5a36;--line:#e2e2df;--ac:255,90,54;--bgc:246,246,244;--sfc:255,255,255;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--bg:#f6f6f4;--surf:#ffffff;--surf2:#ececea;--text:#111;--mute:#5c5c61;--acc:#ff5a36;--acct:#ff5a36;--line:#e2e2df;--ac:255,90,54;--bgc:246,246,244;--sfc:255,255,255;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0b0c;--surf:#161618;--surf2:#222225;--text:#f2f2f0;--mute:#8d8d92;--line:#262629;--bgc:11,11,12;--sfc:22,22,24}}
 :root[data-theme="dark"]{--bg:#0b0b0c;--surf:#161618;--surf2:#222225;--text:#f2f2f0;--mute:#8d8d92;--line:#262629;--bgc:11,11,12;--sfc:22,22,24}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -51,7 +51,7 @@ header{padding:14px 20px 6px;display:flex;align-items:center;justify-content:spa
 .row .t b{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .t span{color:var(--mute);font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .d{color:var(--mute);font-size:13px}
-.row.on .t b,.row.on .n{color:var(--acc)}
+.row.on .t b,.row.on .n{color:var(--acct)}
 .row.drag{background:var(--surf2);box-shadow:0 6px 18px rgba(0,0,0,.3);position:relative;z-index:2;transform:scale(1.02);border-radius:10px}
 .k{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex:none}
 .k:active{background:var(--surf2);transform:scale(.9)}
@@ -182,7 +182,7 @@ header{padding:14px 20px 6px;display:flex;align-items:center;justify-content:spa
 .alm:active{transform:scale(.9)}
 .fcard.hot{transform:scale(1.05)}
 .fcard.hot .fold{box-shadow:0 0 0 3px rgb(var(--fa))}
-.back.hot{color:var(--acc);transform:translateX(-4px)}
+.back.hot{color:var(--acct);transform:translateX(-4px)}
 .ghost{position:fixed;left:0;top:0;z-index:40;pointer-events:none;border-radius:14px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.45);will-change:transform}
 .ghost .cov{width:100%;height:100%;border-radius:0}
 .card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -541,12 +541,233 @@ header{display:block;padding:8px 20px 2px}
 .fxpv .cov{width:92px;height:92px;font-size:36px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
 .bgs .fop.fx span{width:88px}
 .chip.mt2{opacity:.55}.chip.mt2.on{opacity:1}
+/* v21: big player volume = one centred unit (icon + bar) that fills the space between the side buttons and never overlaps them */
+.fbot{grid-template-columns:minmax(88px,1fr) minmax(0,220px) minmax(88px,1fr);column-gap:10px}
+.fbot .fvol{position:relative;display:flex;align-items:center;gap:2px;width:100%;max-width:220px;min-width:0;margin:0;justify-self:center}
+.fbot .fvol .mt{position:static;transform:none;flex:none;width:30px;height:30px;margin:0}
+.fbot .fvol .mt:active{transform:scale(.88)}
+.fbot .fvol .rng{flex:1;min-width:0;height:34px;display:block}
+.fbot .fvol .rng::-webkit-slider-runnable-track{height:4px;border-radius:4px}
+.fbot .fvol .rng::-webkit-slider-thumb{width:15px;height:15px;margin-top:-5.5px}
+.fbot .fvol .rng::-moz-range-track{height:4px;border-radius:4px}
+.fbot .fvol .rng::-moz-range-progress{height:4px;border-radius:4px}
+.fbot .fvol .rng::-moz-range-thumb{width:15px;height:15px}
+html[data-layout=pc] .fbot .fvol{flex:1;width:auto;max-width:210px;margin:0 6px}
+/* v20: normalize volume button */
+.nmb{position:relative;opacity:.5;transition:opacity .2s,color .2s}
+.nmb.on{opacity:1}
+#mini .nmb.on{color:rgb(var(--ac))}
+.fnm{position:absolute;right:84px;top:50%;transform:translateY(-50%)}
+.fnm:active{transform:translateY(-50%) scale(.88)}
+.fnm.on{color:#fff}
+html[data-layout=pc] #fc .ftop .fnm{order:4}
+.nmb.on::after{content:"";position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:currentColor}
+.nmb.busy .ic{animation:nmp .9s ease-in-out infinite}
+@keyframes nmp{50%{opacity:.25}}
+/* v19: frequency picker (EQ style) */
+.fxeq{position:relative;border-radius:14px;overflow:hidden;background:rgba(128,128,128,.12);margin-top:4px;touch-action:none;-webkit-user-select:none;user-select:none}
+.fxeq canvas{display:block;width:100%;height:190px;touch-action:none;cursor:crosshair;color:var(--text)}
+.fxhint{margin:6px 2px 0;font-size:11px;line-height:1.35;color:var(--mute)}
+.fxtab{display:inline-flex;align-items:center;gap:7px}
+.fxtab i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.fxtab.mu{opacity:.55}.fxtab.mu i{opacity:.45}
+.fxhz{display:flex;gap:10px}.fxhz>div{flex:1;min-width:0}
+.fxhz label{margin-top:8px}
+.chip[disabled]{opacity:.35;pointer-events:none}
+
+/* settings button + sheet */
+.gear{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text);background:rgba(var(--sfc),.7);border:1px solid var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.gear:active{transform:scale(.9) rotate(30deg)}
+.gear .ic{width:24px;height:24px}
+.setr{display:flex;gap:8px;margin:4px 0 8px}
+.setg{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;background:rgba(var(--bgc),.45);border:1px solid var(--line);color:var(--mute);font-size:13px;font-weight:600}
+.setg.on{background:var(--text);color:var(--bg);border-color:transparent}
+.setg:active{transform:scale(.95)}
+
+/* PC mode: whole app uses the full screen */
+html[data-layout=pc]{--px:max(clamp(28px,4vw,72px),calc((100% - 1640px)/2))}
+html[data-layout=pc] #app{max-width:none;width:100%}
+html[data-layout=pc] header{padding-left:var(--px);padding-right:var(--px)}
+html[data-layout=pc] #tb{padding-left:var(--px);padding-right:var(--px)}
+html[data-layout=pc] .qk{right:var(--px)}
+html[data-layout=pc] #main{padding-left:var(--px);padding-right:var(--px)}
+html[data-layout=pc] .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:28px}
+html[data-layout=pc] .grid.g3{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px}
+html[data-layout=pc] .grid.g1{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:30px}
+html[data-layout=pc] .tab:hover{opacity:1}
+html[data-layout=pc] .card .cov{transition:transform .2s cubic-bezier(.22,.8,.24,1),box-shadow .2s}
+html[data-layout=pc] .card:hover .cov{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.3)}
+html[data-layout=pc] .row{padding:10px 12px;border-radius:10px}
+html[data-layout=pc] .row:hover{background:var(--surf2)}
+html[data-layout=pc] .k:hover,html[data-layout=pc] .ib:hover,html[data-layout=pc] .gear:hover{background:var(--surf2)}
+html[data-layout=pc] .setg:hover{border-color:var(--mute)}
+html[data-layout=pc] .pill:hover{opacity:.85}
+html[data-layout=pc] #mini{left:max(16px,calc(50% - 250px));right:max(16px,calc(50% - 250px));bottom:18px}
+html[data-layout=pc] #selbar{left:max(16px,calc(50% - 320px));right:max(16px,calc(50% - 320px));bottom:18px}
+html[data-layout=pc] #ov{align-items:center}
+html[data-layout=pc] .sheet{max-width:520px}
+html[data-layout=pc] #qp{left:auto;width:min(480px,100%);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.25)}
+html[data-layout=pc] ::-webkit-scrollbar{width:10px}
+html[data-layout=pc] ::-webkit-scrollbar-thumb{background:rgba(128,128,128,.35);border-radius:10px;border:2px solid transparent;background-clip:content-box}
+
+/* PC mode, round 2: every tab and the player */
+html[data-layout=pc] header{padding-top:52px}
+html[data-layout=pc] .tab{font-size:28px;padding:4px 10px;border-radius:12px;transition:opacity .15s,background-color .15s}
+html[data-layout=pc] .tab:hover{background:var(--surf2)}
+html[data-layout=pc] .tabs{gap:30px}
+html[data-layout=pc] #fb .abar{padding-left:var(--px);padding-right:var(--px)}
+html[data-layout=pc] #fb .fh{padding-left:var(--px);padding-right:var(--px)}
+html[data-layout=pc] .sb.open{max-width:560px}
+html[data-layout=pc] .sb:not(.open):hover{background:var(--surf)}
+html[data-layout=pc] .abar .back:hover,html[data-layout=pc] .abar .ab:hover{background:rgba(128,128,128,.32)}
+html[data-layout=pc] .pbig:hover{transform:scale(1.06)}
+html[data-layout=pc] .ab:hover,html[data-layout=pc] .fsz2 button:hover{background:var(--surf2)}
+html[data-layout=pc] .alm,html[data-layout=pc] .fm{opacity:0;transition:opacity .15s,transform .12s}
+html[data-layout=pc] .acard:hover .alm,html[data-layout=pc] .fcard:hover .fm,html[data-layout=pc] .alm:focus-visible,html[data-layout=pc] .fm:focus-visible{opacity:1}
+html[data-layout=pc] .card:focus-visible,html[data-layout=pc] .row:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* songs, album and playlist rows become a table */
+html[data-layout=pc] #main .row{display:grid;grid-template-columns:44px 48px minmax(0,2fr) minmax(0,1.3fr) 64px 44px;column-gap:16px;align-items:center;padding:8px 14px}
+html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:44px minmax(0,2fr) minmax(0,1.3fr) 64px 44px}
+html[data-layout=pc] #main .row .t{display:contents}
+html[data-layout=pc] #main .row .t b{grid-column:auto;font-size:16px}
+html[data-layout=pc] #main .row .t span{font-size:14px}
+html[data-layout=pc] #main .row .n{width:auto;font-size:14px}
+html[data-layout=pc] #main .row .d{text-align:right}
+html[data-layout=pc] #main .row .th,html[data-layout=pc] #main .row .th .cov{width:48px;height:48px}
+html[data-layout=pc] #main .row .k{opacity:.0;transition:opacity .12s,background-color .12s}
+html[data-layout=pc] #main .row:hover .k,html[data-layout=pc] #main .row.on .k,html[data-layout=pc] #main .row .k:focus-visible{opacity:1}
+
+/* album and playlist pages: cover on the left, track list on the right */
+html[data-layout=pc] #main:has(>.acv){display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);column-gap:56px;align-content:start;align-items:start}
+html[data-layout=pc] #main:has(>.acv)>*{grid-column:2}
+html[data-layout=pc] #main:has(>.acv)>.acv{grid-column:1;grid-row:1/span 400;width:100%;max-width:none;margin:0;padding:0;position:sticky;top:calc(var(--tp,130px) + 6px)}
+html[data-layout=pc] .acv .cov{font-size:120px}
+html[data-layout=pc] .at h2{font-size:44px;letter-spacing:-1px}
+html[data-layout=pc] .at .pbig{width:64px;height:64px;border-radius:20px}
+html[data-layout=pc] .at .sh{width:52px;height:52px}
+html[data-layout=pc] .am{font-size:16px;margin-bottom:20px}
+html[data-layout=pc] .ah{flex-direction:row;text-align:left;gap:32px;align-items:center;justify-content:flex-start}
+
+/* full player: cover on the left, info and controls on the right */
+html[data-layout=pc] #fc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:auto 1fr auto auto auto auto 1fr;column-gap:clamp(32px,6vw,110px);max-width:1360px;margin:0 auto;width:100%;padding:22px clamp(28px,5vw,80px) 32px}
+html[data-layout=pc] #fc>.fcv{grid-column:1;grid-row:1/-1;padding:0}
+html[data-layout=pc] #fc>.ftop{grid-column:2;grid-row:1;align-self:start;max-width:420px;width:100%;justify-self:center}
+html[data-layout=pc] #fc>.fti{grid-column:2;grid-row:3}
+html[data-layout=pc] #fc>.fsk{grid-column:2;grid-row:4;margin-top:22px}
+html[data-layout=pc] #fc>.ctl{grid-column:2;grid-row:5;margin-top:14px}
+html[data-layout=pc] #fc>.fbot{grid-column:2;grid-row:6;margin-top:20px}
+html[data-layout=pc] #fc>.fti,html[data-layout=pc] #fc>.fsk,html[data-layout=pc] #fc>.ctl,html[data-layout=pc] #fc>.fbot{width:100%;max-width:520px;justify-self:center}
+html[data-layout=pc] .fcv .cov{width:min(100%,72dvh,600px);font-size:140px}
+html[data-layout=pc] .fti h2{font-size:34px;letter-spacing:-.4px}
+html[data-layout=pc] .fti p{font-size:18px}
+html[data-layout=pc] .ctl .ib{width:56px;height:56px}
+html[data-layout=pc] .ctl .big{width:76px;height:76px}
+html[data-layout=pc] .rng::-webkit-slider-thumb{width:13px;height:13px;margin-top:-5px}
+html[data-layout=pc] .rng{cursor:pointer}
+html[data-layout=pc] #fc .ib:hover{background:rgba(255,255,255,.14)}
+html[data-layout=pc] #fc .ctl .big:hover{background:#fff;transform:scale(1.06)}
+/* background and beat effects scale with the bigger screen */
+html[data-layout=pc] .bl{width:calc(min(80vmax,1500px)*var(--bz,1));height:calc(min(80vmax,1500px)*var(--bz,1))}
+html[data-layout=pc] #fbg.st-grad .bgr{background-size:260% 260%}
+/* effect sheets: roomier on a computer */
+html[data-layout=pc] .sheet:has(.bgs){max-width:540px}
+html[data-layout=pc] .bgs .fop span{width:120px}
+html[data-layout=pc] .chip:hover,html[data-layout=pc] .swb:hover{opacity:.85}
+html[data-layout=pc] #qp #ql .row{padding:8px 4px}
+@media (min-width:1500px){html[data-layout=pc] #main .row{grid-template-columns:48px 52px minmax(0,2.2fr) minmax(0,1.4fr) 72px 48px}}
+
+/* PC header toolbar: [create][sync] ........ tabs ........ [queue][settings] */
+html[data-layout=pc] .hr{height:52px;gap:12px}
+html[data-layout=pc] .plus,html[data-layout=pc] .gear,html[data-layout=pc] #cb,html[data-layout=pc] .qk{width:44px;height:44px;border-radius:50%}
+html[data-layout=pc] #cb{margin-left:0!important;background:rgba(var(--sfc),.7);border:1px solid var(--line);color:var(--mute)}
+html[data-layout=pc] #cb:hover{color:var(--text)}
+html[data-layout=pc] .qk{top:56px;right:calc(var(--px) + 56px);z-index:7}
+html[data-layout=pc] .qk .ic{width:22px;height:22px}
+html[data-layout=pc] .qk:hover{background:var(--surf2);color:var(--text)}
+html[data-layout=pc] .tabs{padding-left:0;padding-right:0}
+
+/* divider under the header */
+#top{border-bottom:1px solid color-mix(in srgb,var(--text) 15%,transparent)}
+
+/* readability: light and custom themes */
+:root[data-theme=dark]{color-scheme:dark}
+:root[data-theme=light]{color-scheme:light}
+html[data-mode=light]{--acct:color-mix(in srgb,#ff5a36 68%,#000)}
+html[data-mode=light] .tab:not(.on),html[data-theme=custom] .tab:not(.on){opacity:1}
+html[data-mode=light] .tg.on{color:color-mix(in srgb,rgb(var(--ac)) 62%,#000)}
+html[data-mode=light] .sheet .it.dg,html[data-mode=light] .sheet .it.hi.dg .ic{color:#c1272d}
+html[data-mode=light] #mini::before{opacity:.16}
+html[data-mode=light] #mini::after{opacity:.28}
+html[data-mode=light] .toast{background:rgba(24,24,26,.92)}
+.cov{text-shadow:0 1px 3px rgba(0,0,0,.35)}
+input::placeholder{color:var(--mute);opacity:1}
+.cset{margin:2px 0 6px}
+.cset .sw{margin:2px 0 6px}
+
+/* v11: clean beat effects, narrower symmetric content, tidy album/playlist header, compact symmetric full player */
+#fc{overflow:visible}
+.fti h2{white-space:normal;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow-wrap:anywhere;line-height:1.2}
+.fcv>.fxcv{position:fixed;left:0;top:0}
+.pcx{display:none}
+html[data-layout=pc]{--hx:max(clamp(28px,4vw,72px),calc((100% - 1640px)/2));--px:max(24px,calc((100% - 820px)/2))}
+html[data-layout=pc] header{padding-left:var(--hx);padding-right:var(--hx)}
+html[data-layout=pc] .qk{right:calc(var(--hx) + 56px)}
+
+/* album + playlist page: cover on the left, header + track list in a column on the right */
+html[data-layout=pc] #app:has(#main>.acv) #fb .abar{padding-left:var(--hx);padding-right:var(--hx)}
+html[data-layout=pc] #main:has(>.acv){--cv:min(400px,36vw);display:grid;grid-template-columns:calc(var(--cv) + 48px) minmax(0,1fr) auto auto;grid-template-rows:auto auto auto auto;column-gap:0;align-content:start;align-items:start;padding-top:calc(var(--tp,130px) + 26px);padding-left:max(24px,calc((100% - 1010px)/2));padding-right:max(24px,calc((100% - 1010px)/2))}
+html[data-layout=pc] #main:has(>.acv)>*{grid-column:2}
+html[data-layout=pc] #main:has(>.acv)>.acv{grid-column:1;grid-row:1/span 400;align-self:start;width:var(--cv);max-width:none;margin:0;padding:0;position:sticky;top:0}
+html[data-layout=pc] #main:has(>.acv)>.at{display:contents}
+html[data-layout=pc] #main:has(>.acv)>.at>h2{grid-column:2;grid-row:1;align-self:start;margin:0;padding-top:2px;font-size:30px;line-height:1.15;letter-spacing:-.5px;overflow-wrap:anywhere}
+html[data-layout=pc] #main:has(>.acv)>.am{grid-column:2;grid-row:2;margin:6px 0 0!important;font-size:15px}
+html[data-layout=pc] #main:has(>.acv)>.am~.am{grid-column:2/-1;grid-row:3;margin:10px 0 0!important}
+html[data-layout=pc] #main:has(>.acv)>.at>.sh{grid-column:3;grid-row:1/span 2;align-self:center;width:48px;height:48px;margin-left:16px}
+html[data-layout=pc] #main:has(>.acv)>.at>.pbig{grid-column:4;grid-row:1/span 2;align-self:center;width:56px;height:56px;border-radius:18px;margin-left:8px}
+html[data-layout=pc] #main:has(>.acv)>.rl{grid-column:2/-1;grid-row:4;margin-top:24px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--text) 8%,transparent)}
+html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:36px minmax(0,1fr) 56px 44px;column-gap:14px;padding:8px 10px}
+html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:36px 48px minmax(0,1fr) 56px 44px}
+html[data-layout=pc] #main:has(>.acv) .row .t{display:block;min-width:0}
+html[data-layout=pc] #main:has(>.acv) .row .t b{font-size:15.5px}
+html[data-layout=pc] #main:has(>.acv) .row .d{text-align:right;margin:0;padding:0}
+html[data-layout=pc] .acv .cov{font-size:120px;border-radius:20px}
+
+/* search / select / filter bar: smooth expand + collapse between Songs and Albums/Playlists */
+#tb{display:flex;overflow:hidden;max-height:0;padding-top:0;padding-bottom:0;opacity:0;visibility:hidden;pointer-events:none;transition:max-height .38s cubic-bezier(.22,.8,.24,1),padding .38s cubic-bezier(.22,.8,.24,1),opacity .24s ease,visibility 0s linear .38s}
+#tb.show{max-height:64px;padding-top:6px;padding-bottom:8px;opacity:1;visibility:visible;pointer-events:auto;transition:max-height .38s cubic-bezier(.22,.8,.24,1),padding .38s cubic-bezier(.22,.8,.24,1),opacity .3s ease .08s,visibility 0s}
+
+/* full player: one symmetric column of controls, close together */
+html[data-layout=pc] #fc{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto auto auto auto auto 1fr;column-gap:clamp(32px,5vw,88px);max-width:1240px}
+html[data-layout=pc] #fc>.ftop{grid-column:2;grid-row:2;position:static;align-self:auto;justify-self:center;width:100%;max-width:520px;display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:22px}
+html[data-layout=pc] #fc .ftop .ib{position:static;transform:none;width:48px;height:48px;margin:0}
+html[data-layout=pc] #fc .ftop .ib:active{transform:scale(.88)}
+html[data-layout=pc] #fc .ftop .fbgb{order:1}
+html[data-layout=pc] #fc .ftop .ftrb{order:2}
+html[data-layout=pc] #fc .ftop .ffx{order:3}
+html[data-layout=pc] #fc .ftop .fedit{display:none}
+html[data-layout=pc] #fc .ftop [data-act=closefull]{position:absolute;left:24px;top:20px;order:0}
+html[data-layout=pc] #fc>.fti{grid-row:3;margin-top:0;min-height:112px;display:flex;flex-direction:column;justify-content:center}
+html[data-layout=pc] .fti h2{font-size:32px;line-height:1.2}
+html[data-layout=pc] #fc>.fsk{grid-row:4;margin-top:20px}
+html[data-layout=pc] #fc>.ctl{grid-row:5;margin-top:16px;gap:28px;justify-content:center}
+html[data-layout=pc] #fc>.fbot{grid-row:6;margin-top:22px;display:flex;align-items:center;justify-content:center;gap:16px}
+html[data-layout=pc] #fc>.fti,html[data-layout=pc] #fc>.fsk,html[data-layout=pc] #fc>.ctl,html[data-layout=pc] #fc>.fbot{grid-column:2;max-width:520px}
+html[data-layout=pc] .fbot .fg{display:flex;gap:16px}
+html[data-layout=pc] .fbot .fg .ib,html[data-layout=pc] .fbot>.ib{width:48px;height:48px}
+html[data-layout=pc] .fbot .pcx{display:flex}
+html[data-layout=pc] .fbot .fvol{flex:1;width:auto;max-width:190px;margin:0 34px}
+/* v22: desktop - the volume bar itself is centred under the play button; the mute icon hangs off its left end */
+html[data-layout=pc] .fbot .fvol{display:block;position:relative}
+html[data-layout=pc] .fbot .fvol .mt{position:absolute;right:100%;top:50%;transform:translateY(-50%);margin:0 2px 0 0}
+html[data-layout=pc] .fbot .fvol .mt:active{transform:translateY(-50%) scale(.88)}
+html[data-layout=pc] .fbot .fvol .rng{width:100%}
 </style>
 </head>
 <body>
 <div id="app">
   <svg id="logo" viewBox="-3 -3 136 43.4" role="img" aria-label="traX"><path d="M88.37 27.11C87.67 27.25 85.49 27.49 84.12 27.93C82.76 28.37 81.39 29.01 80.19 29.77C79.00 30.54 77.19 31.55 76.95 32.54C76.72 33.52 77.77 35.29 78.78 35.70C79.79 36.11 81.63 35.37 83.02 35.01C84.40 34.64 86.41 33.76 87.09 33.51M58.92 25.83C58.28 25.95 56.29 26.11 55.09 26.57C53.89 27.03 52.82 27.88 51.72 28.58C50.62 29.29 49.56 30.06 48.48 30.80C47.39 31.53 46.32 32.28 45.22 32.99C44.12 33.70 43.00 34.39 41.87 35.04C40.73 35.70 39.00 36.61 38.42 36.93M60.20 25.83C60.88 25.93 62.93 26.41 64.30 26.41C65.68 26.42 67.07 26.06 68.45 25.87C69.82 25.67 71.31 25.70 72.57 25.23C73.84 24.76 75.69 23.93 76.02 23.05C76.34 22.17 75.47 20.45 74.53 19.97C73.59 19.48 71.76 19.99 70.38 20.13C69.00 20.27 67.60 20.48 66.26 20.82C64.92 21.15 63.33 21.32 62.32 22.12C61.31 22.92 60.55 25.03 60.20 25.62M59.13 26.04C59.25 26.89 59.68 29.44 59.85 31.15C60.03 32.85 60.14 35.43 60.20 36.29M13.88 0.00C14.10 0.62 14.54 2.62 15.23 3.70C15.93 4.77 16.97 5.70 18.02 6.46C19.08 7.22 20.37 7.67 21.56 8.25C22.74 8.83 23.92 9.45 25.14 9.93C26.36 10.42 27.62 10.85 28.90 11.15C30.18 11.45 31.51 11.61 32.82 11.75C34.13 11.88 35.45 11.92 36.77 11.95C38.09 11.99 39.41 11.95 40.73 11.95C42.05 11.95 43.37 11.95 44.69 11.95C46.01 11.95 47.33 11.95 48.66 11.95C49.98 11.95 51.30 11.92 52.62 11.95C53.94 11.99 55.91 12.13 56.57 12.17M88.59 27.32C88.34 28.36 87.34 32.48 87.09 33.51M87.09 33.51C87.75 33.85 89.63 35.18 91.02 35.53C92.41 35.89 93.98 35.85 95.42 35.67C96.87 35.48 98.25 34.82 99.67 34.40C101.08 33.98 102.56 33.70 103.92 33.14C105.27 32.57 106.48 31.65 107.80 31.00C109.12 30.36 111.18 29.54 111.86 29.24M56.57 12.17C57.21 12.00 59.10 11.32 60.40 11.14C61.70 10.97 63.06 11.11 64.39 11.10C65.72 11.09 67.06 11.11 68.39 11.10C69.72 11.09 71.06 11.17 72.38 11.07C73.70 10.97 75.02 10.76 76.33 10.51C77.63 10.26 78.91 9.88 80.21 9.55C81.50 9.23 82.80 8.93 84.08 8.58C85.36 8.23 86.64 7.84 87.91 7.46C89.19 7.08 90.45 6.65 91.73 6.27C93.00 5.89 94.29 5.55 95.57 5.19C96.85 4.83 98.13 4.46 99.41 4.10C100.69 3.73 101.96 3.32 103.25 2.98C104.53 2.64 105.84 2.37 107.13 2.05C108.42 1.73 110.36 1.23 111.00 1.07M56.57 12.17C56.26 12.75 55.55 14.66 54.73 15.67C53.92 16.68 52.75 17.43 51.69 18.23C50.63 19.03 49.49 19.71 48.40 20.46C47.31 21.22 46.26 22.04 45.14 22.74C44.02 23.45 42.84 24.07 41.67 24.69C40.49 25.30 39.31 25.90 38.09 26.43C36.88 26.96 35.63 27.41 34.38 27.87C33.14 28.32 31.86 28.70 30.62 29.16C29.37 29.61 28.15 30.14 26.91 30.60C25.67 31.07 24.41 31.49 23.16 31.94C21.91 32.39 20.68 32.87 19.42 33.30C18.17 33.72 16.89 34.08 15.62 34.49C14.36 34.89 13.13 35.40 11.85 35.73C10.57 36.06 9.25 36.33 7.94 36.49C6.63 36.65 5.29 36.64 3.97 36.72C2.65 36.79 0.66 36.89 0.00 36.93"/><path class="x" d="M116.55 23.69C117.02 23.12 118.34 21.34 119.35 20.27C120.37 19.20 121.49 18.22 122.63 17.29C123.77 16.36 124.98 15.49 126.21 14.67C127.43 13.85 129.37 12.76 130.00 12.38M116.55 24.12C117.02 24.67 118.36 26.36 119.33 27.42C120.31 28.47 121.47 29.38 122.41 30.47C123.35 31.56 124.09 32.81 124.97 33.96C125.84 35.11 127.20 36.79 127.65 37.36M103.32 14.73C103.75 15.25 104.94 16.91 105.92 17.83C106.89 18.75 108.06 19.48 109.16 20.26C110.27 21.03 111.36 21.87 112.56 22.48C113.75 23.09 115.71 23.67 116.34 23.91"/></svg>
-  <div id="top"><header><div class="hr"><button class="plus" id="plus" data-act="plus" aria-label="Create"></button><div class="theme" id="theme" role="group" aria-label="Theme"><button data-act="theme" data-t="light" aria-label="Light mode"></button><button data-act="theme" data-t="dark" aria-label="Dark mode"></button></div></div><div class="tabs"><button class="tab on" data-act="tab" data-t="albums" id="t1">ALBUMS</button><button class="tab" data-act="tab" data-t="songs" id="t2">SONGS</button><button class="tab" data-act="tab" data-t="playlists" id="t3">PLAYLISTS</button></div></header><button class="qk" id="qk" data-act="qopen" aria-label="Open queue"></button><div id="tb"></div><div id="fb"></div></div>
+  <div id="top"><header><div class="hr"><button class="plus" id="plus" data-act="plus" aria-label="Create"></button><button class="gear" id="gear" data-act="settings" aria-label="Settings"></button></div><div class="tabs"><button class="tab on" data-act="tab" data-t="albums" id="t1">ALBUMS</button><button class="tab" data-act="tab" data-t="songs" id="t2">SONGS</button><button class="tab" data-act="tab" data-t="playlists" id="t3">PLAYLISTS</button></div></header><button class="qk" id="qk" data-act="qopen" aria-label="Open queue"></button><div id="tb"></div><div id="fb"></div></div>
   <div id="main"></div>
   <div id="mini"></div>
   <div id="full"><div id="fbg"><i class="bgr"></i><i class="bl b1"></i><i class="bl b2"></i><i class="bl b3"></i><div class="bimg"></div><div class="bimg bcus"></div><div class="bv"></div></div><div id="fc"></div></div>
@@ -560,7 +781,7 @@ header{display:block;padding:8px 20px 2px}
 <audio id="au" preload="metadata"></audio>
 <script>
 const $=s=>document.querySelector(s),au=$('#au');
-const ICON={rst:'M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 2.97-2.17 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93 0-4.42-3.58-8-8-8zm-6 8c0-1.65.67-3.15 1.76-4.24L6.34 7.34C4.9 8.79 4 10.79 4 13c0 4.08 3.05 7.44 7 7.93v-2.02c-2.83-.48-5-2.94-5-5.91z',fxi:'M10.5 4.5a1.5 1.5 0 013 0v15a1.5 1.5 0 01-3 0zM6 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM15 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM1.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0zM19.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0z',plist:'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z',tune:'M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z',edit:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',szs:'M3 3h5v5H3zM9.5 3h5v5h-5zM16 3h5v5h-5zM3 9.5h5v5H3zM9.5 9.5h5v5h-5zM16 9.5h5v5h-5zM3 16h5v5H3zM9.5 16h5v5h-5zM16 16h5v5h-5z',szm:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',szl:'M5 5h14v14H5z',play:'M8 5v14l11-7z',pause:'M6 5h4v14H6zM14 5h4v14h-4z',next:'M6 6l9 6-9 6zM17 6h2v12h-2z',prev:'M18 6l-9 6 9 6zM5 6h2v12H5z',
+const ICON={norm:'M7 3.5h10L12 9.5zM7 20.5h10L12 14.5zM3.5 11h17v2h-17z',rst:'M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 2.97-2.17 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93 0-4.42-3.58-8-8-8zm-6 8c0-1.65.67-3.15 1.76-4.24L6.34 7.34C4.9 8.79 4 10.79 4 13c0 4.08 3.05 7.44 7 7.93v-2.02c-2.83-.48-5-2.94-5-5.91z',fxi:'M10.5 4.5a1.5 1.5 0 013 0v15a1.5 1.5 0 01-3 0zM6 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM15 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM1.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0zM19.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0z',plist:'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z',tune:'M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z',edit:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',szs:'M3 3h5v5H3zM9.5 3h5v5h-5zM16 3h5v5h-5zM3 9.5h5v5H3zM9.5 9.5h5v5h-5zM16 9.5h5v5h-5zM3 16h5v5H3zM9.5 16h5v5h-5zM16 16h5v5h-5z',szm:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',szl:'M5 5h14v14H5z',play:'M8 5v14l11-7z',pause:'M6 5h4v14H6zM14 5h4v14h-4z',next:'M6 6l9 6-9 6zM17 6h2v12h-2z',prev:'M18 6l-9 6 9 6zM5 6h2v12H5z',
 more:'M12 8a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4z',down:'M7 10l5 5 5-5z',
 shuffle:'M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z',
 repeat:'M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z',
@@ -573,6 +794,7 @@ folder:'M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-
 addpl:'M14 10H3v2h11v-2zm0-4H3v2h11V6zM3 16h7v-2H3v2zm11-2v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z',
 vol:'M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8v8a4.5 4.5 0 002.5-4z',
 sun:'M12 7a5 5 0 100 10 5 5 0 000-10zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM5.99 4.58L4.58 5.99l1.41 1.41 1.42-1.41-1.42-1.42zm12.02 12.02l-1.41 1.41 1.41 1.42 1.42-1.42-1.42-1.41zM18.01 5.99l1.41-1.41-1.41-1.42-1.42 1.42 1.42 1.41zM5.99 18.01l-1.41-1.41-1.42 1.41 1.42 1.42 1.41-1.42z',moon:'M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.5 5.5 0 01-4.51 2.36 5.5 5.5 0 01-5.5-5.5c0-1.85.92-3.49 2.33-4.48A9.1 9.1 0 0012 3z',volx:'M16.5 12A4.5 4.5 0 0014 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z',sel:'M22 7h-9v2h9V7zm0 8h-9v2h9v-2zM5.54 11L2 7.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 11zm0 8L2 15.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 19z',check:'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',palette:'M12 3a9 9 0 000 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.4c2 0 3.6-1.6 3.6-3.6C21 6.6 16.9 3 12 3zM6.5 12a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3-4a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3 4a1.5 1.5 0 110-3 1.5 1.5 0 010 3z',tag:'M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z',arrow:'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',chev:'M15.4 7.4L14 6l-6 6 6 6 1.4-1.4L10.8 12z',dots:'M6 10a2 2 0 100 4 2 2 0 000-4zm12 0a2 2 0 100 4 2 2 0 000-4zm-6 0a2 2 0 100 4 2 2 0 000-4z',pencil:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',image:'M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z',trash:'M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',up:'M12 8l-6 6 1.4 1.4L12 10.8l4.6 4.6L18 14z',qm:'M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z'};
+ICON.gear='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z';ICON.phone='M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z';ICON.desk='M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z';ICON.devices='M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z';
 ICON.album='M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a4 4 0 110-8 4 4 0 010 8z';ICON.trans='M9 7h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2zM1.5 12L5 8v8zM22.5 12L19 8v8z';ICON.minus='M12 2a10 10 0 100 20 10 10 0 000-20zm5 11H7v-2h10v2z';ICON.reorder='M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z';ICON.unalb='M19 13H5v-2h14v2z';
 const ic=(n,s)=>`<svg class="ic" viewBox="0 0 24 24" ${s?`style="width:${s}px;height:${s}px"`:''}><path d="${ICON[n]}"/></svg>`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -810,43 +1032,63 @@ function trSheet(){
 
 /* beat effects (big player): bounce, squash, glow, ripple and bars, driven by the audio. All of them grow from the cover centre, so the result stays symmetric */
 const FXL=[['bounce','Bounce'],['squash','Squash'],['glow','Glow'],['ripple','Ripple'],['bars','Bars']];
-const FXB=[['sub','Sub (808)'],['bass','Bass'],['mid','Mid'],['treble','Treble'],['full','Full']];
-/* band edges in Hz, turned into analyser bins at run time so they stay right at any sample rate or FFT size */
+/* quick picks: each one is a list of [low Hz, high Hz] bands */
+const FXB=[['sub','Sub 808',[[20,110]]],['kick','Kick',[[40,120]]],['bass','Bass',[[43,300]]],['vox','Vocals',[[300,3400]]],['snare','Snare',[[150,300],[2500,6000]]],['hat','Hi-hats',[[6000,16000]]],['full','Full range',[[43,13000]]]];
+/* old single-band names from earlier versions, only used to carry saved settings over */
 const FXBAND={sub:[20,110],bass:[43,300],mid:[300,2700],treble:[2700,13000],full:[43,13000]};
+const FXMAXB=5,FXMIN=20,FXMAX=20000,FXBC=['#b57bee','#ee7bb5','#f0a35e','#d6dc5e','#5fdc9c'];
+/* a band is {lo,hi,g,on}: edges in Hz, weight 0-150 %, on/off. Keeps at least a quarter octave of width */
+function fxClampBand(b){
+  let lo=Math.min(FXMAX,Math.max(FXMIN,+b.lo)),hi=Math.min(FXMAX,Math.max(FXMIN,+b.hi));
+  if(lo>hi){const t=lo;lo=hi;hi=t}
+  if(hi/lo<1.19){const c=Math.sqrt(lo*hi);lo=c/1.0905;hi=c*1.0905;if(lo<FXMIN){lo=FXMIN;hi=lo*1.19}if(hi>FXMAX){hi=FXMAX;lo=hi/1.19}}
+  return {lo,hi,g:Math.min(150,Math.max(0,isFinite(b.g)?+b.g:100)),on:b.on===0?0:1};
+}
 const FXR=[['amt','Intensity',0,100,'%'],['sens','Sensitivity',0,100,'%'],['smo','Smoothness',0,95,'%'],['rch','Reach',0,100,'%'],['lag','Sync lead',0,200,'ms']];
-const FXD={on:1,e:{bounce:1,squash:0,glow:1,ripple:0,bars:0},band:'bass',mode:'beat',col:'cover',amt:50,sens:50,smo:55,rch:50,lag:40};
+const FXD={on:1,e:{bounce:1,squash:0,glow:1,ripple:0,bars:0},bands:[{lo:43,hi:300,g:100,on:1}],mode:'beat',col:'cover',amt:50,sens:50,smo:55,rch:50,lag:40};
 const fxS=JSON.parse(JSON.stringify(FXD));
 try{const j=JSON.parse(localStorage.getItem('tracks-fx')||'null');if(j&&typeof j==='object'){
   if(j.on===0||j.on===1)fxS.on=j.on;
   if(j.e&&typeof j.e==='object')FXL.forEach(x=>{if(j.e[x[0]]===0||j.e[x[0]]===1)fxS.e[x[0]]=j.e[x[0]]});
-  if(FXBAND[j.band])fxS.band=j.band;
+  if(Array.isArray(j.bands)){const b=j.bands.filter(x=>x&&isFinite(x.lo)&&isFinite(x.hi)).slice(0,FXMAXB).map(fxClampBand);if(b.length)fxS.bands=b}
+  else if(FXBAND[j.band])fxS.bands=[fxClampBand({lo:FXBAND[j.band][0],hi:FXBAND[j.band][1],g:100,on:1})];
   if(j.mode==='beat'||j.mode==='level')fxS.mode=j.mode;
   if(j.col==='cover'||j.col==='white')fxS.col=j.col;
   FXR.forEach(r=>{const v=j[r[0]];if(typeof v==='number'&&isFinite(v))fxS[r[0]]=Math.min(r[3],Math.max(r[2],v))})}}catch(e){}
 /* audio graph is only built once an effect is switched on and a song plays, so the player behaves as before until then */
-let fxAC=null,fxAN=null,fxAN2=null,fxBuf=null,fxTD=null,fxHP=null,fxLP=null,fxDly=null,fxBandCur='',fxLagCur=-1,fxOK=true,fxRaf=0,fxPrev=0;
+let fxAC=null,fxGain=null,fxAN=null,fxAS=null,fxCH=[],fxBuf=null,fxDly=null,fxKey='',fxLagCur=-1,fxOK=true,fxRaf=0,fxPrev=0,fxSel=0,fxEd=null;
 function fxGraph(){
   if(fxAN)return true;if(!fxOK)return false;
   try{
     const C=window.AudioContext||window.webkitAudioContext;if(!C){fxOK=false;return false}
     fxAC=new C({latencyHint:'interactive'});const src=fxAC.createMediaElementSource(au);
-    fxAN=fxAC.createAnalyser();fxAN.fftSize=1024;fxAN.smoothingTimeConstant=0;   /* spectrum, for the bars; no built-in smoothing so nothing lags */
-    fxAN2=fxAC.createAnalyser();fxAN2.fftSize=512;fxAN2.smoothingTimeConstant=0; /* band level: filtered waveform, much faster than an FFT */
-    fxHP=fxAC.createBiquadFilter();fxHP.type='highpass';fxLP=fxAC.createBiquadFilter();fxLP.type='lowpass';
-    fxDly=fxAC.createDelay(.5);
-    src.connect(fxAN);src.connect(fxHP);fxHP.connect(fxLP);fxLP.connect(fxAN2);
-    src.connect(fxDly);fxDly.connect(fxAC.destination);   /* the sound is held back a few ms so the picture lands on the hit */
-    fxBuf=new Uint8Array(fxAN.frequencyBinCount);fxTD=new Float32Array(512);
+    fxAN=fxAC.createAnalyser();fxAN.fftSize=2048;fxAN.smoothingTimeConstant=0;   /* spectrum, for the bars; no built-in smoothing so nothing lags */
+    fxAS=fxAC.createAnalyser();fxAS.fftSize=8192;fxAS.smoothingTimeConstant=.72; /* fine, smoothed spectrum, only drawn in the frequency picker */
+    fxDly=fxAC.createDelay(.5);fxGain=fxAC.createGain();   /* fxGain = volume normalization */
+    src.connect(fxAN);src.connect(fxAS);
+    /* one filtered channel per band: 24 dB/oct high-pass + low-pass, then a small analyser reading its level (much faster than an FFT) */
+    for(let i=0;i<FXMAXB;i++){
+      const f=['highpass','highpass','lowpass','lowpass'].map(ty=>{const n=fxAC.createBiquadFilter();n.type=ty;n.Q.value=.7071;return n});
+      const an=fxAC.createAnalyser();an.fftSize=1024;an.smoothingTimeConstant=0;
+      src.connect(f[0]);f[0].connect(f[1]);f[1].connect(f[2]);f[2].connect(f[3]);f[3].connect(an);
+      fxCH.push({f,a:an,td:new Float32Array(1024),n:1024});
+    }
+    src.connect(fxDly);fxDly.connect(fxGain);fxGain.connect(fxAC.destination);   /* the sound is held back a few ms so the picture lands on the hit */
+    fxBuf=new Uint8Array(fxAN.frequencyBinCount);
     fxAC.onstatechange=()=>{if(fxAC.state!=='running'&&!au.paused)fxAC.resume().catch(()=>{})};
   }catch(e){fxOK=false;fxAN=null}
   return !!fxAN;
 }
-/* band filter and analysis window follow the chosen band; low bands need a longer window to see a full wave */
-function fxBandSet(){
-  const b=fxS.band;if(b===fxBandCur)return;fxBandCur=b;
-  const H=FXBAND[b],n=b==='sub'?2048:b==='bass'?1024:512;
-  fxHP.frequency.value=Math.max(20,H[0]);fxLP.frequency.value=H[1];
-  fxAN2.fftSize=n;fxTD=new Float32Array(n);
+/* filters follow the bands; low bands need a longer window to see a full wave */
+function fxBandsSet(){
+  const key=fxS.bands.map(b=>b.lo.toFixed(1)+'-'+b.hi.toFixed(1)).join('|');if(key===fxKey)return;fxKey=key;
+  const nyq=fxAC.sampleRate/2*.92;
+  fxS.bands.forEach((b,i)=>{
+    const c=fxCH[i];if(!c)return;
+    const lo=Math.min(nyq*.9,b.lo),hi=Math.min(nyq,Math.max(lo*1.1,b.hi));
+    c.f[0].frequency.value=lo;c.f[1].frequency.value=lo;c.f[2].frequency.value=hi;c.f[3].frequency.value=hi;
+    const n=lo<30?2048:lo<150?1024:512;if(n!==c.n){c.n=n;c.a.fftSize=n;c.td=new Float32Array(n)}
+  });
 }
 function fxLagSet(){
   const v=fxS.on?fxS.lag:0;if(v===fxLagCur)return;fxLagCur=v;
@@ -866,7 +1108,7 @@ const fxT=[
   {id:'main',demo:false,get:()=>{const f=$('#full');if(!f||!f.classList.contains('open'))return null;const h=$('#fc .fcv');return h?{host:h,cov:h.querySelector('.cov')}:null}},
   {id:'prev',demo:true,get:()=>{const h=$('#fxpv');return h?{host:h,cov:h.querySelector('.cov')}:null}}
 ];
-fxT.forEach(t=>{t.env=0;t.slow=0;t.pk=.3;t.rings=[];t.lastR=0;t.bars=new Float32Array(64);t.dirty=false});
+fxT.forEach(t=>{t.env=0;t.slow=0;t.pk=.3;t.bs=[];t.bpk=.3;t.raw=null;t.rings=[];t.lastR=0;t.bars=new Float32Array(64);t.dirty=false});
 function fxColor(){
   if(fxS.col==='white')return '255,255,255';
   const s=songs.find(x=>x.id===cur);let c=null;try{c=s&&accent(s)}catch(e){}
@@ -877,20 +1119,29 @@ function fxReset(t,r){
   if(r&&r.host){const c=r.host.querySelector(':scope>.fxcv');if(c){const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height)}}
   t.env=0;t.rings.length=0;t.dirty=false;
 }
-function fxFrame(t,r,spec,dt,now,col,bw,lvl){
+function fxFrame(t,r,spec,dt,now,col,bw,lv){
   const o=fxS,E=o.e,amt=o.amt/100,cov=r.cov;if(!cov)return false;
   let v=0;
   if(spec){
-    const H=FXBAND[o.band],lo=Math.max(1,Math.round(H[0]/bw)),hi=Math.min(spec.length,Math.max(lo+1,Math.round(H[1]/bw)));let sum=0;for(let i=lo;i<hi;i++)sum+=spec[i];
-    const x0=lvl!=null?lvl:sum/((hi-lo)*255);
-    t.pk=Math.max(x0,t.pk*(1-dt*.2),.12);
-    let x=Math.min(1,x0/t.pk);
-    const th=.6*(1-o.sens/100);x=Math.max(0,Math.min(1,(x-th)/(1-th)));
-    if(o.mode==='beat'){v=Math.max(0,Math.min(1,(x-t.slow)*2.2));t.slow+=(x-t.slow)*Math.min(1,dt*3)}
-    else{v=x;t.slow=x}
-    t.v=v;
+    /* every band is read and shaped on its own (so a quiet hi-hat band still reacts), scaled by its weight; the strongest one drives the cover */
+    let vm=0;
+    o.bands.forEach((B,i)=>{
+      const q=t.bs[i]||(t.bs[i]={pk:.3,slow:0,v:0});
+      if(!B.on){q.v=0;return}
+      let x0;
+      if(lv)x0=lv[i];
+      else{const lo=Math.max(1,Math.round(B.lo/bw)),hi=Math.min(spec.length,Math.max(lo+1,Math.round(B.hi/bw)));let sum=0;for(let k=lo;k<hi;k++)sum+=spec[k];x0=sum/((hi-lo)*255)}
+      q.pk=Math.max(x0,q.pk*(1-dt*.2),.12);
+      let x=Math.min(1,x0/q.pk);
+      const th=.6*(1-o.sens/100);x=Math.max(0,Math.min(1,(x-th)/(1-th)));
+      let vi;
+      if(o.mode==='beat'){vi=Math.max(0,Math.min(1,(x-q.slow)*3.5));q.slow+=(x-q.slow)*Math.min(1,dt*12)}   /* short baseline (~80 ms) so a hit that lands on a ringing 808 tail still counts as a new hit */
+      else{vi=x;q.slow=x}
+      q.v=vi;vm=Math.max(vm,Math.min(1,vi*B.g/100));
+    });
+    v=vm;t.v=v;
   }
-  const rel=.04+o.smo/100*.5,k=1-Math.exp(-dt/(v>t.env?.012:rel));
+  const rel=o.mode==='beat'?.03+o.smo/100*.28:.04+o.smo/100*.5,k=1-Math.exp(-dt/(v>t.env?.012:rel));
   t.env+=(v-t.env)*k;
   const env=t.env;
   /* scale, bounce and squash both pivot on the centre */
@@ -906,10 +1157,11 @@ function fxFrame(t,r,spec,dt,now,col,bw,lvl){
   if(!need){if(cv){const x=cv.getContext('2d');x.clearRect(0,0,cv.width,cv.height)}t.rings.length=0}
   else{
     if(!cv){cv=document.createElement('canvas');cv.className='fxcv';host.insertBefore(cv,host.firstChild)}
-    const d=Math.min(2,window.devicePixelRatio||1),cw=host.clientWidth,ch=host.clientHeight;
+    const big=host.classList.contains('fcv'),d=Math.min(2,window.devicePixelRatio||1),cw=big?window.innerWidth:host.clientWidth,ch=big?window.innerHeight:host.clientHeight;
+    let ox=0,oy=0;if(big){const hr=host.getBoundingClientRect();ox=hr.left;oy=hr.top;cv.style.width=cw+'px';cv.style.height=ch+'px'}
     if(cv.width!==Math.round(cw*d)||cv.height!==Math.round(ch*d)){cv.width=Math.round(cw*d);cv.height=Math.round(ch*d)}
     const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,cw,ch);
-    const cx=cov.offsetLeft+W/2,cy=cov.offsetTop+H/2,hw=W*sx/2,hh=H*sy/2,rad=parseFloat(getComputedStyle(cov).borderTopLeftRadius)||12;
+    const cx=ox+cov.offsetLeft+W/2,cy=oy+cov.offsetTop+H/2,hw=W*sx/2,hh=H*sy/2,rad=parseFloat(getComputedStyle(cov).borderTopLeftRadius)||12;
     const reach=o.rch/100,room=Math.max(8,Math.min(cx-hw,cw-cx-hw,cy-hh,ch-cy-hh));
     if(E.ripple){
       if(spec&&v>.45&&now-t.lastR>260){t.rings.push(now);t.lastR=now}
@@ -925,14 +1177,21 @@ function fxFrame(t,r,spec,dt,now,col,bw,lvl){
       }
     }
     if(E.bars&&spec){
+      /* the bars spread across the frequencies you picked (log scale, mirrored on both axes) */
       const N=64,maxLen=(14+reach*70)*(.5+amt),gap=5;
+      let bl=1e9,bh=0;o.bands.forEach(B=>{if(B.on){bl=Math.min(bl,B.lo);bh=Math.max(bh,B.hi)}});if(bh<=0){bl=43;bh=9500}
+      const lbw=Math.log(bh/bl),raw=t.raw||(t.raw=new Float32Array(N));let mx=0;
+      for(let i=0;i<N;i++){
+        const th=(i+.5)/N*Math.PI*2,f=Math.atan2(Math.abs(Math.sin(th)),Math.abs(Math.cos(th)))/(Math.PI/2);
+        const idx=Math.min(spec.length-1,Math.max(1,Math.round(bl*Math.exp(lbw*f)/bw)));
+        raw[i]=spec[idx]/255;if(raw[i]>mx)mx=raw[i];
+      }
+      t.bpk=Math.max(mx,t.bpk*(1-dt*.2),.25);
       g.lineCap='round';g.lineWidth=Math.max(2,Math.min(4,Math.min(hw,hh)*2*Math.PI/N*.4));
+      const sh=.6*(1-o.sens/100);
       for(let i=0;i<N;i++){
         const th=(i+.5)/N*Math.PI*2,c=Math.cos(th),sn=Math.sin(th);
-        const f=Math.atan2(Math.abs(sn),Math.abs(c))/(Math.PI/2);  /* folded angle, mirrors across both axes */
-        const idx=Math.min(spec.length-1,Math.max(1,Math.round((43+Math.pow(f,1.5)*9500)/bw)));
-        let b=Math.min(1,(spec[idx]/255)/Math.max(t.pk,.25));
-        b=Math.max(0,(b-.6*(1-o.sens/100)))/(1-.6*(1-o.sens/100));
+        let b=Math.min(1,raw[i]/t.bpk);b=Math.max(0,(b-sh))/(1-sh);
         const bk=1-Math.exp(-dt/(b>t.bars[i]?.02:.05+o.smo/100*.3));t.bars[i]+=(b-t.bars[i])*bk;
         const m=Math.max(Math.abs(c)/hw,Math.abs(sn)/hh);
         const r0=(1/m)+gap,len=2+t.bars[i]*maxLen;
@@ -947,9 +1206,12 @@ function fxFrame(t,r,spec,dt,now,col,bw,lvl){
 function fxLoop(now){
   fxRaf=0;
   const dt=Math.min(.05,Math.max(.001,(now-(fxPrev||now))/1000));fxPrev=now;
-  const playing=!au.paused&&!au.ended;let live=false,spec=null,realBW=43.07,lvl=null;
+  const playing=!au.paused&&!au.ended;let live=false,spec=null,realBW=43.07,lv=null;
   if(fxS.on&&!RM.matches){
-    if(playing&&fxGraph()){try{fxLagSet();fxBandSet();fxAN.getByteFrequencyData(fxBuf);spec=fxBuf;realBW=fxAC.sampleRate/fxAN.fftSize;fxAN2.getFloatTimeDomainData(fxTD);let sq=0;for(let i=0;i<fxTD.length;i++)sq+=fxTD[i]*fxTD[i];lvl=Math.max(0,(20*Math.log10(Math.sqrt(sq/fxTD.length)+1e-6)+60)/60)}catch(e){}}
+    if(playing&&fxGraph()){try{
+      fxLagSet();fxBandsSet();fxAN.getByteFrequencyData(fxBuf);spec=fxBuf;realBW=fxAC.sampleRate/fxAN.fftSize;
+      lv=fxS.bands.map((B,i)=>{const c=fxCH[i];if(!c||!B.on)return 0;c.a.getFloatTimeDomainData(c.td);let sq=0;for(let k=0;k<c.td.length;k++)sq+=c.td[k]*c.td[k];return Math.max(0,(20*Math.log10(Math.sqrt(sq/c.td.length)+1e-6)+60)/60)});
+    }catch(e){spec=null;lv=null}}
   }
   if(fxAN&&!fxS.on)try{fxLagSet()}catch(e){}
   const col=fxColor();
@@ -958,12 +1220,136 @@ function fxLoop(now){
     if(!r||!r.cov){t.dirty=false;continue}
     if(!fxS.on||RM.matches){if(t.dirty)fxReset(t,r);continue}
     let sp=spec;if(!sp&&t.demo)sp=fxDemo(now);
-    if(fxFrame(t,r,sp,dt,now,col,sp===spec?realBW:43.07,sp===spec?lvl:null))live=true;else if(!sp&&t.dirty)fxReset(t,r);
+    if(fxFrame(t,r,sp,dt,now,col,sp===spec?realBW:43.07,sp===spec?lv:null))live=true;else if(!sp&&t.dirty)fxReset(t,r);
     if(sp&&t.demo)live=true;
   }
+  if(fxEd)fxEdDraw(now,!!(spec&&fxAS));
   if(live||playing&&fxS.on)fxRaf=requestAnimationFrame(fxLoop);else fxPrev=0;
 }
 function fxKick(){if(!fxRaf)fxRaf=requestAnimationFrame(fxLoop)}
+/* frequency picker: draggable bands over the live spectrum, like an EQ */
+const fxF2X=(f,W)=>Math.log(f/FXMIN)/Math.log(FXMAX/FXMIN)*W;
+const fxX2F=(x,W)=>FXMIN*Math.pow(FXMAX/FXMIN,Math.min(1,Math.max(0,x/W)));
+const fxFmt=f=>f>=1000?(+(f/1000).toFixed(f>=10000?1:2))+'k':String(Math.round(f));
+const fxPar=v=>{const m=/^\s*([\d.,]+)\s*(k?)\s*(?:hz)?\s*$/i.exec(String(v));if(!m)return null;const n=parseFloat(m[1].replace(',','.'));return isFinite(n)?n*(m[2]?1000:1):null};
+function fxAddAt(f){const B=fxS.bands;if(B.length>=FXMAXB)return false;const k=Math.pow(2,.75);B.push(fxClampBand({lo:f/k,hi:f*k,g:100,on:1}));fxSel=B.length-1;return true}
+function fxAddFree(){
+  const C=[[2500,6000],[40,120],[6000,16000],[300,2500],[150,300]],B=fxS.bands;
+  const ov=c=>B.some(b=>Math.min(b.hi,c[1])>Math.max(b.lo,c[0]));
+  const c=C.find(x=>!ov(x))||C[0];
+  if(B.length<FXMAXB){B.push(fxClampBand({lo:c[0],hi:c[1],g:100,on:1}));fxSel=B.length-1}
+}
+const FXPT=14,FXPB=18;
+function fxEdInit(cv,onChange){
+  const ed=fxEd={cv,drag:null,lastTap:0,lastX:0,lastY:0,txt:getComputedStyle(cv).color||'#fff',sp:new Uint8Array(4096)};
+  const plotH=()=>cv.clientHeight-FXPT-FXPB;
+  const pos=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
+  const nodeXY=b=>{const W=cv.clientWidth;return[(fxF2X(b.lo,W)+fxF2X(b.hi,W))/2,FXPT+(1-b.g/150)*plotH()]};
+  const inBand=(x,W)=>{let best=-1,bw=1e9;fxS.bands.forEach((b,i)=>{const x0=fxF2X(b.lo,W),x1=fxF2X(b.hi,W);if(x>=x0&&x<=x1&&x1-x0<bw){bw=x1-x0;best=i}});return best};
+  cv.addEventListener('pointerdown',e=>{
+    const W=cv.clientWidth,[x,y]=pos(e),B=fxS.bands;let hit=null;
+    for(let i=B.length-1;i>=0;i--){const n=nodeXY(B[i]);if(Math.hypot(x-n[0],y-n[1])<=20){hit={m:'move',i};break}}
+    if(!hit){
+      const order=[fxSel,...B.map((_,i)=>i).filter(i=>i!==fxSel)];
+      for(const i of order){
+        if(!B[i])continue;
+        const x0=fxF2X(B[i].lo,W),x1=fxF2X(B[i].hi,W),d0=Math.abs(x-x0),d1=Math.abs(x-x1);
+        if(d0<=11&&d0<=d1){hit={m:'lo',i};break}
+        if(d1<=11){hit={m:'hi',i};break}
+      }
+    }
+    if(!hit){const i=inBand(x,W);if(i>=0)hit={m:'move',i}}
+    if(!hit){   /* empty space: a quick second tap adds a band here */
+      const now=performance.now();
+      if(now-ed.lastTap<320&&Math.hypot(x-ed.lastX,y-ed.lastY)<24){if(fxAddAt(fxX2F(x,W)))onChange();ed.lastTap=0}
+      else{ed.lastTap=now;ed.lastX=x;ed.lastY=y}
+      return;
+    }
+    e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(_){}
+    fxSel=hit.i;const b=B[hit.i];
+    ed.drag={m:hit.m,i:hit.i,x,y,lo:b.lo,hi:b.hi,g:b.g};onChange();
+  });
+  cv.addEventListener('pointermove',e=>{
+    const d=ed.drag;if(!d)return;const b=fxS.bands[d.i];if(!b)return;
+    const W=cv.clientWidth,[x,y]=pos(e);
+    if(d.m==='move'){
+      let sh=(x-d.x)/W*Math.log(FXMAX/FXMIN);sh=Math.min(Math.log(FXMAX/d.hi),Math.max(Math.log(FXMIN/d.lo),sh));
+      b.lo=d.lo*Math.exp(sh);b.hi=d.hi*Math.exp(sh);
+      let g=Math.min(150,Math.max(0,d.g-(y-d.y)/plotH()*150));if(Math.abs(g-100)<4)g=100;b.g=Math.round(g);   /* sticks to the 100 % line */
+    }else if(d.m==='lo')b.lo=Math.min(fxX2F(x,W),b.hi/1.19);
+    else b.hi=Math.max(fxX2F(x,W),b.lo*1.19);
+    const c=fxClampBand(b);b.lo=c.lo;b.hi=c.hi;onChange();
+  });
+  const up=()=>{ed.drag=null};
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  cv.addEventListener('wheel',e=>{   /* mouse wheel over a band = width, like the Q knob in an EQ */
+    const W=cv.clientWidth;let i=inBand(pos(e)[0],W);if(i<0)i=fxSel;const b=fxS.bands[i];if(!b)return;
+    e.preventDefault();fxSel=i;
+    const c=Math.sqrt(b.lo*b.hi),w=Math.sqrt(b.hi/b.lo)*Math.exp(-e.deltaY*.0015),nb=fxClampBand({lo:c/w,hi:c*w,g:b.g,on:b.on});
+    b.lo=nb.lo;b.hi=nb.hi;onChange();
+  },{passive:false});
+}
+function fxEdDraw(now,live){
+  const ed=fxEd,cv=ed&&ed.cv;if(!cv)return;if(!cv.isConnected){fxEd=null;return}
+  const W=cv.clientWidth,H=cv.clientHeight;if(!W||!H)return;
+  const d=Math.min(2,window.devicePixelRatio||1);
+  if(cv.width!==Math.round(W*d)||cv.height!==Math.round(H*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
+  const g=cv.getContext('2d'),PT=FXPT,PH=H-FXPT-FXPB,txt=ed.txt,B=fxS.bands;
+  if(fxSel>=B.length)fxSel=B.length-1;if(fxSel<0)fxSel=0;
+  g.setTransform(d,0,0,d,0,0);g.clearRect(0,0,W,H);
+  g.font='10px system-ui,-apple-system,sans-serif';g.textAlign='center';
+  /* grid */
+  const lab={50:'50',100:'100',200:'200',500:'500',1000:'1k',2000:'2k',5000:'5k',10000:'10k'};
+  g.fillStyle=txt;g.strokeStyle=txt;g.lineWidth=1;
+  for(let dec=10;dec<=10000;dec*=10)for(let m=1;m<10;m++){
+    const f=dec*m;if(f<FXMIN||f>=FXMAX)continue;const x=Math.round(fxF2X(f,W))+.5;
+    g.globalAlpha=m===1?.16:.06;g.beginPath();g.moveTo(x,PT);g.lineTo(x,PT+PH);g.stroke();
+    if(lab[f]){g.globalAlpha=.5;g.fillText(lab[f],x,H-5)}
+  }
+  [0,50,100,150].forEach(v=>{const y=Math.round(PT+(1-v/150)*PH)+.5;g.globalAlpha=v===100?.5:.07;g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()});
+  /* band regions, lit up by how hard each band is hitting right now */
+  const act=i=>{const t=fxT[1].bs[i];return t&&fxS.on?Math.min(1,t.v||0):0};
+  B.forEach((b,i)=>{
+    const x0=fxF2X(b.lo,W),x1=fxF2X(b.hi,W);
+    g.globalAlpha=b.on?.09+.3*act(i):.035;g.fillStyle=FXBC[i];g.fillRect(x0,PT,x1-x0,PH);
+  });
+  /* spectrum */
+  const pts=[];
+  if(live){
+    fxAS.getByteFrequencyData(ed.sp);const bh=fxAC.sampleRate/8192,sp=ed.sp;
+    for(let x=0;x<=W;x+=2){
+      const a=fxX2F(x-1,W)/bh,b=fxX2F(x+1,W)/bh;let v;
+      if(b-a<1){const c=(a+b)/2,i=Math.floor(c),fr=c-i;v=sp[i]*(1-fr)+sp[Math.min(4095,i+1)]*fr}
+      else{v=0;for(let k=Math.floor(a);k<=Math.min(4095,Math.ceil(b));k++)v=Math.max(v,sp[k])}
+      pts.push(Math.min(1,v/255*(.8+.35*x/W)));
+    }
+  }else{
+    const t=now/1000,kb=Math.exp(-(t%.55)*8),hb=Math.exp(-((t+.275)%.55)*14);
+    for(let x=0;x<=W;x+=2){
+      const f=fxX2F(x,W),p=x/W;
+      pts.push(Math.max(0,Math.min(1,.5-.3*p+kb*.42*Math.exp(-Math.pow(Math.log2(f/55),2)/1.3)+hb*.3*Math.exp(-Math.pow(Math.log2(f/9000),2)/1.6)+.05*Math.sin(f/90+t*2))));
+    }
+  }
+  g.beginPath();g.moveTo(0,PT+PH);pts.forEach((v,i)=>g.lineTo(i*2,PT+PH*(1-v)));g.lineTo(W,PT+PH);g.closePath();
+  g.fillStyle=txt;g.globalAlpha=live?.26:.14;g.fill();g.strokeStyle=txt;g.globalAlpha=live?.55:.3;g.lineWidth=1;g.stroke();
+  if(!live){g.globalAlpha=.45;g.fillStyle=txt;g.textAlign='right';g.fillText('demo spectrum',W-8,12);g.textAlign='center'}
+  /* edges, weight bars and numbered dots */
+  B.forEach((b,i)=>{
+    const sel=i===fxSel,x0=fxF2X(b.lo,W),x1=fxF2X(b.hi,W),y=PT+(1-b.g/150)*PH,cx=(x0+x1)/2,a=act(i),col=FXBC[i];
+    g.strokeStyle=col;g.lineWidth=sel?1.5:1;g.globalAlpha=b.on?(sel?.95:.45):.25;
+    g.beginPath();g.moveTo(x0,PT);g.lineTo(x0,PT+PH);g.moveTo(x1,PT);g.lineTo(x1,PT+PH);g.stroke();
+    if(sel){g.fillStyle=col;g.globalAlpha=.95;[x0,x1].forEach(x=>{g.beginPath();if(g.roundRect)g.roundRect(x-3,PT+PH-34,6,20,3);else g.rect(x-3,PT+PH-34,6,20);g.fill()})}
+    g.lineWidth=2.5;g.globalAlpha=b.on?.9:.3;g.beginPath();g.moveTo(x0,y);g.lineTo(x1,y);g.stroke();
+    g.globalAlpha=b.on?1:.5;g.shadowColor=col;g.shadowBlur=b.on?a*20:0;
+    g.fillStyle='#1b2430';g.strokeStyle=col;g.lineWidth=sel?3:2;
+    g.beginPath();g.arc(cx,y,sel?13:11,0,Math.PI*2);g.fill();g.stroke();g.shadowBlur=0;
+    g.fillStyle='#fff';g.globalAlpha=b.on?1:.6;g.font='bold 11px system-ui,-apple-system,sans-serif';g.textAlign='center';g.fillText(String(i+1),cx,y+4);
+  });
+  /* readout of the selected band */
+  const s0=B[fxSel];
+  if(s0){g.font='600 11px system-ui,-apple-system,sans-serif';g.textAlign='left';g.fillStyle=txt;g.globalAlpha=.85;g.fillText(fxFmt(s0.lo)+' - '+fxFmt(s0.hi)+' Hz  |  weight '+Math.round(s0.g)+'%'+(s0.on?'':'  (muted)'),8,11)}
+  g.globalAlpha=1;
+}
 function fxSheet(){
   const o=fxS,chips=(id,list,cls)=>`<div class="bgst" id="${id}">${list.map(x=>`<button type="button" class="chip ${cls||''}" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>`;
   const cs=songs.find(x=>x.id===cur),art=cs?cover(songCover(cs),cs.name):'<div class="cov"></div>';
@@ -971,35 +1357,130 @@ function fxSheet(){
   <div class="fxpv" id="fxpv">${art}</div>
   <label>Effects</label>${chips('fxon',[['1','On'],['0','Off']])}
   <div id="fxmore"><label>Mix (tap to combine)</label>${chips('fxe',FXL)}
-  <label>Follows</label>${chips('fxb',FXB)}
+  <label>Reacts to these frequencies</label>
+  <div class="fxeq"><canvas id="fxeq" aria-label="Frequency picker"></canvas></div>
+  <p class="fxhint">Drag a dot to move a band (up and down sets its weight). Drag the edges to make it wider or narrower. Double-tap empty space to add a band.</p>
+  <div class="bgst" id="fxbt"></div>
+  <div id="fxbp">
+    <div class="fxhz"><div><label>From (Hz)</label><input type="text" inputmode="decimal" id="fxlo" autocomplete="off"></div><div><label>To (Hz)</label><input type="text" inputmode="decimal" id="fxhi" autocomplete="off"></div></div>
+    <div class="fop fx" id="fxgr"><span>Weight</span><input type="range" class="rng" id="fxg" min="0" max="150" aria-label="Band weight"><b></b><button type="button" class="rsb" id="fxgrs" aria-label="Reset weight to default" title="Reset to default">${ic('rst',16)}</button></div>
+    <div class="bgst"><button type="button" class="chip fx" id="fxmu">Mute band</button><button type="button" class="chip fx" id="fxrm">${ic('trash',14)} Remove</button></div>
+  </div>
+  <label>Quick picks</label>${chips('fxq',FXB)}
   <label>Response</label>${chips('fxm',[['beat','Beat punch'],['level','Loudness']])}
   <label>Colour</label>${chips('fxc',[['cover','From cover'],['white','White']])}
   <div id="fxrows">${FXR.map(r=>`<div class="fop fx" data-k="${r[0]}"><span>${r[1]}</span><input type="range" class="rng" data-k="${r[0]}" min="${r[2]}" max="${r[3]}" aria-label="${r[1]}"><b></b><button type="button" class="rsb" data-r="${r[0]}" aria-label="Reset ${r[1]} to default" title="Reset to default">${ic('rst',16)}</button></div>`).join('')}</div></div></div>
   <div class="bt"><button class="pill mr" id="fxx">Reset</button><button class="pill acc" id="fxdn">Done</button></div>`);
   const keep=()=>{try{localStorage.setItem('tracks-fx',JSON.stringify(o))}catch(e){}};
+  let tabH='';
+  const paintB=()=>{
+    const B=o.bands;if(fxSel>=B.length)fxSel=B.length-1;if(fxSel<0)fxSel=0;
+    const h=B.map((b,i)=>`<button type="button" class="chip fxtab${i===fxSel?' on':''}${b.on?'':' mu'}" data-i="${i}" style="--c:${FXBC[i]}" aria-label="Band ${i+1}"><i></i>${i+1}</button>`).join('')+(B.length<FXMAXB?`<button type="button" class="chip fx" data-add="1" aria-label="Add band">${ic('plus',14)} Add</button>`:'');
+    if(h!==tabH){tabH=h;$('#fxbt').innerHTML=h}
+    const b=B[fxSel],lo=$('#fxlo'),hi=$('#fxhi'),gr=$('#fxg');
+    if(document.activeElement!==lo)lo.value=fxFmt(b.lo);
+    if(document.activeElement!==hi)hi.value=fxFmt(b.hi);
+    gr.value=b.g;gr.style.setProperty('--p',(b.g/150*100)+'%');
+    $('#fxgr b').textContent=Math.round(b.g)+'%';$('#fxgr').classList.toggle('dflt',Math.round(b.g)===100);
+    const mu=$('#fxmu');mu.classList.toggle('on',!b.on);mu.textContent=b.on?'Mute band':'Unmute band';
+    $('#fxrm').disabled=B.length<2;
+  };
   const paint=()=>{
     const on=(id,f)=>document.querySelectorAll('#'+id+' .chip').forEach(c=>c.classList.toggle('on',f(c.dataset.v)));
-    on('fxon',v=>v===String(o.on));on('fxe',v=>!!o.e[v]);on('fxb',v=>v===o.band);on('fxm',v=>v===o.mode);on('fxc',v=>v===o.col);
+    on('fxon',v=>v===String(o.on));on('fxe',v=>!!o.e[v]);on('fxm',v=>v===o.mode);on('fxc',v=>v===o.col);
+    on('fxq',v=>{const p=FXB.find(x=>x[0]===v);return !!p&&p[2].length===o.bands.length&&p[2].every((r,i)=>Math.abs(r[0]-o.bands[i].lo)<.5&&Math.abs(r[1]-o.bands[i].hi)<.5)});
     $('#fxmore').style.display=o.on?'':'none';
     FXR.forEach(r=>{
       const el=document.querySelector('#fxrows .fop[data-k="'+r[0]+'"]'),inp=el.querySelector('input'),v=o[r[0]];
       inp.value=v;inp.style.setProperty('--p',((v-r[2])/(r[3]-r[2])*100)+'%');el.querySelector('b').textContent=v+r[4];el.classList.toggle('dflt',v===FXD[r[0]]);
       el.style.display=(r[0]!=='rch'||o.e.ripple||o.e.bars)?'':'none';
     });
+    paintB();
   };
-  const ch=()=>{keep();paint();fxKick()};
+  const ch=()=>{keep();paint();fxKick();fxEdDraw(performance.now(),false)};
   $('#fxon').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;o.on=+c.dataset.v;if(!o.on){fxT.forEach(t=>fxReset(t,t.get()))}ch()};
   $('#fxe').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;o.e[c.dataset.v]=o.e[c.dataset.v]?0:1;ch()};
-  $('#fxb').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;o.band=c.dataset.v;ch()};
   $('#fxm').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;o.mode=c.dataset.v;ch()};
   $('#fxc').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;o.col=c.dataset.v;ch()};
+  $('#fxbt').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;if(c.dataset.add)fxAddFree();else fxSel=+c.dataset.i;ch()};
+  $('#fxq').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;const p=FXB.find(x=>x[0]===c.dataset.v);if(!p)return;o.bands=p[2].map(r=>fxClampBand({lo:r[0],hi:r[1],g:100,on:1}));fxSel=0;fxT.forEach(t=>{t.bs=[]});ch()};
+  const edit=(k,el)=>{
+    const v=fxPar(el.value),b=o.bands[fxSel];
+    if(v!=null){if(k==='lo')b.lo=Math.min(v,b.hi/1.19);else b.hi=Math.max(v,b.lo*1.19);const c=fxClampBand(b);b.lo=c.lo;b.hi=c.hi}
+    el.value=fxFmt(b[k]);ch();
+  };
+  [['#fxlo','lo'],['#fxhi','hi']].forEach(x=>{const el=$(x[0]);el.onchange=()=>edit(x[1],el);el.onkeydown=e=>{if(e.key==='Enter')el.blur()}});
+  $('#fxg').oninput=e=>{let v=+e.target.value;if(Math.abs(v-100)<3)v=100;o.bands[fxSel].g=v;ch()};
+  $('#fxgrs').onclick=()=>{o.bands[fxSel].g=100;ch()};
+  $('#fxmu').onclick=()=>{const b=o.bands[fxSel];b.on=b.on?0:1;ch()};
+  $('#fxrm').onclick=()=>{if(o.bands.length<2)return;o.bands.splice(fxSel,1);fxSel=Math.max(0,fxSel-1);fxT.forEach(t=>{t.bs=[]});ch()};
   $('#fxrows').oninput=e=>{const k=e.target.dataset.k;if(!k)return;o[k]=+e.target.value;ch()};
   $('#fxrows').onclick=e=>{const b=e.target.closest('.rsb');if(!b)return;o[b.dataset.r]=FXD[b.dataset.r];ch()};
-  $('#fxx').onclick=()=>{const d=JSON.parse(JSON.stringify(FXD));Object.keys(d).forEach(k=>{o[k]=d[k]});ch()};
+  $('#fxx').onclick=()=>{const d=JSON.parse(JSON.stringify(FXD));Object.keys(d).forEach(k=>{o[k]=d[k]});fxSel=0;fxT.forEach(t=>{t.bs=[]});ch()};
   $('#fxdn').onclick=()=>closeOv();
   $('#ov').onclick=e=>{if(e.target.id==='ov')closeOv()};
-  paint();fxKick();
+  fxEdInit($('#fxeq'),()=>{keep();paint();fxKick()});
+  paint();fxKick();fxEdDraw(performance.now(),false);
 }
+
+/* normalize volume: measures how loud each song is once (gated, LUFS-style, cached), then lifts or lowers it to one common level.
+   The correction is a gain node after the beat-effect analysers, so the visuals are not affected. Boosts never push the peaks past full scale. */
+const NM_TARGET=-14,NM_MAXUP=12,NM_MAXDN=-20;
+const nm={on:0,db:0,key:null,busy:0,tk:0};
+try{nm.on=localStorage.getItem('tracks-norm')==='1'?1:0}catch(e){}
+let nmCache={};try{nmCache=JSON.parse(localStorage.getItem('tracks-loud')||'{}')||{}}catch(e){}
+function nmSave(){try{if(songs.length)for(const k of Object.keys(nmCache))if(!songs.some(x=>x.id===k))delete nmCache[k];localStorage.setItem('tracks-loud',JSON.stringify(nmCache))}catch(e){}}
+async function nmMeasure(s){
+  const buf=await s.blob.arrayBuffer(),OC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+  const ab=await new Promise((res,rej)=>{const p=new OC(1,1,44100).decodeAudioData(buf,res,rej);if(p&&p.catch)p.catch(rej)});
+  const sr=ab.sampleRate,N=ab.length,blk=Math.max(1,Math.round(sr*.4)),a=Math.exp(-2*Math.PI*60/sr),chs=[];
+  for(let c=0;c<Math.min(2,ab.numberOfChannels);c++)chs.push(ab.getChannelData(c));
+  const hx=new Float64Array(chs.length),hy=new Float64Array(chs.length),ms=[],mul=chs.length===1?2:1;   /* mono counts as two matching channels */
+  let acc=0,cnt=0,pk=0;
+  for(let i=0;i<N;i++){
+    for(let c=0;c<chs.length;c++){const x=chs[c][i],ax=x<0?-x:x;if(ax>pk)pk=ax;const y=a*(hy[c]+x-hx[c]);hx[c]=x;hy[c]=y;acc+=y*y}
+    if(++cnt===blk){ms.push(acc/blk*mul);acc=0;cnt=0;if(ms.length%40===0)await new Promise(r=>setTimeout(r,0))}
+  }
+  const ok=ms.filter(m=>m>1e-7);let l=-80;
+  if(ok.length){const m0=ok.reduce((t,x)=>t+x,0)/ok.length,g=ok.filter(m=>m>=m0/10);l=10*Math.log10(g.reduce((t,x)=>t+x,0)/g.length)-.691}   /* absolute gate -70, relative gate -10 */
+  return {sz:s.blob.size,l:+l.toFixed(2),pk:+(20*Math.log10(pk||1e-6)).toFixed(2)};
+}
+function nmGain(e){
+  if(!e||e.l<=-60)return 0;
+  const g=Math.min(NM_MAXUP,Math.max(NM_MAXDN,NM_TARGET-e.l));
+  return Math.min(g,Math.max(0,-.5-e.pk));   /* only the boost is limited by the peak */
+}
+const nmTxt=d=>(d>=0?'+':'\u2212')+Math.abs(d).toFixed(1)+' dB';
+function nmPaint(){
+  document.querySelectorAll('.nmb').forEach(b=>{
+    b.classList.toggle('on',!!nm.on);b.classList.toggle('busy',!!nm.busy);b.setAttribute('aria-pressed',nm.on?'true':'false');
+    const t=nm.on?(nm.busy?'Analysing loudness\u2026':'Volume normalized ('+nmTxt(nm.db)+'). Tap to turn off'):'Normalize volume';
+    b.title=t;b.setAttribute('aria-label',t);
+  });
+}
+function nmSet(db){
+  nm.db=db;
+  if(fxGain&&fxAC){const t=fxAC.currentTime,v=Math.pow(10,db/20);try{fxGain.gain.cancelScheduledValues(t);fxGain.gain.setTargetAtTime(v,t,.08)}catch(e){fxGain.gain.value=v}}
+  nmPaint();
+}
+function nmEnsure(say){
+  if(!nm.on){if(nm.db)nmSet(0);return}
+  const s=songs.find(x=>x.id===cur);if(!s||!s.blob)return;
+  const key=s.id+':'+s.blob.size;if(nm.key===key){if(say)toast('Volume normalized ('+nmTxt(nm.db)+')');return}
+  if(!fxGraph()){nm.busy=0;nmPaint();if(say)toast('Normalize is not supported in this browser');return}   /* built right here, inside the tap */
+  const my=++nm.tk,e=nmCache[s.id];
+  if(e&&e.sz===s.blob.size){nm.key=key;nm.busy=0;nmSet(nmGain(e));if(say)toast('Volume normalized ('+nmTxt(nm.db)+')');return}
+  nm.key=null;nm.busy=1;nmSet(0);   /* plain level while the song is being measured */
+  nmMeasure(s).then(r=>{nmCache[s.id]=r;nmSave();if(my!==nm.tk)return;nm.busy=0;nm.key=key;nmSet(nmGain(r));if(say)toast('Volume normalized ('+nmTxt(nm.db)+')')})
+    .catch(()=>{if(my!==nm.tk)return;nm.busy=0;nmPaint();toast('Could not analyse this song')});
+}
+function nmToggle(){
+  nm.on=nm.on?0:1;try{localStorage.setItem('tracks-norm',String(nm.on))}catch(e){}
+  nm.tk++;nm.key=null;nm.busy=0;
+  if(nm.on){if(cur)nmEnsure(true);else{toast('Normalize is on for every song you play');nmPaint()}}
+  else{nmSet(0);toast('Normalize off')}
+}
+au.addEventListener('play',()=>nmEnsure());
 
 /* storage */
 function openDB(){return new Promise((res,rej)=>{try{const r=indexedDB.open('tracks-app',3);
@@ -1129,7 +1610,7 @@ const sub=s=>[artLine(s),(albumOf(s)||{}).name].filter(Boolean).join(' \u00b7 ')
 const byOrd=(a,b)=>(a.ord??1e15)-(b.ord??1e15);
 const isMainArt=(s,n)=>sameArt(artOf(s),n);
 const hasFeat=(s,n)=>featOf(s).some(f=>sameArt(f,n));
-const knownArts=()=>{const m=new Map(),add=x=>{x=(x||'').trim();if(x&&!m.has(x.toLowerCase()))m.set(x.toLowerCase(),x)};songs.forEach(s=>{add(s.artist);featOf(s).forEach(add)});albums.forEach(a=>add(a.artist));return [...m.values()].sort(cmp)};
+const knownArts=()=>{const m=new Map(),add=x=>{x=(x||'').trim();if(x&&!m.has(x.toLowerCase()))m.set(x.toLowerCase(),x)};songs.forEach(s=>{add(s.artist);featOf(s).forEach(add)});albums.forEach(a=>{add(a.artist);albFeat(a).forEach(add)});return [...m.values()].sort(cmp)};
 const albumSongs=id=>songs.filter(s=>s.album===id).sort((a,b)=>(a.pos??a.added)-(b.pos??b.added));
 const artOf=s=>(s.artist||(albumOf(s)||{}).artist||'').trim();
 const sameArt=(a,b)=>a.toLowerCase()===b.toLowerCase();
@@ -1224,7 +1705,7 @@ function renderAlbums(m){
   let h='';
   if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+`<button class="ab" data-act="reorder" aria-label="Reorder albums" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="folderedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
   h+=`<div class="grid ${inF?({s:'g3',l:'g1'}[fsz]||''):''}">`+(inF?'':folders.map(foldCard).join(''))+
-    list.map(a=>{const n=songs.filter(s=>s.album===a.id).length;return `<div class="acard"><button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${a.artist?esc(a.artist)+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
+    list.map(a=>{const n=songs.filter(s=>s.album===a.id).length;return `<div class="acard"><button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${(a.artist||albFeat(a).length)?esc((a.artist||'')+(albFeat(a).length?(a.artist?' ':'')+'feat. '+albFeat(a).join(', '):''))+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
   if(!list.length&&(inF||!folders.length))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create an album here.':'No albums yet.<br>Tap + to create an album or a folder.'}</div>`;
   m.innerHTML=h;
 }
@@ -1233,13 +1714,13 @@ function renderAlbum(m){
   const arts=[...new Set(list.map(s=>(s.artist||'').trim()).filter(Boolean))];
   const artTxt=arts.length>2?arts.slice(0,2).join(' & ')+' & more':arts.join(' & ');
   const tot=list.reduce((n,s)=>n+(s.dur||0),0);
-  const artHtml=a.artist?artLink(a.artist):arts.slice(0,2).map(x=>artLink(x)).join(' &amp; ')+(arts.length>2?' &amp; more':'');
+  const afl=albFeat(a),artHtml=(a.artist?artLink(a.artist):arts.slice(0,2).map(x=>artLink(x)).join(' &amp; ')+(arts.length>2?' &amp; more':''))+(afl.length?' feat. '+afl.map(x=>artLink(x)).join(', '):'');
   const meta=[a.artist||artTxt,list.length+(list.length===1?' track':' tracks'),tot?Math.max(1,Math.round(tot/60))+' min':''].filter(Boolean).join(' \u00b7 ');
   $('#fb').innerHTML=`<div class="abar"><button class="back" data-act="back" aria-label="Back">${ic('arrow',26)}</button><div class="abtns"><button class="ab" data-act="addsongs" data-id="${a.id}" aria-label="Add songs" title="Add songs">${ic('addpl',22)}</button><button class="ab" data-act="albqueue" data-id="${a.id}" aria-label="Add album to queue" title="Add album to queue">${ic('qm',21)}</button><button class="ab${selMode?' acc':''}" data-act="select" aria-label="Select songs" title="Select songs">${ic('sel',21)}</button><button class="ab" data-act="albmenu" data-id="${a.id}" aria-label="More options" title="More">${ic('dots',22)}</button></div></div>`;
   m.innerHTML=`<div class="acv">${cover(a)}</div>
   <div class="at"><h2>${esc(a.name)}</h2><button class="ib sh" data-act="playshuf" data-id="${a.id}" aria-label="Shuffle play">${ic('shuffle',22)}</button><button class="pbig" data-act="playall" data-id="${a.id}" aria-label="Play">${ic('play',26)}</button></div>
   <p class="am">${[artHtml,list.length+(list.length===1?' track':' tracks'),tot?Math.max(1,Math.round(tot/60))+' min':''].filter(Boolean).join(' \u00b7 ')}</p>`+
-    (list.length?list.map((s,i)=>rowHtml(s,i,false)).join(''):'<div class="empty">This album is empty.<br>Use the add songs button to pick from your library.</div>');
+    '<div class="rl">'+(list.length?list.map((s,i)=>rowHtml(s,i,false)).join(''):'<div class="empty">This album is empty.<br>Use the add songs button to pick from your library.</div>')+'</div>';
 }
 function render(){
   const m=$('#main'),keep=m.scrollTop;
@@ -1251,7 +1732,7 @@ function render(){
   const PT=view.tab==='playlists',depth=PT?(view.pl?2:view.pf?1:0):(view.album?2:(view.folder||view.artist)?1:0),key=view.tab+':'+(PT?(view.pl||view.pf||''):(view.album||view.folder||view.artist||'')),navd=key!==lastKey;
   let dir=depth>lastDepth?1:depth<lastDepth?-1:0;if(view.tab!==lastTab)dir=TABS.indexOf(view.tab)>TABS.indexOf(lastTab)?1:-1;else if(dir===0)dir=view.tab==='songs'?1:-1;
   if(navd&&selMode){selMode=false;selSet.clear()}$('#t1').classList.toggle('on',view.tab==='albums');$('#t2').classList.toggle('on',view.tab==='songs');$('#t3').classList.toggle('on',PT);
-  $('#tb').style.display=view.tab==='songs'?'flex':'none';
+  $('#tb').classList.toggle('show',view.tab==='songs');
   $('#app').classList.toggle('selmode',selMode&&canSel());{const rm=$('#selrm');if(rm)rm.style.display=(view.tab==='albums'&&view.album)||(view.tab==='playlists'&&view.pl)?'':'none'}$('#selbtn').classList.toggle('on',selMode);
   $('#app').classList.toggle('inalb',!!(view.album&&view.tab==='albums'));
   $('#plus').style.visibility=((view.tab==='albums'&&view.album)||(PT&&view.pl))?'hidden':'visible';
@@ -1299,14 +1780,14 @@ function renderFull(){
   const s=songs.find(x=>x.id===cur);if(!s)return closeFull();
   const p=au.duration?au.currentTime/au.duration:0;
   const oc=$('#fc .cov'),ghost=(oc&&fullFor!==null&&fullFor!==s.id)?oc.cloneNode(true):null;
-  $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><button class="ib fbgb" data-act="bgopts" aria-label="Background options" title="Background options">${ic('tune',22)}</button><button class="ib ftrb" data-act="tropts" aria-label="Cover transition" title="Cover transition">${ic('trans',22)}</button><button class="ib ffx" data-act="fxopts" aria-label="Beat effects" title="Beat effects">${ic('fxi',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div><div class="fcv">${cover(songCover(s),s.name)}</div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
+  $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><button class="ib fbgb" data-act="bgopts" aria-label="Background options" title="Background options">${ic('tune',22)}</button><button class="ib ftrb" data-act="tropts" aria-label="Cover transition" title="Cover transition">${ic('trans',22)}</button><button class="ib nmb fnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib ffx" data-act="fxopts" aria-label="Beat effects" title="Beat effects">${ic('fxi',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div><div class="fcv">${cover(songCover(s),s.name)}</div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
   <div class="fsk"><input type="range" class="rng seek" id="sk" min="0" max="1000" value="${Math.round(p*1000)}" style="--p:${p*100}%" aria-label="Seek"><div class="tm"><span id="ct">${fmt(au.currentTime)}</span><span id="dt2">${fmt(au.duration||s.dur)}</span></div></div>
   <div class="ctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',28)}</button><button class="ib big" id="fp" data-k="${au.paused?'play':'pause'}" data-act="toggle" aria-label="Play or pause">${ic(au.paused?'play':'pause',34)}</button><button class="ib" data-act="next" aria-label="Next">${ic('next',28)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div>
-  <div class="fbot"><div class="fg"><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button></div>`;
+  <div class="fbot"><div class="fg"><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div>`;
   const sk=$('#sk');
   sk.oninput=()=>{if(au.duration)au.currentTime=sk.value/1000*au.duration;sk.style.setProperty('--p',(sk.value/10)+'%');$('#ct').textContent=fmt(au.currentTime)};
   sk.onpointerdown=()=>{seeking=true};
-  $('#fvol').oninput=e=>setVol(e.target.value/100);
+  $('#fvol').oninput=e=>setVol(e.target.value/100);nmPaint();
   const changed=fullFor!==null&&fullFor!==s.id;fullFor=s.id;fullSig=fullKey(s);
   syncCtl();updateBg(s);
   if(changed)coverChange(ghost,trDir);
@@ -1342,14 +1823,18 @@ function restoreLast(){
   const t=+j.t||0;au.addEventListener('loadedmetadata',()=>{if(t>0&&t<au.duration)au.currentTime=t;restoring=false},{once:true});
 }
 /* playback */
+/* shuffle state: shPlayed = songs already heard this round, shHist = play order (for Previous) */
+let shPlayed=new Set(),shHist=[],shBack=false;
 function playSong(id,list,keep){
   const s=songs.find(x=>x.id===id);if(!s)return;
   if(!s.blob){toast('Downloading from Drive…');cloudFetch(s).then(()=>playSong(id,list,keep)).catch(e=>toast(e.message));return}
-  if(list){queue=list.slice();ctxCur=id}else if(!keep){if(!queue.includes(id))queue=[id];ctxCur=id}
+  if(list){queue=list.slice();ctxCur=id;shPlayed=new Set();shHist=[]}else if(!keep){if(!queue.includes(id))queue=[id];ctxCur=id}
+  if(!shBack){shHist.push(id);if(shHist.length>500)shHist.shift()}
+  shPlayed.add(id);
   cur=id;restoring=false;saveLast(true,0);
   if(curUrl)URL.revokeObjectURL(curUrl);
   curUrl=URL.createObjectURL(s.blob);au.src=curUrl;
-  au.play().catch(()=>{});
+  au.play().catch(()=>{});nmEnsure();
   setSession(s);render();
 }
 function step(d,auto){trDir=d>0?1:-1;try{return step0(d,auto)}finally{trDir=0}}
@@ -1358,7 +1843,19 @@ function step0(d,auto){
   let i=queue.indexOf(ctxCur);
   if(auto&&repeat===2)return playSong(cur,null,true);
   if(d>0&&upNext.length)return playSong(upNext.shift(),null,true);
-  if(shuffle&&queue.length>1){let n;do{n=Math.floor(Math.random()*queue.length)}while(n===i);return playSong(queue[n])}
+  if(shuffle&&queue.length>1){
+    if(d<0){
+      if(shHist.length>1){shHist.pop();const pid=shHist[shHist.length-1];shPlayed.delete(cur);shBack=true;try{return playSong(pid)}finally{shBack=false}}
+      au.currentTime=0;return;
+    }
+    shPlayed.add(cur);
+    let bag=queue.filter(x=>!shPlayed.has(x));
+    if(!bag.length){
+      if(auto&&repeat!==1){au.pause();return render()}
+      shPlayed=new Set([cur]);bag=queue.filter(x=>x!==cur);
+    }
+    return playSong(bag[Math.floor(Math.random()*bag.length)]);
+  }
   i+=d;
   if(i>=queue.length){if(repeat===1||!auto)i=0;else return render()}
   if(i<0)i=queue.length-1;
@@ -1548,23 +2045,43 @@ $('#ci').onchange=async e=>{
 };
 
 /* actions: songs */
-const newAlbum=(n,f,artist)=>{const a={id:uid(),name:n,artist:artist||'',cover:null,folderId:f||null};albums.push(a);put('albums',a);return a};
+const albFeat=a=>Array.isArray(a.feat)?a.feat.filter(Boolean):[];
+const newAlbum=(n,f,artist,feat)=>{const a={id:uid(),name:n,artist:artist||'',feat:(feat||[]).slice(),cover:null,folderId:f||null};albums.push(a);put('albums',a);return a};
 function albumForm(title,a,ok){return new Promise(res=>{
-  const arts=knownArts();
-  openOv(`<h3>${esc(title)}</h3><label for="an">Album name</label><input type="text" id="an" maxlength="80" placeholder="Album name" autocomplete="off"><label for="aa">Artist (optional)</label><input type="text" id="aa" maxlength="80" placeholder="Artist name" list="arl" autocomplete="off"><datalist id="arl">${arts.slice(0,80).map(x=>`<option value="${esc(x)}">`).join('')}</datalist><div class="bt"><button class="pill" id="ax">Cancel</button><button class="pill acc" id="as">${ok||'Save'}</button></div>`);
+  const arts=knownArts(),KA=knownArts(),d={feat:a?albFeat(a).slice():[]};
+  openOv(`<h3>${esc(title)}</h3><label for="an">Album name</label><input type="text" id="an" maxlength="80" placeholder="Album name" autocomplete="off"><label for="aa">Artist (optional)</label><input type="text" id="aa" maxlength="80" placeholder="Artist name" list="arl" autocomplete="off"><datalist id="arl">${arts.slice(0,80).map(x=>`<option value="${esc(x)}">`).join('')}</datalist>
+  <label for="afi">Featuring (optional)</label><div class="chips wrap" id="afts"></div><div class="ftrow"><input type="text" id="afi" maxlength="120" placeholder="Add a featuring artist" autocomplete="off"><button type="button" class="pill" id="afa">Add</button></div><div class="chips" id="afs"></div>
+  <div class="bt"><button class="pill" id="ax">Cancel</button><button class="pill acc" id="as">${ok||'Save'}</button></div>`);
   $('#an').value=a?a.name:'';$('#aa').value=a&&a.artist||'';
   setTimeout(()=>$('#an').focus(),60);
+  const fl=()=>{
+    $('#afts').style.display=d.feat.length?'':'none';
+    $('#afts').innerHTML=d.feat.map((x,i)=>`<button type="button" class="chip on fx" data-r="${i}" aria-label="Remove ${esc(x)}">${esc(x)}${ic('close',12)}</button>`).join('');
+    const q=$('#afi').value.trim().toLowerCase(),ma=$('#aa').value.trim();
+    const sg=KA.filter(x=>!sameArt(x,ma)&&!d.feat.some(f=>sameArt(f,x))&&(!q||x.toLowerCase().includes(q))).slice(0,14);
+    $('#afs').innerHTML=sg.map(x=>`<button type="button" class="chip" data-n="${esc(x)}">${esc(x)}</button>`).join('');
+    $('#afs').style.display=sg.length?'':'none';
+  };
+  const addF=v=>{v=(v||'').replace(/\s+/g,' ').trim();if(v&&!d.feat.some(f=>sameArt(f,v))&&!sameArt(v,$('#aa').value.trim()))d.feat.push(v);$('#afi').value='';fl()};
+  $('#afa').onclick=()=>addF($('#afi').value);
+  $('#afi').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addF($('#afi').value)}};
+  $('#afi').oninput=fl;$('#aa').oninput=fl;
+  $('#afts').onclick=e=>{const c=e.target.closest('[data-r]');if(!c)return;d.feat.splice(+c.dataset.r,1);fl()};
+  $('#afs').onclick=e=>{const c=e.target.closest('[data-n]');if(c)addF(c.dataset.n)};
+  fl();
   const done=v=>{closeOv();res(v)};
-  const go=()=>{const n=$('#an').value.trim();if(!n){$('#an').focus();return}done({name:n,artist:$('#aa').value.trim()})};
+  const go=()=>{const n=$('#an').value.trim();if(!n){$('#an').focus();return}
+    const pend=($('#afi').value||'').replace(/\s+/g,' ').trim();if(pend&&!d.feat.some(f=>sameArt(f,pend)))d.feat.push(pend);
+    const ar=$('#aa').value.trim();done({name:n,artist:ar,feat:d.feat.filter(x=>!sameArt(x,ar))})};
   $('#ax').onclick=()=>done(null);$('#as').onclick=go;
   $('#an').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('#aa').focus()}};
-  $('#aa').onkeydown=e=>{if(e.key==='Enter')go()};
+  $('#aa').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('#afi').focus()}};
   $('#ov').onclick=e=>{if(e.target.id==='ov')done(null)};
 })}
 async function moveSong(s){
   const opts=albums.map(a=>({label:a.name,value:a.id,sel:a.id===s.album,cov:a}));opts.push({label:'New album',value:'__new',plus:true});
   const t=await choose('Add to album',opts);
-  if(t==='__new'){const f=await albumForm('New album',null,'Create');if(f){const a=newAlbum(f.name,null,f.artist);s.album=a.id;s.pos=Date.now();await put('songs',s)}}
+  if(t==='__new'){const f=await albumForm('New album',null,'Create');if(f){const a=newAlbum(f.name,null,f.artist,f.feat);s.album=a.id;s.pos=Date.now();await put('songs',s)}}
   else if(t){s.album=t;s.pos=Date.now();await put('songs',s)}
 }
 function editSong(s){return new Promise(res=>{
@@ -1754,7 +2271,7 @@ function renderPlaylist(m){
   m.innerHTML=`<div class="acv">${plCover(p)}</div>
   <div class="at"><h2>${esc(p.name)}</h2><button class="ib sh" data-act="plshuf" data-id="${p.id}" aria-label="Shuffle play">${ic('shuffle',22)}</button><button class="pbig" data-act="plplay" data-id="${p.id}" aria-label="Play">${ic('play',26)}</button></div>
   <p class="am">${[list.length+(list.length===1?' track':' tracks'),tot?Math.max(1,Math.round(tot/60))+' min':''].filter(Boolean).join(' \u00b7 ')}</p>${p.desc?`<p class="am" style="margin-top:-8px">${esc(p.desc)}</p>`:''}`+
-    (list.length?list.map((s,i)=>rowHtml(s,i,true)).join(''):'<div class="empty">This playlist is empty.<br>Use the add songs button, or choose Add to playlist on any song.</div>');
+    '<div class="rl">'+(list.length?list.map((s,i)=>rowHtml(s,i,true)).join(''):'<div class="empty">This playlist is empty.<br>Use the add songs button, or choose Add to playlist on any song.</div>')+'</div>';
 }
 function plForm(p,fid){return new Promise(res=>{
   const isNew=!p,d={color:p?p.color||null:null,cover:p?p.cover||null:null};
@@ -1945,7 +2462,7 @@ m.addEventListener('touchstart',e=>{
 },{passive:true});
 m.addEventListener('touchend',e=>{
   if(!t0)return;const t=e.changedTouches[0],dx=t.clientX-t0.x,dy=t.clientY-t0.y,dt=Date.now()-t0.t;t0=null;
-  if(selMode||drag||ad||hold||ah||ds||view.album||(view.tab==='playlists'&&view.pl)||$('#ov').classList.contains('open')||$('#full').classList.contains('open')||qOpen)return;
+  if(selMode||drag||ad||hold||ah||ds||$('#ov').classList.contains('open')||$('#full').classList.contains('open')||qOpen)return;
   if(Math.abs(dx)<64||Math.abs(dx)<Math.abs(dy)*1.8||dt>700)return;
   const ti=TABS.indexOf(view.tab)+(dx<0?1:-1);if(ti<0||ti>=TABS.length)return;const to=TABS[ti];
   document.querySelector('[data-act=tab][data-t="'+to+'"]').click();
@@ -2046,7 +2563,7 @@ document.addEventListener('click',async e=>{
       return;
     }
     let r=view.folder?'album':await choose('Create',[{label:'New album',value:'album'},{label:'New folder',value:'folder'}]);
-    if(r==='album'){const f=await albumForm('New album',null,'Create');if(f){const a=newAlbum(f.name,view.folder,f.artist);view.album=a.id;render()}}
+    if(r==='album'){const f=await albumForm('New album',null,'Create');if(f){const a=newAlbum(f.name,view.folder,f.artist,f.feat);view.album=a.id;render()}}
     else if(r==='folder'){const f=await folderForm(null);if(f)render()}
     return;
   }
@@ -2077,7 +2594,7 @@ document.addEventListener('click',async e=>{
     if(r){const t=document.createElement('button');t.dataset.act=r;t.dataset.id=id;t.style.display='none';document.body.appendChild(t);t.click();t.remove()}
     return;
   }
-  if(act==='rename'){const a=albums.find(x=>x.id===id),f=await albumForm('Edit album',a,'Save');if(f){a.name=f.name;a.artist=f.artist;await put('albums',a);render()}return}
+  if(act==='rename'){const a=albums.find(x=>x.id===id),f=await albumForm('Edit album',a,'Save');if(f){a.name=f.name;a.artist=f.artist;a.feat=f.feat||[];await put('albums',a);render()}return}
   if(act==='cover'){coverFor=id;return $('#ci').click()}
   if(act==='albfolder'){
     const a=albums.find(x=>x.id===id),opts=[{label:'No folder',value:'__none',sel:!a.folderId}].concat(folders.map(f=>({label:f.name,value:f.id,sel:f.id===a.folderId})));opts.push({label:'New folder',value:'__new'});
@@ -2130,9 +2647,11 @@ document.addEventListener('click',async e=>{
   if(act==='selcolor'){if(!selSet.size)return toast('Select songs first');if(await bulkColor([...selSet])){selMode=false;selSet.clear()}return render()}
   if(act==='seltag'){if(!selSet.size)return toast('Select songs first');if(await bulkTag([...selSet])){selMode=false;selSet.clear()}return render()}
   if(act==='playshuf'){const l=shuf(albumSongs(id).map(s=>s.id));if(!l.length)return toast('Album is empty');return playSong(l[0],l)}
+  if(act==='norm')return nmToggle();
   if(act==='mute')return toggleMute();
   if(act==='cloud')return cloudSheet();
   if(act==='theme')return setTheme(b.dataset.t,true);
+  if(act==='settings')return openSettings();
   if(act==='qopen')return openQ();
   if(act==='qclose')return closeQ();
   if(act==='qshuf'){const ci=queue.indexOf(ctxCur);queue=queue.slice(0,ci+1).concat(shuf(queue.slice(ci+1)));shuf(upNext);renderQueue();return toast('Queue shuffled')}
@@ -2144,7 +2663,7 @@ document.addEventListener('click',async e=>{
   if(act==='vol'){if(b.closest('#mini')){const m=$('#mini');miniVol(!m.classList.contains('vm'));if(m.classList.contains('vm'))vpTimer();return}return toggleVp(b)}
   if(act==='next')return step(1);
   if(act==='prev'){if(au.currentTime>3)au.currentTime=0;else step(-1);return}
-  if(act==='shuffle'){shuffle=!shuffle;syncCtl();return pop(b.firstChild)}
+  if(act==='shuffle'){shuffle=!shuffle;shPlayed=new Set(cur?[cur]:[]);shHist=cur?[cur]:[];syncCtl();return pop(b.firstChild)}
   if(act==='repeat'){repeat=(repeat+1)%3;syncCtl();return pop(b.firstChild)}
   if(act==='closefull')return closeFull();
 });
@@ -2158,7 +2677,7 @@ function vpTimer(){clearTimeout(vpT);vpT=setTimeout(()=>{closeVp();miniVol(false
 function toggleVp(btn){
   const v=$('#vp');if(v.classList.contains('open'))return closeVp();
   const r=(btn&&!btn.closest('#mini')?btn:$('#mini')).getBoundingClientRect(),a=$('#app').getBoundingClientRect();
-  const inFull=btn&&!btn.closest('#mini');if(inFull){v.style.bottom='auto';v.style.top=(r.bottom-a.top+8)+'px'}else{v.style.top='auto';v.style.bottom=(a.bottom-r.top+8)+'px';v.style.left='16px';v.style.right='auto'}v.classList.add('open');
+  const inFull=btn&&!btn.closest('#mini');if(inFull){v.style.bottom='auto';v.style.top=(r.bottom-a.top+8)+'px'}else{v.style.top='auto';v.style.bottom=(a.bottom-r.top+8)+'px';v.style.left=(r.left-a.left+6)+'px';v.style.right='auto'}if(inFull&&document.documentElement.dataset.layout==='pc'){v.style.right='auto';v.style.left=Math.max(8,r.left-a.left-70)+'px'}v.classList.add('open');
   an(v,[{opacity:0,transform:'translateY(8px) scale(.96)'},{opacity:1,transform:'none'}],{duration:240,easing:EASE_OUT});vpTimer();
 }
 
@@ -2208,7 +2727,7 @@ async function bulkAlbum(ids){
   const opts=albums.map(a=>({label:a.name,value:a.id,cov:a}));opts.push({label:'New album',value:'__new',plus:true});opts.push({label:'No album',value:'__none'});
   const t=await choose('Add '+ids.length+(ids.length===1?' song':' songs')+' to album',opts);if(!t)return false;
   let aid=null;
-  if(t==='__new'){const f=await albumForm('New album',null,'Create');if(!f)return false;aid=newAlbum(f.name,null,f.artist).id}else if(t!=='__none')aid=t;
+  if(t==='__new'){const f=await albumForm('New album',null,'Create');if(!f)return false;aid=newAlbum(f.name,null,f.artist,f.feat).id}else if(t!=='__none')aid=t;
   let p=Date.now();for(const id of ids){const s=songs.find(x=>x.id===id);if(s){s.album=aid;s.pos=p++;await put('songs',s)}}
   toast('Updated '+ids.length+(ids.length===1?' song':' songs'));return true;
 }
@@ -2266,26 +2785,109 @@ function toggleMute(){const c=au.volume;if(c>0){lastVol=c;setVol(0)}else setVol(
 
 /* theme */
 function curTheme(){return document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
-function paintTheme(){const t=curTheme();document.querySelectorAll('#theme button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='dark'?'#0b0b0c':'#f6f6f4'}
-function setTheme(t,save){const r=document.documentElement;r.classList.add('tt');r.dataset.theme=t;if(save)try{localStorage.setItem('tracks-theme',t)}catch(e){}paintTheme();setTimeout(()=>r.classList.remove('tt'),260)}
+/* custom theme: any background colour, every other colour derived for readable contrast */
+const CT={hex:'#1e293b',mode:'dark',adj:false};
+try{const h=localStorage.getItem('tracks-custom-bg');if(/^#[0-9a-f]{6}$/i.test(h||''))CT.hex=h.toLowerCase()}catch(e){}
+const hex2rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const rgb2hex=c=>'#'+c.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const linC=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};
+const lumC=c=>.2126*linC(c[0])+.7152*linC(c[1])+.0722*linC(c[2]);
+const crC=(a,b)=>{const x=lumC(a),y=lumC(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const mixC=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+function customVars(hex){
+  let bg=hex2rgb(hex),adj=false;
+  const WT=[244,244,242],BT=[17,17,17],dark=crC(bg,WT)>=crC(bg,BT),ext=dark?[0,0,0]:[255,255,255],text=dark?WT:BT;
+  for(let i=0;i<40&&crC(bg,text)<6;i++){bg=mixC(bg,ext,.04);adj=true}
+  const toward=dark?[255,255,255]:[0,0,0];
+  let surf=mixC(bg,toward,.07),surf2=mixC(bg,toward,.14);
+  for(let t=.14;t>0&&crC(text,surf2)<5.5;t-=.02)surf2=mixC(bg,toward,t);
+  let mute=mixC(text,bg,.32);
+  for(let t=.32;t>0&&(crC(mute,bg)<4.8||crC(mute,surf2)<4.5);t-=.04)mute=mixC(text,bg,t);
+  let acct=[255,90,54];
+  for(let t=0;t<1&&crC(acct,bg)<4.5;t+=.05)acct=mixC([255,90,54],text,t);
+  const line=mixC(bg,text,.16);
+  return{bg,surf,surf2,text,mute,line,acct,mode:dark?'dark':'light',adj,hex:rgb2hex(bg)}
+}
+function clearCustom(){const S=document.documentElement.style;['--bg','--surf','--surf2','--text','--mute','--line','--bgc','--sfc','--acct'].forEach(k=>S.removeProperty(k));S.colorScheme=''}
+function applyCustom(hex){
+  const c=customVars(hex),S=document.documentElement.style,j=a=>a.map(Math.round).join(',');
+  S.setProperty('--bg',rgb2hex(c.bg));S.setProperty('--surf',rgb2hex(c.surf));S.setProperty('--surf2',rgb2hex(c.surf2));
+  S.setProperty('--text',rgb2hex(c.text));S.setProperty('--mute',rgb2hex(c.mute));S.setProperty('--line',rgb2hex(c.line));
+  S.setProperty('--bgc',j(c.bg));S.setProperty('--sfc',j(c.surf));S.setProperty('--acct',rgb2hex(c.acct));S.colorScheme=c.mode;
+  CT.mode=c.mode;CT.adj=c.adj;CT.shown=c.hex;
+}
+function paintTheme(){
+  const r=document.documentElement,t=curTheme();
+  if(t==='custom'&&!r.style.getPropertyValue('--bg'))applyCustom(CT.hex);
+  const mode=t==='custom'?CT.mode:(t==='dark'?'dark':'light');r.dataset.mode=mode;
+  document.querySelectorAll('.setg[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='custom'?(CT.shown||CT.hex):(t==='dark'?'#0b0b0c':'#f6f6f4');
+}
+function setTheme(t,save){const r=document.documentElement;r.classList.add('tt');r.dataset.theme=t;if(t==='custom')applyCustom(CT.hex);else clearCustom();if(save)try{localStorage.setItem('tracks-theme',t)}catch(e){}paintTheme();setTimeout(()=>r.classList.remove('tt'),260)}
+function setCustomBg(hex,save){CT.hex=hex.toLowerCase();if(save)try{localStorage.setItem('tracks-custom-bg',CT.hex)}catch(e){}setTheme('custom',save)}
+(function(){try{if(localStorage.getItem('tracks-theme')==='custom'){document.documentElement.dataset.theme='custom';applyCustom(CT.hex)}}catch(e){}paintTheme();try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',paintTheme)}catch(e){}})();
+
+/* layout mode: auto detects phone vs PC, can be forced from Settings */
+const LAY={m:'auto'};
+try{const v=localStorage.getItem('tracks-layout');if(v==='phone'||v==='pc'||v==='auto')LAY.m=v}catch(e){}
+function detectLayout(){return(matchMedia('(hover:hover) and (pointer:fine)').matches&&innerWidth>=900)?'pc':'phone'}
+function curLayout(){return LAY.m==='auto'?detectLayout():LAY.m}
+function applyLayout(){document.documentElement.dataset.layout=curLayout()}
+function setLayout(m,save){LAY.m=m;if(save)try{localStorage.setItem('tracks-layout',m)}catch(e){}applyLayout()}
+applyLayout();
+addEventListener('resize',()=>{if(LAY.m==='auto')applyLayout()});
+const BGP=['#000000','#1c1c1e','#0f172a','#102a1f','#2b1220','#241638','#f4ecd8','#e3f2e9','#dbeafe','#fde7ef'];
+function openSettings(){
+  const opt=(a,v,k,lb)=>`<button type="button" class="setg" ${a}="${v}">${ic(k,24)}<span>${lb}</span></button>`;
+  openOv(`<h3>Settings</h3><label>Theme</label><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
+  <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div>
+  <label>Layout</label><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p>`);
+  const sh=$('#ov .sheet');
+  const paint=()=>{
+    paintTheme();
+    sh.querySelectorAll('.setg[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===LAY.m));
+    const cu=curTheme()==='custom';$('#cset').hidden=!cu;
+    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));$('#cbk').value=CT.hex;$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted slightly to '+h+' so all text stays readable.':'Text colours are chosen automatically for best contrast.'}
+    const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'Auto picked '+(curLayout()==='pc'?'PC':'Phone')+' mode for this device.':(LAY.m==='pc'?'PC mode: full-screen layout for computers.':'Phone mode: compact touch layout.')
+  };
+  paint();
+  sh.onclick=e=>{
+    const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
+    const b=e.target.closest('.setg');if(!b)return;
+    if(b.dataset.t)setTheme(b.dataset.t,true);else if(b.dataset.m)setLayout(b.dataset.m,true);paint()};
+  $('#cbk').oninput=e=>{setCustomBg(e.target.value,true);paint()};
+}
+/* keyboard shortcuts (PC mode) */
+addEventListener('keydown',e=>{
+  if(document.documentElement.dataset.layout!=='pc'||e.ctrlKey||e.metaKey||e.altKey)return;
+  const t=e.target,tag=t&&t.tagName;if((tag==='INPUT'&&t.type!=='range')||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
+  if(e.key==='Escape'){if($('#ov').classList.contains('open'))closeOv();else if(typeof qOpen!=='undefined'&&qOpen)closeQ();else if($('#full').classList.contains('open'))closeFull();return}
+  if($('#ov').classList.contains('open'))return;
+  if((e.key==='q'||e.key==='Q')&&tag!=='INPUT'){e.preventDefault();$('#qp').classList.contains('open')?closeQ():openQ();return}
+  if(e.key==='/'&&tag!=='INPUT'){e.preventDefault();openSearch();return}
+  if(e.code==='Space'&&tag!=='BUTTON'){if(cur){e.preventDefault();au.paused?au.play():au.pause();renderMini()}}
+  else if(e.key==='ArrowRight'&&tag!=='INPUT'){e.preventDefault();if(e.shiftKey)step(1);else if(au.duration)au.currentTime=Math.min(au.duration,au.currentTime+5)}
+  else if(e.key==='ArrowLeft'&&tag!=='INPUT'){e.preventDefault();if(e.shiftKey)step(-1);else au.currentTime=Math.max(0,au.currentTime-5)}
+  else if((e.key==='m'||e.key==='M')&&cur)toggleMute();
+});
 
 /* static UI and init */
 function ui(){
-  try{const t=localStorage.getItem('tracks-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}
+  try{const t=localStorage.getItem('tracks-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;else if(t==='custom'){document.documentElement.dataset.theme='custom';applyCustom(CT.hex)}}catch(e){}
   if(LS('tracks-mh'))$('#app').classList.add('mh');
   $('#app').insertAdjacentHTML('beforeend',`<button id="mshow" data-act="minishow" aria-label="Show player">${ic('chev',18)}</button>`);
   $('#plus').innerHTML=ic('plus',26);$('#qk').innerHTML=ic('qm',22);
   $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('addpl',24)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button></div></div>`);
-  $('#theme').children[0].innerHTML=ic('sun',20);$('#theme').children[1].innerHTML=ic('moon',20);paintTheme();
+  $('#gear').innerHTML=ic('gear',24);paintTheme();applyLayout();
   new ResizeObserver(()=>document.documentElement.style.setProperty('--tp',$('#top').offsetHeight+'px')).observe($('#top'));
   $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off"><button class="sbx" data-act="clearsearch" aria-label="Close search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
   $('#sq').oninput=()=>{view.q=$('#sq').value;render()};
   $('#sq').onblur=()=>{if(!$('#sq').value)closeSearch()};
-  $('#mini').innerHTML=`<button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button></div>
+  $('#mini').innerHTML=`<button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div><button class="ib nmb" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button></div>
   <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
   $('#app').insertAdjacentHTML('beforeend',`<div id="vp"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="vol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%" aria-label="Volume"></div>`);
   $('#vol').oninput=e=>{setVol(e.target.value/100);vpTimer()};
-  $('#mvl').oninput=e=>{setVol(e.target.value/100);vpTimer()};
+  $('#mvl').oninput=e=>{setVol(e.target.value/100);vpTimer()};nmPaint();
   $('#msk').oninput=e=>{if(au.duration)au.currentTime=e.target.value/1000*au.duration;e.target.style.setProperty('--p',(e.target.value/10)+'%');$('#mct').textContent=fmt(au.currentTime)};
   $('#msk').onpointerdown=()=>{seeking=true};
   $('#app').insertAdjacentHTML('beforeend',`<div id="qp"><div class="qh"><button class="back" data-act="qclose" aria-label="Close queue">${ic('down',28)}</button><h3>Queue</h3><div class="qa"><button class="ib" data-act="qshuf" aria-label="Shuffle upcoming songs">${ic('shuffle',22)}</button><button class="pill" data-act="qclear">Clear</button></div></div><div id="ql"></div></div>`);
@@ -2296,7 +2898,7 @@ function ui(){
   try{db=await openDB();songs=(await tx('songs','readonly',s=>s.getAll()))||[];albums=(await tx('albums','readonly',s=>s.getAll()))||[];folders=(await tx('folders','readonly',s=>s.getAll()))||[];playlists=(await tx('playlists','readonly',s=>s.getAll()))||[];pfolders=(await tx('pfolders','readonly',s=>s.getAll()))||[]}catch(e){db=null}
   songs.sort((a,b)=>a.added-b.added);
   ui();applyBg();restoreLast();render();
-  $('#plus').insertAdjacentHTML('afterend',`<button class="ib" id="cb" data-act="cloud" aria-label="Google Drive sync" style="margin-left:10px;margin-right:auto">${ic('cloud',24)}</button>`);
+  $('#plus').insertAdjacentHTML('afterend',`<button class="ib" id="cb" data-act="cloud" aria-label="Google Drive sync" title="Google Drive sync" style="margin-left:10px;margin-right:auto">${ic('cloud',24)}</button>`);$('#qk').title='Queue (Q)';$('#gear').title='Settings';$('#plus').title='Create / import';
   parseTok();if(LS('tracks-cloud')){cloudSt('Connected');if(navigator.onLine)cloudSync(false)}
   if(!db)toast('Storage unavailable, songs last until you close this page');
   for(const o of [...songs,...albums]){
