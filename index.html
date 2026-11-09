@@ -762,6 +762,17 @@ html[data-layout=pc] .fbot .fvol{display:block;position:relative}
 html[data-layout=pc] .fbot .fvol .mt{position:absolute;right:100%;top:50%;transform:translateY(-50%);margin:0 2px 0 0}
 html[data-layout=pc] .fbot .fvol .mt:active{transform:translateY(-50%) scale(.88)}
 html[data-layout=pc] .fbot .fvol .rng{width:100%}
+.zsp{max-height:236px;overflow-y:auto;border-radius:14px;background:var(--surf2);padding:4px;margin:4px 0 6px;overscroll-behavior:contain}
+.zr{display:flex;align-items:center;gap:12px;width:100%;padding:8px;border-radius:10px;text-align:left;box-shadow:inset 0 0 0 2px transparent}
+.zr:active{transform:scale(.98)}
+.zr.on{background:rgba(var(--ac),.16);box-shadow:inset 0 0 0 2px rgb(var(--ac))}
+.zt{width:44px;height:44px;border-radius:7px;background:var(--line);overflow:hidden;flex:none}
+.zt img{width:100%;height:100%;object-fit:cover;display:block}
+.zn{min-width:0;flex:1}
+.zn b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zn small{color:var(--mute);font-size:12.5px}
+.zmsg{color:var(--mute);font-size:14px;padding:18px;text-align:center}
+.zdis{color:var(--mute);font-size:13px;padding:6px 2px;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -773,6 +784,7 @@ html[data-layout=pc] .fbot .fvol .rng{width:100%}
   <div id="full"><div id="fbg"><i class="bgr"></i><i class="bl b1"></i><i class="bl b2"></i><i class="bl b3"></i><div class="bimg"></div><div class="bimg bcus"></div><div class="bv"></div></div><div id="fc"></div></div>
 </div>
 <div id="ov"></div>
+<input type="file" id="zi" accept=".zip,application/zip,application/x-zip-compressed" hidden>
 <input type="file" id="fi" multiple accept="audio/*,.mp3,.wav,.flac,.m4a,.aac,.ogg,.opus,.wma,.aiff" hidden>
 <input type="file" id="ci" accept="image/*" hidden>
 <input type="file" id="si" accept="image/*" hidden>
@@ -828,7 +840,7 @@ function enterAnim(m,dir){
 }
 
 /* state */
-let db=null,songs=[],albums=[],folders=[],playlists=[],pfolders=[],queue=[],upNext=[],ctxCur=null,qOpen=false,cur=null,shuffle=false,repeat=0,curUrl=null,coverFor=null,seeking=false;
+let db=null,songs=[],albums=[],folders=[],playlists=[],pfolders=[],queue=[],upNext=[],ctxCur=null,qOpen=false,cur=null,shuffle=false,shOrig=[],repeat=0,curUrl=null,coverFor=null,seeking=false;
 const TABS=['albums','songs','playlists'];
 let view={tab:'albums',folder:null,album:null,artist:null,q:'',pf:null,pl:null};
 let lastKey=null,lastDepth=0,lastTab=null,miniSig=null,miniFor=null,fullSig=null,fullFor=null;
@@ -1813,22 +1825,36 @@ function closeFull(){
 
 /* remember the last song, position and queue across launches */
 let lastSave=0,restoring=false;
-function saveLast(force,t0){if(!cur||restoring)return;const n=Date.now();if(!force&&n-lastSave<1500)return;lastSave=n;LS('tracks-last',JSON.stringify({id:cur,t:t0!=null?t0:(au.currentTime||0),q:queue,u:upNext,sh:shuffle,rp:repeat}))}
+function saveLast(force,t0){if(!cur||restoring)return;const n=Date.now();if(!force&&n-lastSave<1500)return;lastSave=n;LS('tracks-last',JSON.stringify({id:cur,t:t0!=null?t0:(au.currentTime||0),q:queue,u:upNext,sh:shuffle,o:shOrig,rp:repeat}))}
 function restoreLast(){
   let j=null;try{j=JSON.parse(LS('tracks-last')||'null')}catch(e){}
   const s=j&&songs.find(x=>x.id===j.id);if(!s||!s.blob)return;
   const ok=a=>Array.isArray(a)?a.filter(i=>songs.some(x=>x.id===i)):[];
-  queue=ok(j.q);if(!queue.includes(s.id))queue=[s.id];upNext=ok(j.u);ctxCur=s.id;shuffle=!!j.sh;repeat=+j.rp||0;
+  queue=ok(j.q);if(!queue.includes(s.id))queue=[s.id];upNext=ok(j.u);ctxCur=s.id;shuffle=!!j.sh;shOrig=ok(j.o);repeat=+j.rp||0;
   cur=s.id;restoring=true;curUrl=URL.createObjectURL(s.blob);au.src=curUrl;
   const t=+j.t||0;au.addEventListener('loadedmetadata',()=>{if(t>0&&t<au.duration)au.currentTime=t;restoring=false},{once:true});
 }
 /* playback */
 /* shuffle state: shPlayed = songs already heard this round, shHist = play order (for Previous) */
 let shPlayed=new Set(),shHist=[],shBack=false;
+/* Spotify-style shuffle: one shuffled order is built up front (the queue itself), so Next, Previous and the queue list all agree.
+   Songs by the same artist are spread out instead of landing back to back. Turning shuffle off restores the original order (shOrig). */
+function smartShuffle(ids){
+  const by=new Map(songs.map(x=>[x.id,x])),g=new Map();
+  for(const id of ids){const x=by.get(id),k=x&&nkey(artOf(x))||'#'+id;if(!g.has(k))g.set(k,[]);g.get(k).push(id)}
+  const out=[];
+  for(const a of g.values()){shuf(a);const n=a.length,off=Math.random()/n;a.forEach((id,i)=>out.push({id,p:i/n+off+(Math.random()-.5)*.6/n}))}
+  return out.sort((a,b)=>a.p-b.p).map(o=>o.id);
+}
+function applyShuffle(){
+  const piv=queue.includes(ctxCur)?ctxCur:null;
+  if(shuffle){shOrig=queue.slice();queue=piv?[piv].concat(smartShuffle(queue.filter(x=>x!==piv))):smartShuffle(queue)}
+  else{if(shOrig.length){const have=new Set(queue);queue=shOrig.filter(x=>have.has(x));if(piv&&!queue.includes(piv))queue.unshift(piv)}shOrig=[]}
+}
 function playSong(id,list,keep){
   const s=songs.find(x=>x.id===id);if(!s)return;
   if(!s.blob){toast('Downloading from Drive…');cloudFetch(s).then(()=>playSong(id,list,keep)).catch(e=>toast(e.message));return}
-  if(list){queue=list.slice();ctxCur=id;shPlayed=new Set();shHist=[]}else if(!keep){if(!queue.includes(id))queue=[id];ctxCur=id}
+  if(list){shOrig=shuffle?list.slice():[];queue=shuffle?[id].concat(smartShuffle(list.filter(x=>x!==id))):list.slice();ctxCur=id;shPlayed=new Set();shHist=[]}else if(!keep){if(!queue.includes(id))queue=[id];ctxCur=id}
   if(!shBack){shHist.push(id);if(shHist.length>500)shHist.shift()}
   shPlayed.add(id);
   cur=id;restoring=false;saveLast(true,0);
@@ -1844,17 +1870,12 @@ function step0(d,auto){
   if(auto&&repeat===2)return playSong(cur,null,true);
   if(d>0&&upNext.length)return playSong(upNext.shift(),null,true);
   if(shuffle&&queue.length>1){
-    if(d<0){
-      if(shHist.length>1){shHist.pop();const pid=shHist[shHist.length-1];shPlayed.delete(cur);shBack=true;try{return playSong(pid)}finally{shBack=false}}
-      au.currentTime=0;return;
-    }
-    shPlayed.add(cur);
-    let bag=queue.filter(x=>!shPlayed.has(x));
-    if(!bag.length){
-      if(auto&&repeat!==1){au.pause();return render()}
-      shPlayed=new Set([cur]);bag=queue.filter(x=>x!==cur);
-    }
-    return playSong(bag[Math.floor(Math.random()*bag.length)]);
+    if(d<0){if(i>0)return playSong(queue[i-1]);au.currentTime=0;return}
+    if(i>=0&&i+1<queue.length)return playSong(queue[i+1]);
+    if(auto&&repeat!==1){au.pause();return render()}
+    /* end of the round: reshuffle everything, and never open with the song that just played */
+    const nq=smartShuffle(queue.slice());if(nq.length>1&&nq[0]===queue[queue.length-1])nq.push(nq.shift());
+    shOrig=queue.slice();queue=nq;return playSong(queue[0]);
   }
   i+=d;
   if(i>=queue.length){if(repeat===1||!auto)i=0;else return render()}
@@ -2029,6 +2050,266 @@ async function addFiles(files){
   const bits=[];if(n)bits.push(`Added ${n} ${n===1?'song':'songs'}`);if(rep)bits.push(`replaced ${rep}`);if(skip)bits.push(`skipped ${skip}`);
   toast(bits.length?bits.join(' \u00b7 ').replace(/^./,c=>c.toUpperCase()):'No audio files found');render();
 }
+/* ===== Spotify zip import: reads the zip in place (no library), tags songs from ID3, builds an ordered playlist ===== */
+const zU16=(d,o)=>d.getUint16(o,true),zU32=(d,o)=>d.getUint32(o,true),zU64=(d,o)=>Number(d.getBigUint64(o,true));
+async function zipEntries(file){
+  const tail=Math.min(file.size,65557),tb=new DataView(await file.slice(file.size-tail).arrayBuffer());
+  let e=-1;for(let i=tail-22;i>=0;i--)if(zU32(tb,i)===0x06054b50){e=i;break}
+  if(e<0)throw new Error('not a zip');
+  let n=zU16(tb,e+10),sz=zU32(tb,e+12),off=zU32(tb,e+16);
+  if((n===0xffff||off===0xffffffff)&&e>=20&&zU32(tb,e-20)===0x07064b50){
+    const r=zU64(tb,e-12),z=new DataView(await file.slice(r,r+56).arrayBuffer());n=zU64(z,32);sz=zU64(z,40);off=zU64(z,48);
+  }
+  const cd=new DataView(await file.slice(off,off+sz).arrayBuffer()),u8=new Uint8Array(cd.buffer),out=[];
+  for(let p=0,i=0;i<n&&p+46<=cd.byteLength;i++){
+    const meth=zU16(cd,p+10),nl=zU16(cd,p+28),el=zU16(cd,p+30),cl=zU16(cd,p+32);
+    let csz=zU32(cd,p+20),usz=zU32(cd,p+24),lo=zU32(cd,p+42);
+    const name=new TextDecoder().decode(u8.subarray(p+46,p+46+nl));
+    if(csz===0xffffffff||usz===0xffffffff||lo===0xffffffff){
+      for(let q=p+46+nl,end=q+el;q+4<=end;q+=4+zU16(cd,q+2))if(zU16(cd,q)===1){
+        let r=q+4;if(usz===0xffffffff){usz=zU64(cd,r);r+=8}if(csz===0xffffffff){csz=zU64(cd,r);r+=8}if(lo===0xffffffff)lo=zU64(cd,r);
+      }
+    }
+    out.push({name,meth,csz,usz,lo,dir:name.endsWith('/')});
+    p+=46+nl+el+cl;
+  }
+  return out;
+}
+async function zipRead(file,en,type){
+  const h=new DataView(await file.slice(en.lo,en.lo+30).arrayBuffer()),s=en.lo+30+zU16(h,26)+zU16(h,28),raw=file.slice(s,s+en.csz,type);
+  if(en.meth===0)return raw;
+  if(en.meth!==8)throw new Error('unsupported compression');
+  return new Blob([await new Response(raw.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob()],{type});
+}
+/* ID3v2.2 / 2.3 / 2.4: title, artist, album artist, cover picture */
+function id3(buf){
+  let d=new Uint8Array(buf);const r={};
+  if(d.length<10||d[0]!==73||d[1]!==68||d[2]!==51)return r;
+  const ver=d[3],ss=o=>(d[o]<<21)|(d[o+1]<<14)|(d[o+2]<<7)|d[o+3];
+  if(d[5]&0x80&&ver<4){const o=[];for(let i=0;i<d.length;i++){o.push(d[i]);if(d[i]===255&&d[i+1]===0)i++}d=Uint8Array.from(o)}
+  const end=Math.min(10+ss(6),d.length),v22=ver===2,hl=v22?6:10;let p=10;
+  if(d[5]&0x40)p+=ver===4?ss(p):((d[p]<<24)|(d[p+1]<<16)|(d[p+2]<<8)|d[p+3])+4;
+  const txt=b=>{const e=b[0],x=b.subarray(1);try{return new TextDecoder(e===0?'iso-8859-1':e===3?'utf-8':e===1&&x[0]===255&&x[1]===254?'utf-16le':e===1&&x[0]===254&&x[1]===255?'utf-16be':e===1?'utf-16le':'utf-16be').decode(x).replace(/\0+$/,'')}catch(_){return ''}};
+  while(p+hl<=end){
+    const id=String.fromCharCode(...d.subarray(p,p+(v22?3:4)));
+    if(!/^[A-Z0-9]{3,4}$/.test(id))break;
+    const fs=v22?((d[p+3]<<16)|(d[p+4]<<8)|d[p+5]):ver===4?ss(p+4):(d[p+4]*16777216+((d[p+5]<<16)|(d[p+6]<<8)|d[p+7]));
+    const b=d.subarray(p+hl,p+hl+fs);p+=hl+fs;
+    if(!b.length)continue;
+    if(id==='TIT2'||id==='TT2')r.title=txt(b);
+    else if(id==='TPE1'||id==='TP1')r.artist=txt(b);
+    else if(id==='TPE2'||id==='TP2')r.aartist=txt(b);
+    else if(id==='APIC'||id==='PIC'){
+      let q=1;
+      if(v22)q=4;else{while(q<b.length&&b[q])q++;q++}
+      const front=b[q]===3;q++;
+      if(b[0]===1||b[0]===2){while(q+1<b.length&&(b[q]||b[q+1]))q+=2;q+=2}else{while(q<b.length&&b[q])q++;q++}
+      if((!r.img||front)&&q<b.length)r.img=new Blob([b.slice(q)],{type:b[q]===0x89?'image/png':'image/jpeg'});
+    }
+  }
+  return r;
+}
+async function readTags(blob){
+  const h=new Uint8Array(await blob.slice(0,10).arrayBuffer());
+  if(h[0]!==73||h[1]!==68||h[2]!==51)return {};
+  return id3(await blob.slice(0,((h[6]<<21)|(h[7]<<14)|(h[8]<<7)|h[9])+10).arrayBuffer());
+}
+/* tags first, file name ("Artist, Artist - Title") as fallback, "(feat. X)" moved out of the title into featuring */
+const FEAT_RE=/\s*[\(\[]\s*(?:feat\.?|ft\.?|featuring|with)\s+([^\)\]]+?)\s*[\)\]]|\s+(?:-\s*)?(?:feat\.?|ft\.?|featuring)\s+(.+)$/i;
+function songMeta(base,t){
+  const clean=a=>a.map(x=>x.trim()).filter(Boolean);
+  let title=(t.title||'').trim(),arts=t.artists?clean(t.artists):clean((t.artist||'').split(/\0|;|(?<!AC)\/(?!DC)/));
+  if(!title||!arts.length){
+    const i=base.indexOf(' - ');
+    if(i>0){if(!arts.length)arts=clean(base.slice(0,i).split(','));if(!title)title=base.slice(i+3).trim()}
+    else if(!title)title=base.trim();
+  }
+  if(!arts.length&&t.aartist)arts=[t.aartist.trim()];
+  const feat=arts.slice(1);
+  title=title.replace(FEAT_RE,(m,a,b)=>{feat.push(...clean((a||b).split(/,|&|\band\b/i)));return ''}).trim()||base;
+  const artist=arts[0]||'';
+  return {title,artist,feat:feat.filter((x,i)=>!sameArt(x,artist)&&feat.findIndex(y=>sameArt(x,y))===i)};
+}
+const Z_MIME={mp3:'audio/mpeg',m4a:'audio/mp4',aac:'audio/aac',flac:'audio/flac',ogg:'audio/ogg',opus:'audio/ogg',wav:'audio/wav'};
+const zBase=n=>n.split('/').pop();
+/* ---- Spotify connection (PKCE, no secret; token stays in this browser) ---- */
+const SP_ID='';/* optional: paste your Client ID here, otherwise the app asks once */
+const SP_SCOPE='playlist-read-private playlist-read-collaborative';
+const SP_REDIRECTS=['https://super-peony-8c59ba.netlify.app/','https://beefyjr.github.io/traXz/'];/* add both as Redirect URIs in your Spotify dashboard, exactly like this */
+const spRedirect=()=>SP_REDIRECTS.find(u=>location.href.startsWith(u))||SP_REDIRECTS[0];
+const spLS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}return null};
+const spCid=()=>SP_ID||spLS('sp-id');
+const spConnected=()=>!!(spLS('sp-ref')||(Number(spLS('sp-exp'))>Date.now()&&spLS('sp-tok')));
+const spDisconnect=()=>['sp-tok','sp-exp','sp-ref'].forEach(k=>spLS(k,null));
+const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+function spAskId(){return new Promise(res=>{
+  openOv(`<h3>Connect Spotify</h3><p class="dupn">In your Spotify developer dashboard, add this Redirect URI to your app, then paste its Client ID.</p>
+  <label for="sru">Redirect URI</label><input type="text" id="sru" readonly>
+  <label for="sid">Client ID</label><input type="text" id="sid" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Client ID">
+  <div class="bt"><button class="pill" id="sx">Cancel</button><button class="pill acc" id="sg">Connect</button></div>`);
+  $('#sru').value=spRedirect();$('#sru').onfocus=e=>e.target.select();
+  const close=v=>{closeOv();res(v)};
+  $('#sx').onclick=()=>close(null);
+  $('#sg').onclick=()=>{const v=$('#sid').value.trim();if(!v){$('#sid').focus();return}close(v)};
+  $('#ov').onclick=ev=>{if(ev.target.id==='ov')close(null)};
+})}
+async function spConnect(){
+  let id=spCid();if(!id){id=await spAskId();if(!id)return;spLS('sp-id',id)}
+  const ver=b64u(crypto.getRandomValues(new Uint8Array(48))),st=b64u(crypto.getRandomValues(new Uint8Array(12)));
+  const chal=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ver)));
+  spLS('sp-ver',ver);spLS('sp-state',st);
+  location.href='https://accounts.spotify.com/authorize?'+new URLSearchParams({client_id:id,response_type:'code',redirect_uri:spRedirect(),scope:SP_SCOPE,code_challenge_method:'S256',code_challenge:chal,state:st});
+}
+async function spToken(body){
+  try{
+    const r=await fetch('https://accounts.spotify.com/api/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:spCid(),...body})});
+    const j=await r.json();if(!r.ok||!j.access_token)return false;
+    spLS('sp-tok',j.access_token);spLS('sp-exp',String(Date.now()+j.expires_in*1000-60000));if(j.refresh_token)spLS('sp-ref',j.refresh_token);
+    return true;
+  }catch(e){return false}
+}
+async function spCallback(){
+  const q=new URLSearchParams(location.search);if(!q.has('code')&&!q.has('error'))return;
+  const code=q.get('code'),ok=q.get('state')&&q.get('state')===spLS('sp-state');
+  history.replaceState(null,'',location.pathname);
+  if(!code||!ok)return toast('Spotify connection cancelled');
+  toast(await spToken({grant_type:'authorization_code',code,redirect_uri:spRedirect(),code_verifier:spLS('sp-ver')})?'Spotify connected. Choose your zip again.':'Could not connect Spotify');
+}
+async function spGet(url,n=0){
+  let t=Number(spLS('sp-exp'))>Date.now()&&spLS('sp-tok');
+  if(!t){const ref=spLS('sp-ref');if(ref&&await spToken({grant_type:'refresh_token',refresh_token:ref}))t=spLS('sp-tok')}
+  if(!t)throw new Error('auth');
+  const r=await fetch(url.startsWith('http')?url:'https://api.spotify.com/v1'+url,{headers:{Authorization:'Bearer '+t}});
+  if(r.status===429&&n<2){await new Promise(s=>setTimeout(s,(+r.headers.get('Retry-After')||1)*1000));return spGet(url,n+1)}
+  if(!r.ok)throw new Error(r.status);
+  return r.json();
+}
+async function spTracks(id){
+  const out=[];let u=`/playlists/${id}/items?limit=100`;
+  while(u){
+    const j=await spGet(u);
+    for(const e of j.items||[]){
+      const t=e&&(e.item||e.track);if(!t||!t.name||t.type==='episode'||!Array.isArray(t.artists))continue;
+      const im=(t.album&&t.album.images)||[];out.push({name:t.name,artists:t.artists.map(a=>a.name),img:(im[1]||im[0]||{}).url});
+    }
+    u=j.next;
+  }
+  return out;
+}
+const spImgC=new Map();
+async function spImg(url){
+  if(spImgC.has(url))return spImgC.get(url);
+  let c=null;try{const r=await fetch(url);if(r.ok)c=await makeCover(await r.blob())}catch(e){}
+  spImgC.set(url,c);return c;
+}
+/* match a file to the Spotify track it came from: title (exact, or found in the file name) plus artist */
+function spMatch(T,used,base,m){
+  const bk=nkey(base),mt=nkey(m.title),ma=nkey(m.artist);let best=-1,bs=0;
+  T.forEach((t,i)=>{
+    if(used.has(i))return;
+    const tk=nkey(t.name);if(!tk)return;
+    let s=0;
+    if(tk===mt||(tk.length>3&&bk.includes(tk)))s=4;
+    else if(tk.length>3&&mt.length>3&&(tk.includes(mt)||mt.includes(tk)))s=2;
+    if(!s)return;
+    if(t.artists.some(a=>{a=nkey(a);return a&&(a===ma||bk.includes(a))}))s+=3;
+    if(s>bs){bs=s;best=i}
+  });
+  return bs>=4?best:-1;
+}
+/* ---- import dialog ---- */
+function zipDialog(dflt,n,numbered,sp){return new Promise(res=>{
+  openOv(`<h3>Import Spotify zip</h3><p class="dupn">${n} ${n===1?'song':'songs'} found${numbered?'. Numbered file names set the order':''}.</p>
+  <label for="zn">Playlist name</label><input type="text" id="zn" maxlength="80" autocomplete="off">
+  ${sp?`<div id="zspw"><label>Match with your Spotify playlist</label><div class="zsp" id="zsp"><div class="zmsg">Loading your playlists\u2026</div></div><button type="button" class="zdis" id="zdc">Disconnect Spotify</button></div>`:''}
+  <label class="pk dall" id="zrl"><input type="checkbox" id="zr"><span class="t"><b>Reverse order</b><small>Use this if the playlist comes out upside down</small></span></label>
+  <div class="bt"><button class="pill" id="zx">Cancel</button><button class="pill acc" id="zg">Import</button></div>`);
+  let sel=null,touched=false;const nm=$('#zn');nm.value=dflt;nm.oninput=()=>{touched=true};
+  const close=v=>{closeOv();res(v)};
+  $('#zx').onclick=()=>close(null);
+  $('#zg').onclick=()=>close({name:nm.value.trim()||dflt,rev:$('#zr').checked&&!(sel&&sel.rd),sp:sel});
+  $('#ov').onclick=ev=>{if(ev.target.id==='ov')close(null)};
+  if(!sp)return;
+  $('#zdc').onclick=()=>{spDisconnect();sel=null;$('#zspw').remove();$('#zrl').style.display='';toast('Spotify disconnected')};
+  (async()=>{
+    let L=[];
+    try{
+      let me=null;try{me=await spGet('/me')}catch(e){}
+      for(let u='/me/playlists?limit=50',i=0;u&&i<4;i++){const j=await spGet(u);L=L.concat((j.items||[]).filter(Boolean));u=j.next}
+      L.forEach(p=>p.rd=!me||!!p.collaborative||!!(p.owner&&p.owner.id===me.id));
+    }catch(e){const b=$('#zsp');if(b)b.innerHTML='<div class="zmsg">Could not load your Spotify playlists.</div>';return}
+    const box=$('#zsp');if(!box)return;
+    if(!L.length){box.innerHTML='<div class="zmsg">No playlists found.</div>';return}
+    const paint=()=>{
+      box.innerHTML=L.map((p,i)=>{const im=p.images&&p.images[p.images.length-1];return `<button type="button" class="zr${p===sel?' on':''}" data-i="${i}"><span class="zt">${im?`<img src="${esc(im.url)}" alt="">`:''}</span><span class="zn"><b>${esc(p.name)}</b><small>${p.rd?'Order, covers and artists':'Cover only'}</small></span></button>`}).join('');
+      const r=$('#zrl');if(r)r.style.display=sel&&sel.rd?'none':'';
+    };
+    const k=nkey(dflt);
+    sel=L.find(p=>nkey(p.name)===k)||L.find(p=>k.length>3&&nkey(p.name).length>3&&(nkey(p.name).includes(k)||k.includes(nkey(p.name))))||null;
+    if(sel&&!touched)nm.value=sel.name;
+    paint();
+    box.onclick=ev=>{const b=ev.target.closest('[data-i]');if(!b)return;const p=L[+b.dataset.i];sel=sel===p?null:p;if(!touched)nm.value=sel?sel.name:dflt;paint()};
+  })();
+})}
+async function importZip(file){
+  let ents;try{ents=await zipEntries(file)}catch(e){return toast('Could not read that zip')}
+  const ok=x=>!x.dir&&!/(^|\/)(__MACOSX\/|\._)/.test(x.name);
+  let aud=ents.filter(x=>ok(x)&&/\.(mp3|m4a|aac|flac|ogg|opus|wav)$/i.test(x.name));
+  if(!aud.length)return toast('No audio files in that zip');
+  /* fallback order (no Spotify): a leading number in the file name wins ("01 - ...", "002. ..."), otherwise the order inside the zip */
+  const numRe=/^\s*(\d{1,4})\s*[-._)]\s*\S/,nums=aud.map(x=>{const m=numRe.exec(zBase(x.name));return m?+m[1]:null});
+  const numbered=nums.filter(x=>x!=null).length>=aud.length*.8;
+  if(numbered)aud=aud.map((x,i)=>({x,k:nums[i]??1e9,i})).sort((a,b)=>a.k-b.k||a.i-b.i).map(o=>o.x);
+  const dflt=zBase(file.name).replace(/\.zip$/i,'').trim()||'Spotify playlist';
+  const o=await zipDialog(dflt,aud.length,numbered,spConnected());if(!o)return;
+  if(o.rev)aud.reverse();
+  $('#ov').onclick=null;openOv('<h3>Importing playlist</h3><p class="dupn" id="zp">Starting\u2026</p>');
+  /* playlist cover + track list: Spotify first, then a cover/folder image inside the zip */
+  const name=o.name;let cov=null,T=null;
+  if(o.sp){
+    $('#zp').textContent='Reading your Spotify playlist\u2026';
+    if(o.sp.images&&o.sp.images[0])cov=await spImg(o.sp.images[0].url);
+    if(o.sp.rd){try{T=await spTracks(o.sp.id)}catch(e){toast('Spotify did not share this playlist\u2019s tracks')}}
+  }
+  if(!cov){
+    const im=ents.filter(x=>ok(x)&&/\.(jpe?g|png|webp)$/i.test(x.name)),pick=im.find(x=>/cover|folder|playlist|front|artwork/i.test(zBase(x.name)))||(im.length===1?im[0]:null);
+    if(pick){try{cov=await makeCover(await zipRead(file,pick,'image/jpeg'))}catch(e){}}
+  }
+  const items=[],used=new Set();let added=0,reused=0,failed=0,matched=0;
+  for(let i=0;i<aud.length;i++){
+    const en=aud[i],bn=zBase(en.name),ext=bn.split('.').pop().toLowerCase();
+    const zp=$('#zp');if(zp)zp.textContent=`${i+1} / ${aud.length} \u00b7 ${bn}`;
+    try{
+      const blob=await zipRead(file,en,Z_MIME[ext]||'audio/mpeg');
+      const t=ext==='mp3'?await readTags(blob).catch(()=>({})):{};
+      const b0=bn.replace(/\.[^.]+$/,''),b1=numbered?b0.replace(/^\s*\d{1,4}\s*[-._)]\s*/,''):b0,m0=songMeta(b1,t);
+      let ti=-1;if(T){ti=spMatch(T,used,b1,m0);if(ti>=0){used.add(ti);matched++}}
+      const tr=ti>=0?T[ti]:null,m=tr?songMeta(b1,{title:tr.name,artists:tr.artists}):m0;
+      const s={id:uid(),name:m.title,artist:m.artist,feat:m.feat,blob,album:null,dur:await getDur(blob),added:Date.now()+i};
+      const k=ti>=0?ti:1e9+i;
+      const ex=songs.find(e=>e.blob&&e.blob.size===blob.size&&Math.abs((e.dur||0)-s.dur)<1)||songs.find(e=>nkey(e.name)===nkey(s.name)&&nkey(e.artist)===nkey(s.artist));
+      if(ex){if(!items.some(x=>x.id===ex.id))items.push({id:ex.id,k});reused++;continue}
+      let c=null;
+      if(t.img)c=await makeCover(t.img);
+      if(!c&&tr&&tr.img)c=await spImg(tr.img);
+      if(c){s.cover=c.data;s.ccol=c.color}
+      songs.push(s);await put('songs',s);items.push({id:s.id,k});added++;
+    }catch(e){failed++}
+  }
+  items.sort((a,b)=>a.k-b.k);const ids=items.map(x=>x.id);
+  const pl={id:uid(),name,desc:'',color:null,cover:cov?cov.data:null,folderId:view.pf||null,songs:ids,added:Date.now()};
+  playlists.push(pl);await put('playlists',pl);
+  closeOv();view.pl=pl.id;render();
+  toast([`Imported ${ids.length} ${ids.length===1?'song':'songs'}`,T?`${matched} matched to Spotify`:'',reused?`${reused} already in library`:'',failed?`${failed} failed`:''].filter(Boolean).join(' \u00b7 '));
+}
+async function startZipImport(){
+  if(spConnected())return $('#zi').click();
+  const r=await choose('Import Spotify zip',[{label:'Connect Spotify for order and covers',value:'c'},{label:'Continue without Spotify',value:'n'}]);
+  if(r==='c')return spConnect();
+  if(r==='n')$('#zi').click();
+}
+$('#zi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)await importZip(f)};
+setTimeout(spCallback,400);
 $('#fi').onchange=async e=>{await addFiles([...e.target.files]);e.target.value=''};
 function makeCover(file){return new Promise(res=>{
   const img=new Image(),u=URL.createObjectURL(file);
@@ -2140,11 +2421,14 @@ async function songMenu(id,plId){
     {label:'Add to playlist',value:'toplaylist',ic:'addpl',gap:1},{label:'Add to album',value:'move',ic:'album'}];
   if(pl0)items.push({label:'Remove from this playlist',value:'plrm',ic:'minus'});
   if(s.album)items.push({label:'Remove from album',value:'unalbum',ic:'unalb'});
-  items.push({label:'Edit details',value:'edit',ic:'pencil',gap:1});
+  const cvT=!s.cover?null:pl0?{o:pl0,st:'playlists',w:'playlist'}:(view.tab==='albums'&&view.album&&albums.find(x=>x.id===view.album)?{o:albums.find(x=>x.id===view.album),st:'albums',w:'album'}:null);
+  if(cvT)items.push({label:'Use as '+cvT.w+' cover',value:'usecover',ic:'album',gap:1});
+  items.push({label:'Edit details',value:'edit',ic:'pencil',gap:cvT?0:1});
   items.push({label:pl0?'Delete from library':'Delete song',value:'delete',danger:true,ic:'trash',gap:1});
   const r=await choose(s.name,items);
   if(r==='next')qadd(id,true);
   if(r==='queue')qadd(id,false);
+  if(r==='usecover'&&cvT){cvT.o.cover=s.cover;if(cvT.st==='albums')cvT.o.ccol=s.ccol||null;await put(cvT.st,cvT.o);toast('Updated '+cvT.w+' cover')}
   if(r==='edit')await editSong(s);
   if(r==='move')await moveSong(s);
   if(r==='unalbum'){s.album=null;await put('songs',s)}
@@ -2470,6 +2754,25 @@ m.addEventListener('touchend',e=>{
 })();
 
 
+/* swipe left = next song, swipe right = previous song, on the big player and on the mini player */
+(()=>{
+  let t0=null;
+  const hs=el=>{for(;el&&el!==document.body;el=el.parentElement)if(el.scrollWidth>el.clientWidth+1){const o=getComputedStyle(el).overflowX;if(o==='auto'||o==='scroll')return true}return false};
+  for(const sel of ['#full','#mini']){
+    const h=$(sel);if(!h)continue;
+    h.addEventListener('touchstart',e=>{
+      t0=null;if(e.touches.length!==1||e.target.closest('input,canvas,button,textarea,select,a')||hs(e.target))return;
+      t0={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()};
+    },{passive:true});
+    h.addEventListener('touchend',e=>{
+      if(!t0)return;const t=e.changedTouches[0],dx=t.clientX-t0.x,dy=t.clientY-t0.y,dt=Date.now()-t0.t;t0=null;
+      if(!cur||Math.abs(dx)<56||Math.abs(dx)<Math.abs(dy)*1.6||dt>800)return;
+      const d=dx<0?1:-1;step(d);
+      if(sel==='#mini'){const m=$('#mini .m1');if(m)an(m,[{opacity:0,transform:`translateX(${d*28}px)`},{opacity:1,transform:'none'}],{duration:260,easing:EASE_OUT})}
+    },{passive:true});
+  }
+})();
+
 /* hold an album, drag it onto a folder (or onto Back to move it out of a folder) */
 let ah=null,ad=null;
 function acancel(){if(ah){clearTimeout(ah.t);ah=null}}
@@ -2557,8 +2860,9 @@ document.addEventListener('click',async e=>{
   if(act==='plus'){
     if(view.tab==='songs')return $('#fi').click();
     if(view.tab==='playlists'){
-      const r=view.pf?'pl':await choose('Create',[{label:'New playlist',value:'pl'},{label:'New folder',value:'folder'}]);
+      const r=await choose('Create',[{label:'New playlist',value:'pl'}].concat(view.pf?[]:[{label:'New folder',value:'folder'}],[{label:'Import Spotify playlist',value:'zip'}]));
       if(r==='pl'){const p=await plForm(null,view.pf);if(p){view.pl=p.id;render()}}
+      else if(r==='zip')startZipImport();
       else if(r==='folder'){const f=await folderForm(null,true);if(f)render()}
       return;
     }
@@ -2623,7 +2927,7 @@ document.addEventListener('click',async e=>{
   if(act==='plcard'||act==='plmenu')return plMenu(id);
   if(act==='pladd')return pickForPlaylist(id);
   if(act==='plplay'){const l=plSongs(id).map(s=>s.id);if(l.length)playSong(l[0],l);else toast('Playlist is empty');return}
-  if(act==='plshuf'){const l=shuf(plSongs(id).map(s=>s.id));if(!l.length)return toast('Playlist is empty');return playSong(l[0],l)}
+  if(act==='plshuf'){const l=plSongs(id).map(s=>s.id);if(!l.length)return toast('Playlist is empty');shuffle=true;syncCtl();return playSong(l[Math.floor(Math.random()*l.length)],l)}
   if(act==='plqueue'){const l=plSongs(id).map(s=>s.id);if(!l.length)return toast('Playlist is empty');return qaddMany(l,false)}
   if(act==='miniplaylist'){if(cur){await addToPlaylist([cur]);render()}return}
   if(act==='selpl'){if(!selSet.size)return toast('Select songs first');if(await addToPlaylist(selIds())){selMode=false;selSet.clear()}return render()}
@@ -2646,7 +2950,7 @@ document.addEventListener('click',async e=>{
   if(act==='selalbum'){if(!selSet.size)return toast('Select songs first');if(await bulkAlbum([...selSet])){selMode=false;selSet.clear()}return render()}
   if(act==='selcolor'){if(!selSet.size)return toast('Select songs first');if(await bulkColor([...selSet])){selMode=false;selSet.clear()}return render()}
   if(act==='seltag'){if(!selSet.size)return toast('Select songs first');if(await bulkTag([...selSet])){selMode=false;selSet.clear()}return render()}
-  if(act==='playshuf'){const l=shuf(albumSongs(id).map(s=>s.id));if(!l.length)return toast('Album is empty');return playSong(l[0],l)}
+  if(act==='playshuf'){const l=albumSongs(id).map(s=>s.id);if(!l.length)return toast('Album is empty');shuffle=true;syncCtl();return playSong(l[Math.floor(Math.random()*l.length)],l)}
   if(act==='norm')return nmToggle();
   if(act==='mute')return toggleMute();
   if(act==='cloud')return cloudSheet();
@@ -2663,7 +2967,7 @@ document.addEventListener('click',async e=>{
   if(act==='vol'){if(b.closest('#mini')){const m=$('#mini');miniVol(!m.classList.contains('vm'));if(m.classList.contains('vm'))vpTimer();return}return toggleVp(b)}
   if(act==='next')return step(1);
   if(act==='prev'){if(au.currentTime>3)au.currentTime=0;else step(-1);return}
-  if(act==='shuffle'){shuffle=!shuffle;shPlayed=new Set(cur?[cur]:[]);shHist=cur?[cur]:[];syncCtl();return pop(b.firstChild)}
+  if(act==='shuffle'){shuffle=!shuffle;applyShuffle();shPlayed=new Set(cur?[cur]:[]);shHist=cur?[cur]:[];saveLast(true);syncCtl();return pop(b.firstChild)}
   if(act==='repeat'){repeat=(repeat+1)%3;syncCtl();return pop(b.firstChild)}
   if(act==='closefull')return closeFull();
 });
