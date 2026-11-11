@@ -403,10 +403,17 @@ header{display:block;padding:8px 20px 2px}
 .m2 .mvs .mt2{width:26px;height:26px;color:var(--mute)}
 .mvs .mt2 .ic{width:15px;height:15px}
 .mvs .mt2.on{color:rgb(var(--ac))}
+html:not([data-layout=pc]) .mvs .rng{flex:0 1 110px;max-width:110px}
+html:not([data-layout=pc]) .fbot .fvol{max-width:150px}
+.m2 .mvs .mnm{width:26px;height:26px;flex:none;color:var(--mute)}
+.mvs .mnm .ic{width:17px;height:17px}
+.mvs .mnm.nmb.on::after{bottom:1px}
+#mini.vm.tighter .m2>[data-act=repeat]{display:none}
 /* narrow screens: not enough room, so shuffle hides and the controls pack to the right */
-#mini.vm.tight .m2{justify-content:flex-end}
-#mini.vm.tight .m2>[data-act=shuffle]{display:none}
-#mini.vm.tight .m2>.ib:not([data-act=vol]){width:34px}
+#mini.vm.tight .m2>[data-act=shuffle]{visibility:hidden}
+#mini.vm.tighter .m2{justify-content:flex-end}
+#mini.vm.tighter .m2>[data-act=shuffle]{display:none}
+#mini.vm.tighter .m2>.ib:not([data-act=vol]){width:34px}
 .fcov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:1}
 .fcrow{display:flex;gap:14px;align-items:center}
 .fpv{width:96px;flex:none}
@@ -802,6 +809,14 @@ html[data-layout=pc] #fc .ftop .flyb{order:5}
 .lyx span{max-width:290px;font-size:14px;line-height:1.4;color:rgba(255,255,255,.7)}
 .lyx button{margin-top:6px;padding:10px 18px;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;font-size:14px;font-weight:600}
 .lyx button:active{transform:scale(.95)}
+.lynw{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 14px}
+.lynw .lyn{margin:0}
+.lyswap{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;font-size:12px;font-weight:600}
+.lyswap:active{transform:scale(.95)}
+#dz{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;pointer-events:none;background:rgba(var(--bgc),.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+#dz.on{display:flex}
+#dz div{margin:18px;padding:44px 56px;border:2px dashed var(--acc);border-radius:24px;text-align:center;color:var(--text);font-size:18px;font-weight:700;line-height:1.5}
+#dz span{display:block;margin-top:6px;font-size:13px;font-weight:500;color:var(--mute)}
 .lyb{display:inline-flex;vertical-align:-2px;margin-right:6px;color:var(--acct,var(--acc))}
 html[data-layout=pc] .lyp{top:4%;bottom:4%;width:min(100%,660px);margin:0 auto}
 html[data-layout=pc] .fcv.ly{padding-top:5dvh}
@@ -882,6 +897,23 @@ html[data-layout=pc] #fc:has(>.fcv.ly)>.ctl{grid-row:6}
 html[data-layout=pc] #fc:has(>.fcv.ly)>.fbot{grid-row:7}
 html[data-layout=pc] #fc>.fcv.ly .cov{grid-row:2;align-self:stretch;justify-self:center;width:auto;height:100%;max-width:100%;aspect-ratio:1;margin:0}
 @media (max-height:560px){html[data-layout=pc] #fc:has(>.fcv.ly){grid-template-rows:minmax(0,1fr) minmax(64px,min(340px,30vw)) auto auto auto auto auto minmax(0,1fr);padding-top:12px;padding-bottom:12px}html[data-layout=pc] #fc:has(>.fcv.ly)>.ftop{margin-top:10px}}
+
+/* v26: mini player volume - the bar is a real flex item between the speaker and the other controls, so every button stays visible */
+.m2>[data-act=vol]{transition:color .2s}
+#mini.vm .m2>[data-act=vol]{transform:none}
+#mini .m2 .mvs{position:relative;left:auto;top:auto;bottom:auto;width:auto;flex:0 0 0;min-width:0;overflow:hidden;margin-left:-4px;transform:none;transition:flex-grow .3s cubic-bezier(.22,.8,.24,1),margin .3s cubic-bezier(.22,.8,.24,1),opacity .15s,visibility 0s .3s;gap:2px}
+#mini.vm .m2 .mvs{flex:1 1 0;margin-left:0;transform:none;transition:flex-grow .3s cubic-bezier(.22,.8,.24,1),margin .3s cubic-bezier(.22,.8,.24,1),opacity .2s .08s}
+#mini .mvs .rng{flex:1 1 0;min-width:28px;max-width:none}
+#mini .mvs .mt2,#mini .mvs .mnm{width:24px;height:24px}
+/* phone: squeeze the buttons a little while the bar is open so all seven still fit */
+#mini.vm .m2{gap:0}
+#mini.vm .m2>.ib{width:32px;height:38px}
+html[data-layout=pc] #mini.vm .m2{gap:4px}
+html[data-layout=pc] #mini.vm .m2>.ib{width:38px}
+html[data-layout=pc] #mini.vm .m2 .mvs{flex:1 1 0;max-width:170px}
+/* very narrow screens: drop repeat first, shuffle only as a last resort */
+@media (max-width:339px){#mini.vm .m2>[data-act=repeat]{display:none}}
+@media (max-width:289px){#mini.vm .m2>[data-act=shuffle]{display:none}}
 </style>
 </head>
 <body>
@@ -920,7 +952,7 @@ clock:'M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm.5-1
 vol:'M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8v8a4.5 4.5 0 002.5-4z',
 sun:'M12 7a5 5 0 100 10 5 5 0 000-10zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM5.99 4.58L4.58 5.99l1.41 1.41 1.42-1.41-1.42-1.42zm12.02 12.02l-1.41 1.41 1.41 1.42 1.42-1.42-1.42-1.41zM18.01 5.99l1.41-1.41-1.41-1.42-1.42 1.42 1.42 1.41zM5.99 18.01l-1.41-1.41-1.42 1.41 1.42 1.42 1.41-1.42z',moon:'M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.5 5.5 0 01-4.51 2.36 5.5 5.5 0 01-5.5-5.5c0-1.85.92-3.49 2.33-4.48A9.1 9.1 0 0012 3z',volx:'M16.5 12A4.5 4.5 0 0014 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z',sel:'M22 7h-9v2h9V7zm0 8h-9v2h9v-2zM5.54 11L2 7.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 11zm0 8L2 15.46l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41L5.54 19z',check:'M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',palette:'M12 3a9 9 0 000 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.3-.5-.8-.5-1.2 0-1.1.9-2 2-2h2.4c2 0 3.6-1.6 3.6-3.6C21 6.6 16.9 3 12 3zM6.5 12a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3-4a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm3 4a1.5 1.5 0 110-3 1.5 1.5 0 010 3z',tag:'M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z',arrow:'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',chev:'M15.4 7.4L14 6l-6 6 6 6 1.4-1.4L10.8 12z',dots:'M6 10a2 2 0 100 4 2 2 0 000-4zm12 0a2 2 0 100 4 2 2 0 000-4zm-6 0a2 2 0 100 4 2 2 0 000-4z',pencil:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',image:'M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z',trash:'M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z',up:'M12 8l-6 6 1.4 1.4L12 10.8l4.6 4.6L18 14z',qm:'M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z'};
 ICON.gear='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z';ICON.phone='M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z';ICON.desk='M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z';ICON.devices='M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z';
-ICON.album='M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a4 4 0 110-8 4 4 0 010 8z';ICON.trans='M9 7h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2zM1.5 12L5 8v8zM22.5 12L19 8v8z';ICON.minus='M12 2a10 10 0 100 20 10 10 0 000-20zm5 11H7v-2h10v2z';ICON.reorder='M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z';ICON.unalb='M19 13H5v-2h14v2z';
+ICON.album='M12 2a10 10 0 100 20 10 10 0 000-20zM12 4.4a7.6 7.6 0 110 15.2 7.6 7.6 0 010-15.2zM12 5.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM12 7.1a4.9 4.9 0 110 9.8 4.9 4.9 0 010-9.8zM12 8.1a3.9 3.9 0 100 7.8 3.9 3.9 0 000-7.8zM12 10.8a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z';const FLD='M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2z';ICON.folderplus=FLD+'M11 9h2v3h3v2h-3v3h-2v-3H8v-2h3z';ICON.filep='M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM11 12h2v2h2v2h-2v2h-2v-2H9v-2h2z';ICON.impfld=FLD+'M11 9h2v3h2.5L12 16l-3.5-4H11z';ICON.impalb=FLD+'M12 9a4 4 0 110 8 4 4 0 010-8zM12 11.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8z';ICON.imppl=FLD+'M13.6 9.5L16 11.4v1.8l-2.4-1.4zM12.2 9.5h1.4v6.5h-1.4zM10.5 14.6a1.6 1.6 0 110 3.2 1.6 1.6 0 010-3.2z';ICON.spotify='M12 2a10 10 0 100 20 10 10 0 000-20zM6 9Q12.2 6.8 18.2 10l-.7 1.5Q12 8.7 6.7 10.6zM7 12.6Q12 11 16.8 13.6l-.6 1.4Q11.8 12.6 7.5 14zM7.8 15.7Q12 14.6 15.6 16.6l-.5 1.3Q11.8 16.2 8.3 17.1z';ICON.trans='M9 7h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2zM1.5 12L5 8v8zM22.5 12L19 8v8z';ICON.minus='M12 2a10 10 0 100 20 10 10 0 000-20zm5 11H7v-2h10v2z';ICON.reorder='M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z';ICON.unalb='M19 13H5v-2h14v2z';
 ICON.mic='M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z';
 const ic=(n,s)=>`<svg class="ic" viewBox="0 0 24 24" ${s?`style="width:${s}px;height:${s}px"`:''}><path d="${ICON[n]}"/></svg>`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1793,6 +1825,8 @@ function closeOv(){
 }
 $('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closeOv()});
 function autoIc(it,t){const l=it.label||'';
+  if(/^New album/i.test(l))return 'album';if(/^New playlist/i.test(l))return 'plist';if(/^New folder/i.test(l))return 'folderplus';
+  if(/^Import folder as album/i.test(l))return 'impalb';if(/^Import folder as playlist/i.test(l))return 'imppl';if(/^Import Spotify/i.test(l))return 'spotify';if(/^Add files/i.test(l))return 'filep';if(/^Import folder$/i.test(l))return 'impfld';
   if(/^Delete/i.test(l))return 'trash';if(/^Customize/i.test(l))return 'palette';if(/^Edit/i.test(l))return 'pencil';
   if(/cover/i.test(l))return 'image';if(/^No folder/i.test(l))return 'minus';if(/^New /i.test(l))return 'plus';
   if(/folder/i.test(l)||/^Move to folder/i.test(t))return 'folder';if(/^Add songs/i.test(l))return 'addpl';
@@ -1916,7 +1950,7 @@ function renderFull(){
   $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><button class="ib fbgb" data-act="bgopts" aria-label="Background options" title="Background options">${ic('tune',22)}</button><button class="ib ftrb" data-act="tropts" aria-label="Cover transition" title="Cover transition">${ic('trans',22)}</button><button class="ib nmb fnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib ffx" data-act="fxopts" aria-label="Beat effects" title="Beat effects">${ic('fxi',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib flyb${lyOn?' on':''}" data-act="lyrics" aria-pressed="${lyOn}" aria-label="Lyrics" title="Lyrics (L)">${ic('mic',22)}</button></div><div class="fcv${lyOn?' ly':''}">${cover(songCover(s),s.name)}<div class="lyp" aria-hidden="${lyOn?'false':'true'}"><div class="lys" id="lys"></div></div></div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
   <div class="fsk"><input type="range" class="rng seek" id="sk" min="0" max="1000" value="${Math.round(p*1000)}" style="--p:${p*100}%" aria-label="Seek"><div class="tm"><span id="ct">${fmt(au.currentTime)}</span><span id="dt2">${fmt(au.duration||s.dur)}</span></div></div>
   <div class="ctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',28)}</button><button class="ib big" id="fp" data-k="${au.paused?'play':'pause'}" data-act="toggle" aria-label="Play or pause">${ic(au.paused?'play':'pause',34)}</button><button class="ib" data-act="next" aria-label="Next">${ic('next',28)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div>
-  <div class="fbot"><div class="fg"><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div>`;
+  <div class="fbot"><div class="fg"><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div>`;
   const sk=$('#sk');
   sk.oninput=()=>{if(au.duration)au.currentTime=sk.value/1000*au.duration;sk.style.setProperty('--p',(sk.value/10)+'%');$('#ct').textContent=fmt(au.currentTime)};
   sk.onpointerdown=()=>{seeking=true};
@@ -2108,7 +2142,7 @@ function lyPaint(rec,loading,late){
     sc.innerHTML=rec.l.map((x,i)=>`<p class="ll${x[1]?'':' gap'}" data-act="lyseek" data-i="${i}">${x[1]?esc(x[1]):'\u266A'}</p>`).join('');
   }else{
     sc.className='lys plain';
-    sc.innerHTML='<p class="lyn">Not time-synced</p>'+rec.l.map(t=>`<p class="ll">${t.trim()?esc(t):'&nbsp;'}</p>`).join('');
+    sc.innerHTML='<div class="lynw"><p class="lyn">Not time-synced</p><button type="button" class="lyswap" data-act="lyload">Swap in .lrc file</button></div>'+rec.l.map(t=>`<p class="ll">${t.trim()?esc(t):'&nbsp;'}</p>`).join('');
   }
   sc.scrollTop=0;lySync(true);
 }
@@ -2182,13 +2216,19 @@ function lySeek(b){
   au.currentTime=au.duration?Math.min(t/1000,au.duration):t/1000;
   lyUser=0;lySync(true);
 }
+/* read a lyrics file and store it as the song's lyrics (manual = beats anything found by scanning) */
+async function lyApplyFile(f,s,quiet){
+  try{
+    const r=lyMake(null,await f.text());if(!r){if(!quiet)toast('That file has no lyrics');return false}
+    const had=LYM.get(s.id),swap=!!(had&&had.l&&had.s===false),rec=lySet(s.id,r,null,true);
+    if(s.id===lyFor)lyPaint(rec);
+    if(!quiet)toast(r.s?(swap?'Swapped for synced lyrics':'Synced lyrics added'):(swap?'Lyrics replaced (still not time-synced)':'Lyrics added (not time-synced)'));
+    return true;
+  }catch(err){if(!quiet)toast('Could not read that file');return false}
+}
 $('#li').onchange=async e=>{
   const f=e.target.files[0];e.target.value='';const s=songs.find(x=>x.id===cur);if(!f||!s)return;
-  try{
-    const r=lyMake(null,await f.text());if(!r)return toast('That file has no lyrics');
-    lyPaint(lySet(s.id,r,null,true));
-    toast(r.s?'Synced lyrics added':'Lyrics added (not time-synced)');
-  }catch(err){toast('Could not read that file')}
+  await lyApplyFile(f,s);
 };
 ['wheel','touchstart','touchmove','pointerdown'].forEach(ev=>$('#fc').addEventListener(ev,e=>{if(e.target.closest&&e.target.closest('#lys'))lyUser=Date.now()},{passive:true}));
 ['play'].forEach(ev=>au.addEventListener(ev,lyKick));
@@ -2795,6 +2835,52 @@ async function startZipImport(){
 $('#zi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)await importZip(f)};
 setTimeout(spCallback,400);
 $('#fi').onchange=async e=>{await addFiles([...e.target.files]);e.target.value=''};
+/* ===== drag & drop (desktop): audio files, whole folders, and .lrc files ===== */
+(()=>{
+  const AUD=/\.(mp3|wav|flac|m4a|aac|ogg|opus|wma|aiff?)$/i,LRC=/\.(lrc|txt)$/i;
+  const dz=document.createElement('div');dz.id='dz';dz.setAttribute('aria-hidden','true');
+  dz.innerHTML='<div>Drop to add<span>Songs, folders or .lrc lyric files</span></div>';document.body.appendChild(dz);
+  let depth=0;
+  const hasFiles=e=>!!(e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files'));
+  const hide=()=>{depth=0;dz.classList.remove('on')};
+  const readDir=d=>new Promise(res=>{const r=d.createReader(),out=[];const go=()=>r.readEntries(b=>{if(!b.length)return res(out);out.push(...b);go()},()=>res(out));go()});
+  async function walk(en,out,path){
+    if(en.isFile){await new Promise(r=>en.file(f=>{try{Object.defineProperty(f,'webkitRelativePath',{value:path+f.name})}catch(_){}out.push(f);r()},()=>r()))}
+    else if(en.isDirectory){for(const c of await readDir(en))await walk(c,out,path+en.name+'/')}
+  }
+  /* only lyric files were dropped: the open song gets it, otherwise each file goes to the song with the same name */
+  async function dropLyrics(files){
+    if($('#full').classList.contains('open')){
+      const s=songs.find(x=>x.id===cur);
+      if(s)return void await lyApplyFile(files[0],s);
+    }
+    let n=0;
+    for(const f of files){const s=songs.find(x=>lyKey(x.name)===lyKey(f.name));if(s&&await lyApplyFile(f,s,true))n++}
+    toast(n?'Lyrics added to '+n+(n===1?' song':' songs'):'Open a song\u2019s player first, or name the file like the song');
+  }
+  addEventListener('dragenter',e=>{if(!hasFiles(e))return;e.preventDefault();depth++;dz.classList.add('on')});
+  addEventListener('dragover',e=>{if(!hasFiles(e))return;e.preventDefault();e.dataTransfer.dropEffect='copy'});
+  addEventListener('dragleave',e=>{if(!hasFiles(e))return;if(--depth<=0)hide()});
+  addEventListener('dragend',hide);addEventListener('blur',hide);
+  addEventListener('drop',async e=>{
+    if(!hasFiles(e))return;
+    e.preventDefault();hide();
+    /* entries and files must be grabbed before the first await, the browser clears them afterwards */
+    const ents=[...(e.dataTransfer.items||[])].map(i=>i.kind==='file'&&i.webkitGetAsEntry?i.webkitGetAsEntry():null);
+    const flat=[...e.dataTransfer.files];
+    if($('#ov').classList.contains('open'))return toast('Close the open dialog first');
+    let fs=[];
+    if(ents.length&&ents.every(Boolean)){toast('Reading files\u2026');for(const en of ents)await walk(en,fs,'')}else fs=flat;
+    fs=fs.filter(f=>!/^\._/.test(f.name));
+    const aud=fs.filter(f=>f.type.startsWith('audio/')||AUD.test(f.name)),lrc=fs.filter(f=>LRC.test(f.name));
+    if(!aud.length){
+      if(lrc.length)return dropLyrics(lrc);
+      return toast(fs.length?'Drop audio files, a folder of songs or an .lrc file':'Nothing to add');
+    }
+    fs.sort((a,b)=>cmp(a.webkitRelativePath||a.name,b.webkitRelativePath||b.name));
+    await addFiles(fs);
+  });
+})();
 let dirMode='songs';
 $('#di').onchange=async e=>{const fs=[...e.target.files],mode=dirMode;dirMode='songs';e.target.value='';if(!fs.length)return toast('That folder is empty');
   fs.sort((a,b)=>cmp(a.webkitRelativePath||a.name,b.webkitRelativePath||b.name));
@@ -3490,8 +3576,8 @@ document.addEventListener('click',async e=>{
 
 let vpT=null;
 function closeVp(){const v=$('#vp');if(!v||!v.classList.contains('open'))return;clearTimeout(vpT);const a=an(v,[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(8px) scale(.96)'}],{duration:180,easing:EASE,fill:'forwards'});const f=()=>{v.classList.remove('open');if(a)a.cancel()};if(a)a.onfinish=f;else f()}
-function layoutMiniVol(){const m=$('#mini'),r=m&&m.querySelector('.m2');if(!r||!m.classList.contains('vm'))return;const sp=r.querySelector('[data-act=vol]'),sh=r.querySelector('[data-act=shuffle]'),pv=r.querySelector('[data-act=prev]');m.classList.remove('tight');let end=sh.offsetLeft;if(end-42<100){m.classList.add('tight');end=pv.offsetLeft}r.style.setProperty('--vx',(-sp.offsetLeft)+'px');r.style.setProperty('--vw',Math.max(0,end-44)+'px')}
-function miniVol(on){const m=$('#mini');if(!m||m.classList.contains('vm')===on)return;m.classList.toggle('vm',on);if(on){paintVol();layoutMiniVol()}else m.classList.remove('tight')}
+function layoutMiniVol(){/* layout is pure CSS now (the volume bar is a flex item that takes the leftover space), nothing to measure */}
+function miniVol(on){const m=$('#mini');if(!m||m.classList.contains('vm')===on)return;m.classList.toggle('vm',on);if(on){paintVol();layoutMiniVol()}else m.classList.remove('tight','tighter')}
 addEventListener('resize',layoutMiniVol);
 function vpTimer(){clearTimeout(vpT);vpT=setTimeout(()=>{closeVp();miniVol(false)},3500)}
 function toggleVp(btn){
@@ -3869,14 +3955,14 @@ function ui(){
   if(LS('tracks-mh'))$('#app').classList.add('mh');
   $('#app').insertAdjacentHTML('beforeend',`<button id="mshow" data-act="minishow" aria-label="Show player">${ic('chev',18)}</button>`);
   $('#plus').innerHTML=ic('plus',26);$('#qk').innerHTML=ic('qm',22);
-  $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('addpl',24)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button></div></div>`);
+  $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button></div></div>`);
   $('#gear').innerHTML=ic('gear',24);paintTheme();applyLayout();
   new ResizeObserver(()=>document.documentElement.style.setProperty('--tp',$('#top').offsetHeight+'px')).observe($('#top'));
   $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off"><button class="sbx" data-act="clearsearch" aria-label="Close search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
   $('#sq').oninput=()=>{view.q=$('#sq').value;render()};
   $('#sq').onblur=()=>{if(!$('#sq').value)closeSearch()};
-  $('#mini').innerHTML=`<button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div><button class="ib nmb" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('addpl',24)}</button></div>
-  <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
+  $('#mini').innerHTML=`<button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div>
+  <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button><button class="ib nmb mnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',17)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
   $('#app').insertAdjacentHTML('beforeend',`<div id="vp"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="vol" min="0" max="100" value="${Math.round(au.volume*100)}" style="--p:${Math.round(au.volume*100)}%" aria-label="Volume"></div>`);
   $('#vol').oninput=e=>{setVol(e.target.value/100);vpTimer()};
   $('#mvl').oninput=e=>{setVol(e.target.value/100);vpTimer()};nmPaint();
