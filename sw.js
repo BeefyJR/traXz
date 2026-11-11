@@ -1,4 +1,4 @@
-const C='trax-v40';
+const C='trax-v41';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 const NAV_TIMEOUT=3000;/* on a slow or flaky connection, open the cached app after this long instead of waiting for the network */
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL.map(u=>new Request(u,{cache:'reload'})))).then(()=>self.skipWaiting()))});

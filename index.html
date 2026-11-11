@@ -1720,11 +1720,16 @@ async function cloudSync(inter){
       nx[st]=out;
     }
     songs=nx.songs.sort((a,b)=>a.added-b.added);albums=nx.albums;folders=nx.folders;playlists=nx.playlists;pfolders=nx.pfolders;
+    /* manual lyrics: newest edit wins, same as the other stores */
+    {const rl=new Map((rem.lyrics||[]).map(r=>[r.id,r])),sid=new Set(songs.map(x=>x.id));
+     for(const r of rl.values()){const l=LYM.get(r.id);
+       if(sid.has(r.id)&&(!l||!l.m||(r.mod||0)>(l.mod||0))){LYM.set(r.id,r);await tx('lyrics','readwrite',x=>x.put(r));lyBadge(r.id);if(r.id===lyFor)lyPaint(r);ch=true}}
+     for(const l of LYM.values()){if(!l.m)continue;const r=rl.get(l.id);if(!r||(l.mod||0)>(r.mod||0))ch=true}}
     for(const s of songs)if(s.blob&&!CL.idx['a_'+s.id]){cloudSt('Uploading '+s.name);CL.idx['a_'+s.id]=await dUp('a_'+s.id,s.blob,s.blob.type);ch=true}
     for(const k in tb)if(k.startsWith('songs:')){const n='a_'+k.slice(6);if(CL.idx[n]){await gapi(DV+'/'+CL.idx[n],{method:'DELETE'});delete CL.idx[n]}}
     if(LS('tracks-dirty')||ch||!CL.idx['library.json']){
       LS('tracks-dirty',null);
-      const lib=JSON.stringify({v:1,songs:songs.map(strip),albums,folders,playlists,pfolders,tomb:tb});
+      const lib=JSON.stringify({v:1,songs:songs.map(strip),albums,folders,playlists,pfolders,lyrics:[...LYM.values()].filter(x=>x.m),tomb:tb});
       CL.idx['library.json']=await dUp('library.json',new Blob([lib],{type:'application/json'}),'application/json',CL.idx['library.json']);
     }
     LS('tracks-cloud','1');render();
@@ -2080,8 +2085,8 @@ async function lyDbLoad(){
 }
 function lySet(id,r,old,manual){
   if(old&&old.m&&!manual)return old;
-  const rec={id,v:LYR_V,s:r?r.s:null,l:r?r.l:null};if(manual)rec.m=1;
-  LYM.set(id,rec);tx('lyrics','readwrite',st=>st.put(rec));lyBadge(id);
+  const rec={id,v:LYR_V,s:r?r.s:null,l:r?r.l:null};if(manual){rec.m=1;rec.mod=Date.now()}
+  LYM.set(id,rec);tx('lyrics','readwrite',st=>st.put(rec));lyBadge(id);if(manual)cloudDirty();
   return rec;
 }
 function lyEnsure(s){
