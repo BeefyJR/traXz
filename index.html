@@ -1157,6 +1157,8 @@ html #qp.qset,html[data-layout=pc] #qp.qset{inset:0;left:0;right:0;top:0;bottom:
 #np{position:absolute;top:10px;right:calc(var(--npr,0px) + 10px);width:calc(var(--npe,360px) - 20px);bottom:calc(var(--db) + 94px);z-index:4;flex-direction:column;border-radius:16px;overflow:hidden;background:linear-gradient(rgba(var(--ac),.5),var(--surf) 62%);border:1px solid rgba(128,128,128,.16);box-shadow:0 6px 24px rgba(0,0,0,.22)}
 #np .nph{display:flex;align-items:center;justify-content:space-between;padding:12px 10px 6px 18px;flex:none}
 #np .nph b{font-size:15px}
+#np .nph .nphr{display:flex;align-items:center;gap:2px}
+#np .npi .lk{width:38px;height:38px;flex:none;margin-right:-5px}/* centre lines up with the expand button above */
 #np .npc{padding:6px 18px 0;flex:none;display:flex;justify-content:center;cursor:pointer}
 #np .npc .cov{width:100%;max-width:42vh;height:auto;aspect-ratio:1;font-size:72px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.35)}
 #np .npi{padding:14px 18px 4px;flex:none;min-width:0}
@@ -1175,6 +1177,9 @@ html #qp.qset,html[data-layout=pc] #qp.qset{inset:0;left:0;right:0;top:0;bottom:
 #np .npx b{color:var(--text);font-size:15px}
 #npmore[hidden]{display:none}
 
+/* side player on: the queue lives in the player bar, so the header queue button goes away */
+html[data-layout=pc][data-np=on] .qk{display:none}
+.fbr.szr{gap:8px}
 /* v31: add-to-album/playlist beside the title, queue in place of missing lyrics, drag-to-resize corner, constant cover size */
 #np .npi{display:flex;align-items:center;gap:6px}
 #np .npi .npn{flex:1;min-width:0}
@@ -1272,6 +1277,241 @@ html[data-layout=pc] #qp #ql .scd .row:hover{background:rgba(128,128,128,.08)}
 #xf-cu{margin-top:2px}
 #xf-cu .srow:first-of-type{margin-top:6px}
 #xf-c3 .fop,#xf-c1 .fop{margin:6px 0}
+
+/* ===== v68: small windows - everything stays on screen ===== */
+/* full player (phone layout): the cover takes whatever height is left after title, seek bar and buttons */
+@media (max-height:720px){
+  html:not([data-layout=pc]) .fcv:not(.ly) .cov{width:max(88px,min(76vw,38dvh,340px,calc(100dvh - 362px)))}
+}
+@media (max-height:520px){
+  html:not([data-layout=pc]) #fc{padding:34px 16px calc(8px + env(safe-area-inset-bottom,0px))}
+  html:not([data-layout=pc]) .ftop .ib{width:40px;height:40px}
+  html:not([data-layout=pc]) .fcv{padding:4px 0}
+  html:not([data-layout=pc]) .fcv:not(.ly) .cov{width:max(64px,min(76vw,calc(100dvh - 300px)))}
+  html:not([data-layout=pc]) .fti h2{font-size:17px}
+  html:not([data-layout=pc]) .fti p{font-size:13px}
+  html:not([data-layout=pc]) .fsk{margin-top:4px}
+  html:not([data-layout=pc]) .ctl{margin-top:2px}
+  html:not([data-layout=pc]) .ctl .ib{width:40px;height:40px}
+  html:not([data-layout=pc]) .ctl .big{width:50px;height:50px}
+  html:not([data-layout=pc]) .fbot{margin-top:0}
+  html:not([data-layout=pc]) .fbot .ib{width:40px;height:40px}
+}
+/* full player (phone layout): narrow windows - the volume bar gives way instead of pushing buttons off screen */
+@media (max-width:400px){
+  html:not([data-layout=pc]) #fc{padding-left:14px;padding-right:14px}
+  html:not([data-layout=pc]) .ctl{gap:2px}
+  html:not([data-layout=pc]) .fbot{grid-template-columns:auto minmax(0,1fr) auto}
+}
+@media (max-width:360px){
+  html:not([data-layout=pc]) .ctl .ib{width:40px;height:40px}
+  html:not([data-layout=pc]) .ctl .big{width:54px;height:54px}
+  html:not([data-layout=pc]) .fbot .ib{width:40px;height:40px}
+  .m2 .ib{width:34px;height:34px}
+}
+@media (max-width:320px){
+  html:not([data-layout=pc]) .ctl{gap:0}
+  html:not([data-layout=pc]) .ctl .ib{width:36px;height:36px}
+  html:not([data-layout=pc]) .ctl .big{width:50px;height:50px}
+  #main{padding-left:14px;padding-right:14px}
+}
+/* full player (PC layout): very short windows */
+@media (max-height:440px){
+  html[data-layout=pc] #fc{padding-top:12px;padding-bottom:12px}
+  html[data-layout=pc] #fc>.ftop{margin-bottom:2px}
+  html[data-layout=pc] #fc>.fti{min-height:0}
+  html[data-layout=pc] .fti h2{font-size:20px}
+  html[data-layout=pc] .fti p{font-size:13px}
+  html[data-layout=pc] #fc>.fsk{margin-top:4px}
+  html[data-layout=pc] .ctl .ib{width:40px;height:40px}
+  html[data-layout=pc] .ctl .big{width:52px;height:52px}
+  html[data-layout=pc] #fc>.fbot{margin-top:2px}
+}
+/* header, filter bar, mini player and sheets in short windows */
+@media (max-height:520px){
+  html:not([data-layout=pc]) header{padding-top:4px}
+  html:not([data-layout=pc]) .hr{height:38px}
+  html:not([data-layout=pc]) .hr .plus,html:not([data-layout=pc]) .hr .gear{width:38px;height:38px}
+  html:not([data-layout=pc]) #logo{top:9px;width:76px;height:24px}
+  html:not([data-layout=pc]) .tabs{padding-top:0;padding-bottom:2px}
+  html:not([data-layout=pc]) header .tab{font-size:clamp(13px,3.9vw,19px);padding:2px 0}
+  html:not([data-layout=pc]) .qk{top:38px}
+  #tb{padding-top:2px;padding-bottom:4px}
+  .sb{height:38px;width:38px}
+  .sbi,.sbx{width:38px;height:38px}
+  #tb #flt{width:38px;height:38px}
+  #mini{padding:6px 8px 5px;border-radius:16px}
+  .mcv,.mcv .cov{width:38px;height:38px}
+  .mcv .cov{font-size:16px}
+  .m2 .ib{width:34px;height:34px}
+  #app.hm #main{padding-bottom:150px}
+  #ov,.ovg{padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+  .sheet{max-height:90dvh}
+  .sheet .it{padding-top:8px;padding-bottom:8px}
+}
+/* ===== v69: Spotify-style player in small windows - the bar sheds its least important items instead of squashing ===== */
+#npb{container-type:inline-size}
+html[data-layout=pc][data-np=on] #app.hm #npb{grid-template-columns:minmax(0,1fr) minmax(220px,min(560px,42%)) minmax(0,1fr);gap:12px;padding:0 12px}
+#npb .nm{width:100%}
+#npb .nr .rng{width:clamp(60px,9vw,110px)}
+/* small windows: the like / album / playlist / edit icons fold into one ... button that opens the song menu */
+#npb .npa .npm{display:none}
+@container (max-width:1200px){#npb .npa>.ib:not(.npm){display:none}#npb .npa .npm{display:flex}}
+@container (max-width:900px){#npb .nr .rng{display:none}}
+@container (max-width:700px){#npb .nr .pnm{display:none}#npb .nctl{gap:2px}}
+@container (max-width:560px){#npb .nl .nt{display:none}}
+@container (max-width:460px){#npb .nr [data-npa=ly]{display:none}#npb .nctl .ib{width:34px;height:34px}#npb .nctl .mp{width:40px;height:40px}}
+/* side panel: the cover gives up height before the lyrics area gets squeezed */
+html[data-layout=pc] #np .npc .cov{max-width:clamp(56px,calc(100dvh - 400px),42vh)}
+@media (max-height:600px){
+  html[data-layout=pc] #np .nph{padding-top:6px;padding-bottom:2px}
+  html[data-layout=pc] #np .npi{padding-top:8px}
+  html[data-layout=pc] #np .npi h2{font-size:18px}
+  html[data-layout=pc] #np .npl{min-height:80px;margin-top:6px}
+}
+
+/* ===== Liked songs: heart buttons, row badge, playlist ===== */
+:root{--like:#1ed760}
+html[data-like=off] .lk,html[data-like=off] .lkb{display:none!important}
+html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
+.lkb{display:inline-flex;vertical-align:-3px;margin-right:8px;padding:2px;border:0;background:none;cursor:pointer;color:var(--mute)}
+.lkb.on{color:var(--like)}
+.lkb .ic{width:16px;height:16px}
+/* row end: like icon, mic, time and the 3 dots all sit on one centred line */
+#main .row .d{display:inline-flex!important;align-items:center;justify-content:flex-end;gap:8px;white-space:nowrap;line-height:1}
+#main .row .d .lkb,#main .row .d .lyb{margin:0;vertical-align:baseline;flex:none}
+#main .row .d .lkb{padding:0}
+#main .row .k{align-self:center}
+/* ===== v70: small desktop windows - same density as Spotify's compact window =====
+   Below 900px the app now stays in the PC layout (it used to fall back to the 640px phone column, which wasted the sides and showed only 2 covers).
+   In small or short windows the header folds into one row, the grid packs more covers, and the mini player becomes a slim bar. */
+@media (max-width:899px),(max-height:759px){
+  /* header: [+ cloud] ...... ALBUMS SONGS PLAYLISTS ...... [queue gear] on ONE row (was 3 rows: logo / buttons / tabs) */
+  html[data-layout=pc][data-dock=top] #top header{position:relative;padding-top:6px;padding-bottom:0}
+  html[data-layout=pc][data-dock=top] .hr{position:absolute;top:6px;left:var(--hx);right:var(--hx);height:44px;z-index:3;pointer-events:none}
+  html[data-layout=pc][data-dock=top] .hr>*{pointer-events:auto}
+  html[data-layout=pc][data-dock=top] .tabs{height:44px;align-items:center;justify-content:center;gap:clamp(12px,3vw,30px);padding:0 clamp(96px,16vw,150px)}
+  html[data-layout=pc][data-dock=top] .tab{font-size:clamp(17px,2.9vw,26px);padding:2px 8px;white-space:nowrap}
+  html[data-layout=pc][data-dock=top] .plus,html[data-layout=pc][data-dock=top] .gear,html[data-layout=pc][data-dock=top] #cb,html[data-layout=pc][data-dock=top] .qk{width:40px;height:40px}
+  html[data-layout=pc][data-dock=top] .qk{top:8px;right:calc(var(--hx) + 48px)}
+  html[data-layout=pc][data-dock=top] #logo{display:none}
+  /* docked section bar: the logo would only crowd the single row */
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #logo{display:none}
+  html[data-layout=pc] #fb .abar,html[data-layout=pc] #fb .fh{padding-top:0;padding-bottom:4px}
+  html[data-layout=pc] #fb .abar{margin-bottom:0}
+  html[data-layout=pc] #fb .abar .back,html[data-layout=pc] #fb .abar .ab,html[data-layout=pc] .fbr .back,html[data-layout=pc] .fbr .ab{width:36px;height:36px;border-radius:12px}
+  html[data-layout=pc] #tb{padding-top:0;padding-bottom:6px}
+  html[data-layout=pc] .sb,html[data-layout=pc] #tb #flt,html[data-layout=pc] #tb #selbtn{height:38px}
+  html[data-layout=pc] .sb:not(.open),html[data-layout=pc] #tb #flt,html[data-layout=pc] #tb #selbtn{width:38px}
+  html[data-layout=pc] .sbi,html[data-layout=pc] .sbx{width:38px;height:38px}
+  html[data-layout=pc] #main{padding-bottom:20px}
+  /* content: more, smaller covers; tighter gaps */
+  html[data-layout=pc]{--px:max(16px,calc((100% - 1640px)/2))}
+  html[data-layout=pc] #main{padding-left:max(16px,var(--px));padding-right:max(16px,var(--px))}
+  html[data-layout=pc] .grid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:18px 16px}
+  html[data-layout=pc] .grid.g3{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:12px}
+  html[data-layout=pc] .grid.g1{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  html[data-layout=pc] .card b{font-size:14px;margin-top:6px}
+  html[data-layout=pc] .card span{font-size:12px}
+  html[data-layout=pc] .grid .cov{border-radius:10px;font-size:34px}
+  html[data-layout=pc] .fcard .card b{font-size:14px;margin-top:6px}
+  html[data-layout=pc] .fcard .card span{font-size:12px}
+  html[data-layout=pc] .alm,html[data-layout=pc] .fm{width:32px;height:30px}
+  /* song rows: smaller, album column drops out when it would only be a sliver */
+  html[data-layout=pc] #main .row{padding:5px 10px;column-gap:12px}
+  html[data-layout=pc] #main .row .th,html[data-layout=pc] #main .row .th .cov{width:40px;height:40px}
+  html[data-layout=pc] #main .row{grid-template-columns:36px 40px minmax(0,2fr) minmax(0,1.2fr) 52px 40px}
+  html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:36px minmax(0,2fr) minmax(0,1.2fr) 52px 40px}
+  html[data-layout=pc] #main .row .t b{font-size:14.5px}
+  html[data-layout=pc] #main .row .t span{font-size:12.5px}
+  html[data-layout=pc] #main .row .k{width:34px;height:34px}
+  /* album page: smaller cover column so the track list keeps its room */
+  html[data-layout=pc] #main:has(>.acv){--cv:min(260px,34vw);padding-left:16px;padding-right:16px;padding-top:calc(var(--tp,100px) + 14px)}
+  html[data-layout=pc] #main:has(>.acv)>.at>h2{font-size:24px}
+  html[data-layout=pc] #main:has(>.acv)>.at>.sh{width:42px;height:42px;margin-left:10px}
+  html[data-layout=pc] #main:has(>.acv)>.at>.pbig{width:48px;height:48px;border-radius:16px}
+  html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:32px minmax(0,1fr) 50px 38px;padding:5px 8px}
+  html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:32px 40px minmax(0,1fr) 50px 38px}
+  /* full player: the cover gives way before the controls do */
+  html[data-layout=pc] #fc{padding-top:14px;padding-bottom:16px;column-gap:clamp(20px,4vw,48px);padding-left:clamp(16px,3vw,40px);padding-right:clamp(16px,3vw,40px)}
+  html[data-layout=pc] .fcv .cov{width:min(100%,calc(100dvh - 120px),520px)}
+  html[data-layout=pc] .fti h2{font-size:26px}
+  html[data-layout=pc] .fti p{font-size:16px}
+  html[data-layout=pc] .ctl .ib{width:48px;height:48px}
+  html[data-layout=pc] .ctl .big{width:64px;height:64px}
+  /* sheets and menus use the room they have */
+  html[data-layout=pc] .sheet{max-width:min(520px,calc(100vw - 20px))}
+}
+/* mini player (shown when the side player is off): one slim bar instead of a 3-row card */
+@media (max-width:899px),(max-height:759px){
+  html[data-layout=pc] #mini{container-type:inline-size;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:10px;row-gap:0;padding:14px 12px 6px;border-radius:18px;
+    left:max(calc(14px + var(--dl)),calc(50% + (var(--dl) - var(--dr))/2 - 360px));right:max(calc(14px + var(--dr)),calc(50% - (var(--dl) - var(--dr))/2 - 360px));bottom:calc(12px + var(--db))}
+  html[data-layout=pc] #mini .m1{order:1;flex:1 1 0;min-width:0;gap:8px}
+  html[data-layout=pc] #mini .m2{order:2;flex:0 1 auto;margin-top:0;justify-content:flex-end;gap:2px}
+  html[data-layout=pc] #mini .m3{order:3;flex:0 0 100%;margin-top:0}
+  html[data-layout=pc] #mini .m3 .rng{height:22px}
+  html[data-layout=pc] .mcv,html[data-layout=pc] .mcv .cov{width:42px;height:42px}
+  html[data-layout=pc] #mini .m1 .ib{width:36px;height:36px}
+  html[data-layout=pc] #mini .m2>.ib{width:36px;height:36px}
+  html[data-layout=pc] #mini .m2>.ib.mp{width:40px;height:40px}
+  html[data-layout=pc] #mini.vm .m2>.ib{width:36px}
+  html[data-layout=pc] #mini.vm .m2 .mvs{flex:0 0 130px;max-width:130px}
+  html[data-layout=pc] #mini .mhide{height:14px}
+  html[data-layout=pc] #app.hm #main{padding-bottom:108px}
+  html[data-layout=pc] #app.selmode #main{padding-bottom:150px}
+}
+@container (max-width:560px){
+  #mini .m1 [data-act=minialbum],#mini .m1 [data-act=miniplaylist]{display:none}
+}
+/* header narrower than ~620px (side player open in a small window): buttons row + tabs row instead of one crowded row */
+@media (max-width:899px),(max-height:759px){
+  #top{container-type:inline-size}
+  @container (max-width:620px){
+    html[data-layout=pc][data-dock=top] .hr{position:static;height:40px;left:auto;right:auto;pointer-events:auto}
+    html[data-layout=pc][data-dock=top] #top header{padding-top:6px}
+    html[data-layout=pc][data-dock=top] .tabs{height:38px;padding:0;gap:clamp(10px,3vw,22px)}
+    html[data-layout=pc][data-dock=top] .tab{font-size:clamp(15px,3.6vw,20px)}
+    html[data-layout=pc][data-dock=top] .plus,html[data-layout=pc][data-dock=top] .gear,html[data-layout=pc][data-dock=top] #cb{width:38px;height:38px}
+  }
+  html[data-layout=pc][data-np=on] .grid{grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:14px}
+  html[data-layout=pc][data-np=on] .grid.g3{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+  html[data-layout=pc][data-np=on] .grid.g1{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+}
+/* v71: in a small window the volume slider is a pop-up above the speaker button (hover it, or scroll the mouse wheel over it) instead of disappearing */
+@container (max-width:900px){
+  #npb .nr{position:relative}
+  #npb .nr #nbvl{display:block;position:absolute;right:0;bottom:calc(100% - 6px);width:156px;height:38px;margin:0;padding:0 16px;box-sizing:border-box;border-radius:999px;background:rgba(var(--sfc),.97);border:1px solid color-mix(in srgb,var(--text) 16%,transparent);box-shadow:0 8px 28px rgba(0,0,0,.4);z-index:6;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(6px);transition:opacity .14s,transform .14s,visibility 0s .14s}
+  #npb .nr:has(.mt:hover) #nbvl,#npb .nr #nbvl:hover,#npb .nr #nbvl:focus-visible,#npb .nr #nbvl:active,#npb .nr .mt:focus-visible~#nbvl{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .14s,transform .14s}
+}
+/* Spotify-style bar + panel in small windows: tighter bar, narrower panel, lyrics/cover keep their room */
+@media (max-width:899px){
+  html[data-layout=pc][data-np=on] #app.hm #npb{height:76px}
+  html[data-layout=pc][data-np=on] #app.hm #main{padding-bottom:98px}
+  html[data-layout=pc][data-np=on] #app.hm #selbar{bottom:calc(var(--db) + 88px)}
+  html[data-layout=pc]{--npe:min(var(--npw,360px),42vw)}
+}
+/* ===== v72: compact navigation bar (icons only) for top, left, right and bottom ===== */
+#dkg{display:none;position:absolute;z-index:9;touch-action:none;background:transparent;transition:background-color .15s}
+#dkg:hover,html.dkdrag #dkg{background:rgba(var(--ac),.55)}
+html:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #dkg{display:block}
+html[data-dock=left] #dkg{top:0;bottom:0;right:-3px;width:7px;cursor:ew-resize}
+html[data-dock=right] #dkg{top:0;bottom:0;left:-3px;width:7px;cursor:ew-resize}
+html[data-dock=bottom] #dkg{left:0;right:0;top:-3px;height:7px;cursor:ns-resize}
+html.dkdrag{user-select:none;-webkit-user-select:none}
+html.dkdrag[data-dock=bottom] body{cursor:ns-resize}html.dkdrag:is([data-dock=left],[data-dock=right]) body{cursor:ew-resize}
+html.dkdrag #app,html.dkdrag #dock .tab{transition:none!important}
+html[data-dockc=on] #dock .tab .tl{display:none}
+html[data-dockc=on] #dock .tab{padding:0;gap:0;border-radius:14px}
+html[data-dockc=on]:is([data-dock=left],[data-dock=right]) #dock .tab{height:46px}
+html[data-dockc=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{gap:8px;padding:0 6px}
+html[data-dockc=on][data-dock=bottom] #dock{padding:3px 10px 3px}
+html[data-dockc=on][data-dock=bottom] #dock .tabs{max-width:360px}
+html[data-dockc=on][data-dock=bottom] #dock .tab{height:100%}
+html[data-dockc=on][data-dock=top] .tab{display:inline-flex;align-items:center;justify-content:center;width:52px;height:40px;padding:0;opacity:.6}
+html[data-dockc=on][data-dock=top] .tab.on{opacity:1;background:rgba(128,128,128,.2);border-radius:14px}
+html[data-dockc=on][data-dock=top] .tab .tic{display:block;width:26px;height:26px}
+html[data-dockc=on][data-dock=top] .tab .tl{display:none}
+html[data-dockc=on][data-dock=top] .tabs{gap:6px}
 </style>
 </head>
 <body>
@@ -2676,7 +2916,7 @@ function ask(title,val,ok){return new Promise(res=>{
 
 /* rendering */
 function rowHtml(s,i,withCover){
-  return `<div class="row ${cur===s.id?'on':''}" data-act="${selMode?'selrow':'play'}" data-id="${s.id}"><div class="n">${selMode?`<span class="ck ${selSet.has(s.id)?'on':''}">${selSet.has(s.id)?ic('check',14):''}</span>`:i+1}</div>${withCover?`<div class="th">${cover(songCover(s),s.name)}</div>`:''}<div class="t"><b>${esc(s.name)}</b><span>${view.album&&!withCover?fmtDate(s.added):subHtml(s,!(selMode))||'No album'}</span></div><span class="d">${lyBadgeHtml(s.id)}${fmt(effDur(s))}</span><button class="k" data-act="menu" data-id="${s.id}" aria-label="More options">${ic('dots',22)}</button></div>`;
+  return `<div class="row ${cur===s.id?'on':''}" data-act="${selMode?'selrow':'play'}" data-id="${s.id}"><div class="n">${selMode?`<span class="ck ${selSet.has(s.id)?'on':''}">${selSet.has(s.id)?ic('check',14):''}</span>`:i+1}</div>${withCover?`<div class="th">${cover(songCover(s),s.name)}</div>`:''}<div class="t"><b>${esc(s.name)}</b><span>${view.album&&!withCover?fmtDate(s.added):subHtml(s,!(selMode))||'No album'}</span></div><span class="d">${likeBadgeHtml(s)}${lyBadgeHtml(s.id)}${fmt(effDur(s))}</span><button class="k" data-act="menu" data-id="${s.id}" aria-label="More options">${ic('dots',22)}</button></div>`;
 }
 function songsList(){
   const q=view.q.trim().toLowerCase();
@@ -2693,13 +2933,13 @@ function renderSongs(m){
   if(view.artist)$('#fb').innerHTML=fbar('Songs',view.artist,`${l.length} ${l.length===1?'song':'songs'}${nf?' \u00b7 '+nf+' featured':''}`,'');
   m.innerHTML=l.length?rows:`<div class="empty">${view.artist?'No songs found.':songs.length?'No matches.':'No songs yet.<br>Tap the + button to import mp3, wav, flac, m4a and more from your phone.'}</div>`;
 }
-const szBar=()=>`<div class="abar fbr szr">${fszBtns()}</div>`;
+const szBar=(n)=>`<div class="abar fbr szr">${n>1?`<button class="ab" data-act="reorder" aria-label="Reorder" title="Reorder">${ic('reorder',21)}</button>`:''}${fszBtns()}</div>`;
 var fsz='m';try{fsz=localStorage.getItem('tracks-fsize')||'m'}catch(e){}
 function renderAlbums(m){
   const inF=view.folder?folders.find(f=>f.id===view.folder):null;
   const list=albums.filter(a=>(a.folderId||null)===(inF?inF.id:null)).sort(byOrd);
   let h='';
-  if(!inF)$('#fb').innerHTML=szBar();
+  if(!inF)$('#fb').innerHTML=szBar(list.length);
   if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+`<button class="ab" data-act="reorder" aria-label="Reorder albums" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="folderedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
   h+=`<div class="grid ${({s:'g3',l:'g1'}[fsz]||'')}">`+(inF?'':folders.map(foldCard).join(''))+
     list.map(a=>{const n=songs.filter(s=>s.album===a.id).length;return `<div class="acard"><button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${(a.artist||albFeat(a).length)?esc((a.artist||'')+(albFeat(a).length?(a.artist?' ':'')+'feat. '+albFeat(a).join(', '):''))+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
@@ -2782,7 +3022,7 @@ function renderFull(){
   $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><div class="tbm"><button class="ib tbmb" data-act="tbmenu" aria-haspopup="menu" aria-expanded="false" aria-label="Player options" title="Player options">${ic('tune',22)}</button><div class="tbmp" role="menu" aria-hidden="true"><button class="tbmi" role="menuitem" data-act="bgopts">${ic('image',24)}<span>Background</span></button><button class="tbmi" role="menuitem" data-act="tropts">${ic('trans',24)}<span>Transition</span></button><button class="tbmi" role="menuitem" data-act="fxopts">${ic('fxi',24)}<span>Beat effects</span></button></div></div><button class="ib nmb fnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib flyb${lyOn?' on':''}" data-act="lyrics" aria-pressed="${lyOn}" aria-label="Lyrics" title="Lyrics (L)">${ic('mic',22)}</button></div><div class="fcv${lyOn?' ly':''}">${cover(songCover(s),s.name,true)}<div class="lyp" aria-hidden="${lyOn?'false':'true'}"><div class="lys" id="lys"></div></div></div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
   <div class="fsk"><input type="range" class="rng seek" id="sk" min="0" max="1000" value="${Math.round(p*1000)}" style="--p:${p*100}%" aria-label="Seek"><div class="tm"><span id="ct">${fmt(vT())}</span><span id="dt2">${fmt(vD()||effDur(s))}</span></div></div>
   <div class="ctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',28)}</button><button class="ib big" id="fp" data-k="${au.paused?'play':'pause'}" data-act="toggle" aria-label="Play or pause">${ic(au.paused?'play':'pause',34)}</button><button class="ib" data-act="next" aria-label="Next">${ic('next',28)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div>
-  <div class="fbot"><div class="fg"><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div>`;
+  <div class="fbot"><div class="fg">${likeBtn(s)}<button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div>`;
   const sk=$('#sk');
   sk.oninput=()=>{if(vD())vSeek(sk.value/1000*vD());sk.style.setProperty('--p',(sk.value/10)+'%');$('#ct').textContent=fmt(vT())};
   sk.onpointerdown=()=>{seeking=true};
@@ -3291,10 +3531,20 @@ window.addEventListener('pointerup',()=>{seeking=false});
 /* ===== v30: Spotify style side player (PC only). Right panel: cover, title and synced lyrics. Bottom bar: controls. Turn it on in Settings > Appearance ===== */
 ICON.npx='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z';
 function npOn(){return NP.on&&document.documentElement.dataset.layout==='pc'}
+/* widest the side panel may be: the header keeps enough room (create/sync/search on the left, select/filter/settings on the right) so its buttons never run into each other */
+function npMax(){
+  const d=document.documentElement,p=$('#np'),t=$('#top'),cap=Math.max(280,Math.min(900,Math.round(innerWidth*.55)));
+  if(!npOn()||!p||!t||!p.offsetWidth)return cap;
+  const hx=Math.min(72,Math.max(28,innerWidth*.04)),docked=/^(left|right|bottom)$/.test(d.dataset.dock||'');
+  const need=innerWidth<900?(docked?560:440):(docked?820+2*(hx+100):640);/* 820px centred content + the buttons on both sides */
+  const avail=t.getBoundingClientRect().width+p.getBoundingClientRect().width+20;/* header + panel (with its gaps) stays constant while the panel is resized */
+  return Math.max(280,Math.min(cap,Math.floor(avail-need)));
+}
 function npApply(){
   const r=document.documentElement,on=npOn(),was=r.dataset.np==='on';
   r.dataset.np=on?'on':'off';
   r.style.setProperty('--npw',NP.w+'px');
+  if(on&&NP.w>280){const m=npMax();if(NP.w>m)r.style.setProperty('--npw',m+'px')}/* saved width is kept; only the shown width is limited */
   const p=$('#np');if(p)p.classList.toggle('nol',!NP.ly);
   const lb=$('#npb [data-npa=ly]');if(lb)lb.classList.toggle('on',NP.ly);
   if(on&&!was&&p){NP.sig=null;renderMini()}
@@ -3387,7 +3637,7 @@ function npTime(){
 /* drag the top-left corner (or the left edge) of the panel to make it wider or narrower */
 (function(){
   let sx=0,sw=0,on=false,id=null;
-  const max=()=>Math.max(280,Math.min(900,Math.round(innerWidth*.55)));
+  const max=npMax;
   const set=w=>{NP.w=Math.round(Math.min(max(),Math.max(280,w)));document.documentElement.style.setProperty('--npw',NP.w+'px')};
   document.addEventListener('pointerdown',e=>{
     const g=e.target.closest&&e.target.closest('#npg,#npge');if(!g||!npOn()||e.button>0)return;
@@ -3396,10 +3646,10 @@ function npTime(){
     document.documentElement.classList.add('npdrag');e.preventDefault();
   });
   document.addEventListener('pointermove',e=>{if(!on||e.pointerId!==id)return;set(sw+(sx-e.clientX))});
-  const end=e=>{if(!on||(e&&e.pointerId!==id))return;on=false;document.documentElement.classList.remove('npdrag');LS('tracks-npw',String(NP.w));NP.I=-1;npSync(true);const w=$('#npwr');if(w){w.value=NP.w;w.style.setProperty('--p',(Math.min(100,(NP.w-280)/620*100))+'%');const b=w.parentNode.querySelector('b');if(b)b.textContent=NP.w+'px'}};
+  const end=e=>{if(!on||(e&&e.pointerId!==id))return;on=false;document.documentElement.classList.remove('npdrag');LS('tracks-npw',String(NP.w));NP.I=-1;npSync(true);const w=$('#npwr');if(w){const mx=npMax();w.max=mx;w.value=NP.w;w.style.setProperty('--p',(mx>280?Math.min(100,(NP.w-280)/(mx-280)*100):100)+'%');const b=w.parentNode.querySelector('b');if(b)b.textContent=NP.w+'px'}};
   document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
   document.addEventListener('dblclick',e=>{if(e.target.closest&&e.target.closest('#npg,#npge')){set(360);LS('tracks-npw','360');NP.I=-1;npSync(true)}});
-  addEventListener('resize',()=>{if(npOn()&&NP.w>max())set(max())});
+  addEventListener('resize',()=>{if(npOn())npApply()});
 })();
 function npClick(e){
   const b=e.target.closest('[data-npa]');if(!b||e.target.closest('[data-act]'))return;
@@ -4102,6 +4352,7 @@ async function songMenu(id,plId){
   const pl0=plId?plGet(plId):null;
   const items=[{label:'Play next',value:'next',ic:'next'},{label:'Add to queue',value:'queue',ic:'qm'},
     {label:'Add to playlist',value:'toplaylist',ic:'addpl',gap:1},{label:'Add to album',value:'move',ic:'album'}];
+  if(LIKE.on){items[0].gap=1;items.unshift({label:s.liked?'Remove from Liked Songs':'Add to Liked Songs',value:'like',ic:s.liked?'likeOn':'likeOff',gap:0})}
   if(pl0&&!pl0.sys)items.push({label:'Remove from this playlist',value:'plrm',ic:'minus'});
   if(s.album)items.push({label:'Remove from album',value:'unalbum',ic:'unalb'});
   const cvT=!s.cover?null:pl0&&!pl0.sys?{o:pl0,st:'playlists',w:'playlist'}:(view.tab==='albums'&&view.album&&albums.find(x=>x.id===view.album)?{o:albums.find(x=>x.id===view.album),st:'albums',w:'album'}:null);
@@ -4109,6 +4360,7 @@ async function songMenu(id,plId){
   items.push({label:'Export song',value:'share',ic:'plist',gap:cvT?0:1});items.push({label:'Edit details',value:'edit',ic:'pencil',gap:0});items.push({label:'Replace audio file',value:'replacefile',ic:'swaph',gap:0});items.push({label:'Trim song',value:'trim',ic:'cut',gap:0});
   items.push({label:pl0?'Delete from library':'Delete song',value:'delete',danger:true,ic:'trash',gap:1});
   const r=await choose(s.name,items);
+  if(r==='like')await toggleLike(id);
   if(r==='next')qadd(id,true);
   if(r==='queue')qadd(id,false);
   if(r==='usecover'&&cvT){const old=cvT.o.cmedia&&cvT.o.cmedia.id;cvT.o.cover=s.cover;if(cvT.st==='albums')cvT.o.ccol=s.ccol||null;if(s.cmedia)cvT.o.cmedia=Object.assign({},s.cmedia);else delete cvT.o.cmedia;await put(cvT.st,cvT.o);toast('Updated '+cvT.w+' cover');medGC([old])}
@@ -4231,11 +4483,11 @@ function renderPlaylists(m){
   if(view.pl&&plGet(view.pl))return renderPlaylist(m);
   const inF=view.pf?pfolders.find(f=>f.id===view.pf):null;
   const list=playlists.filter(p=>(p.folderId||null)===(inF?inF.id:null)).sort(byOrd);
-  if(!inF)$('#fb').innerHTML=szBar();
+  if(!inF)$('#fb').innerHTML=szBar(list.length);
   if(inF)$('#fb').innerHTML=fbar('Playlists',inF.name,`${list.length} ${list.length===1?'playlist':'playlists'}`,fszBtns()+`<button class="ab" data-act="reorder" aria-label="Reorder playlists" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="pfedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
-  let h=`<div class="grid ${({s:'g3',l:'g1'}[fsz]||'')}">`+(inF||!rotOn?'':rotCard())+(inF?'':pfolders.map(pfoldCard).join(''))+
+  let h=`<div class="grid ${({s:'g3',l:'g1'}[fsz]||'')}">`+(inF||!LIKE.on?'':likedCard())+(inF||!rotOn?'':rotCard())+(inF?'':pfolders.map(pfoldCard).join(''))+
     list.map(p=>{const n=plSongs(p.id).length;return `<div class="acard"><button class="card" data-act="openpl" data-id="${p.id}">${plCover(p)}<b>${esc(p.name)}</b><span>${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="plcard" data-id="${p.id}" aria-label="Playlist options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
-  if(!list.length&&(inF||!pfolders.length)&&!(rotOn&&!inF))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create a playlist here.':'No playlists yet.<br>Tap + to create a playlist or a folder.<br>Songs you add stay in their albums.'}</div>`;
+  if(!list.length&&(inF||!pfolders.length)&&!((rotOn||LIKE.on)&&!inF))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create a playlist here.':'No playlists yet.<br>Tap + to create a playlist or a folder.<br>Songs you add stay in their albums.'}</div>`;
   m.innerHTML=h;
 }
 function renderPlaylist(m){
@@ -4244,7 +4496,7 @@ function renderPlaylist(m){
   m.innerHTML=`<div class="acv">${plCover(p,true)}</div>
   <div class="at"><h2>${esc(p.name)}</h2><button class="ib sh" data-act="plshuf" data-id="${p.id}" aria-label="Shuffle play">${ic('shuffle',22)}</button><button class="pbig" data-act="plplay" data-id="${p.id}" aria-label="Play">${ic('play',26)}</button></div>
   <p class="am">${[list.length+(list.length===1?' track':' tracks'),tot?Math.max(1,Math.round(tot/60))+' min':''].filter(Boolean).join(' \u00b7 ')}</p>${p.desc?`<p class="am" style="margin-top:-8px">${esc(p.desc)}</p>`:''}`+
-    '<div class="rl">'+(list.length?list.map((s,i)=>rowHtml(s,i,true)).join(''):(p.sys?'<div class="empty">Nothing here yet.<br>Songs you play often will show up in Rotation on their own.</div>':'<div class="empty">This playlist is empty.<br>Use the add songs button, or choose Add to playlist on any song.</div>'))+'</div>';
+    '<div class="rl">'+(list.length?list.map((s,i)=>rowHtml(s,i,true)).join(''):(p.sys?(p.id===LIKEID?'<div class="empty">No liked songs yet.<br>Tap the heart on a song to add it here.</div>':'<div class="empty">Nothing here yet.<br>Songs you play often will show up in Rotation on their own.</div>'):'<div class="empty">This playlist is empty.<br>Use the add songs button, or choose Add to playlist on any song.</div>'))+'</div>';
 }
 function plForm(p,fid){return new Promise(res=>{
   const isNew=!p,d={color:p?p.color||null:null,cover:p?p.cover||null:null,cmedia:p&&p.cmedia||null,cm:null};
@@ -4381,7 +4633,7 @@ function endDrag(){
   toast('Order saved');
 }
 $('#main').addEventListener('pointerdown',e=>{
-  if(selMode||view.pl===ROTID||!(view.album||(view.tab==='playlists'&&view.pl))||e.target.closest('.k'))return;
+  if(selMode||view.pl===ROTID||view.pl===LIKEID||!(view.album||(view.tab==='playlists'&&view.pl))||e.target.closest('.k'))return;
   const el=e.target.closest('.row');if(!el)return;
   cancelHold();
   hold={el,x:e.clientX,y:e.clientY,t:setTimeout(startDrag,750)};
@@ -4521,7 +4773,7 @@ function amove(){
   const d=ad;d.g.style.transform=`translate3d(${d.x-d.ox}px,${d.y-d.oy}px,0) scale(1.08)`;
   const t=document.elementFromPoint(d.x,d.y),h=t&&t.closest?t.closest('.fcard,[data-act="back"]'):null;
   if(h!==d.hot){if(d.hot)d.hot.classList.remove('hot');if(h)h.classList.add('hot');d.hot=h}
-  if(!h&&d.wrap&&(view.tab==='playlists'?view.pf:view.folder))aplace(d);
+  if(!h&&d.wrap)aplace(d);
 }
 /* inside a folder: dragging over another item swaps places with it (others slide out of the way) */
 function aplace(d){
@@ -4575,7 +4827,7 @@ async function delFolder(f){
 }
 $('#main').addEventListener('pointerdown',e=>{
   if(!((view.tab==='albums'&&!view.album)||(view.tab==='playlists'&&!view.pl)))return;
-  const el=e.target.closest('.card[data-act="open"],.card[data-act="openpl"]');if(!el||el.dataset.id===ROTID)return;
+  const el=e.target.closest('.card[data-act="open"],.card[data-act="openpl"]');if(!el||el.dataset.id===ROTID||el.dataset.id===LIKEID)return;
   acancel();ah={el,x:e.clientX,y:e.clientY,t:setTimeout(astart,750)};
 });
 $('#main').addEventListener('contextmenu',e=>{if(e.target.closest('.card'))e.preventDefault()});
@@ -4613,6 +4865,8 @@ document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
   const act=b.dataset.act,id=b.dataset.id;
   if(act==='tbmenu'){const w=b.closest('.tbm');if(w)tbmSet(!w.classList.contains('open'));return}
+  if(act==='like'){e.stopPropagation();return toggleLike(id||cur)}
+  if(act==='npmore'){e.stopPropagation();if(cur)songMenu(cur,null);return}
   if(act==='gotoalb'){e.stopPropagation();const aid=b.dataset.alb;if(!albums.find(x=>x.id===aid))return;if($('#full').classList.contains('open'))closeFull();if(qOpen)closeQ();closeSearch();selMode=false;selSet.clear();view.tab='albums';view.folder=null;view.artist=null;view.album=aid;return render()}
   if(act==='gotoart'){e.stopPropagation();const n=b.dataset.art;if(!n)return;if($('#full').classList.contains('open'))closeFull();if(qOpen)closeQ();closeSearch();selMode=false;selSet.clear();view.tab='songs';view.folder=null;view.album=null;view.artist=n;return render()}
   if(act==='menu'){e.stopPropagation();return songMenu(id,view.tab==='playlists'?view.pl:null)}
@@ -4925,12 +5179,14 @@ function setCustomBg(hex,save){CT.hex=hex.toLowerCase();if(save)try{localStorage
 /* layout mode: auto detects phone vs PC, can be forced from Settings */
 const LAY={m:'auto'};
 try{const v=localStorage.getItem('tracks-layout');if(v==='phone'||v==='pc'||v==='auto')LAY.m=v}catch(e){}
-function detectLayout(){return(matchMedia('(hover:hover) and (pointer:fine)').matches&&innerWidth>=900)?'pc':'phone'}
+function detectLayout(){return(matchMedia('(hover:hover) and (pointer:fine)').matches&&innerWidth>=640)?'pc':'phone'}
 function curLayout(){return LAY.m==='auto'?detectLayout():LAY.m}
-function applyLayout(){document.documentElement.dataset.layout=curLayout();if(typeof npApply==='function')npApply()}
+function applyLayout(){document.documentElement.dataset.layout=curLayout();try{dockSync()}catch(e){}if(typeof npApply==='function')npApply()}
 function setLayout(m,save){LAY.m=m;if(save)try{localStorage.setItem('tracks-layout',m)}catch(e){}applyLayout()}
 applyLayout();
 addEventListener('resize',()=>{if(LAY.m==='auto')applyLayout()});
+/* mouse wheel over the player-bar volume button or slider changes the volume */
+document.addEventListener('wheel',e=>{const t=e.target.closest&&e.target.closest('#npb .nr .mt,#npb #nbvl');if(!t)return;e.preventDefault();setVol(Math.min(1,Math.max(0,uvol+(e.deltaY<0?.05:-.05))))},{passive:false});
 /* movable section bar: Albums / Songs / Playlists can sit on top (default), left, right or bottom. The same buttons move, so every existing handler keeps working */
 const DOCKS=['top','left','right','bottom'];
 const getDock=()=>{const v=LS('tracks-dock');return DOCKS.includes(v)?v:'top'};
@@ -4940,9 +5196,46 @@ function applyDock(d){
   if(!tabs||!dock||!hdr)return;
   const host=d==='top'?hdr:dock;if(tabs.parentNode!==host)host.appendChild(tabs);
 }
-function setDock(d){if(!DOCKS.includes(d))return;LS('tracks-dock',d);applyDock(d);if(d!=='top')an($('#dock'),[{opacity:0},{opacity:1}],{duration:260,easing:EASE})}
+function setDock(d){if(!DOCKS.includes(d))return;LS('tracks-dock',d);applyDock(d);try{dockSync()}catch(e){}if(typeof npApply==='function')npApply();if(d!=='top')an($('#dock'),[{opacity:0},{opacity:1}],{duration:260,easing:EASE})}
 [['t1','album'],['t2','note'],['t3','plist']].forEach(([id,k])=>{const b=$('#'+id);if(b&&!b.querySelector('.tic')){const t=b.textContent;b.innerHTML=ic(k,24).replace('class="ic"','class="ic tic"')+'<span class="tl">'+esc(t)+'</span>'}});
 applyDock(getDock());
+/* navigation bar size: drag the bar's inner edge to shrink it (never larger than the normal size); narrow enough = icons only */
+const DKC={on:LS('tracks-dockc')==='1'};/* top bar: icons only on/off */
+const dkMax=()=>{const pc=document.documentElement.dataset.layout==='pc',d=getDock();return d==='bottom'?(pc?72:66):(pc?112:84)};
+const dkKey=()=>getDock()==='bottom'?'tracks-dockh':'tracks-dockw';
+function dockSync(){
+  const R=document.documentElement,d=getDock();let icons=false;
+  R.style.removeProperty('--dw');R.style.removeProperty('--dbh');
+  if(d==='left'||d==='right'){let w=+LS('tracks-dockw')||0;if(w&&w<dkMax()){w=Math.max(58,w);R.style.setProperty('--dw',w+'px');icons=w<84}}
+  else if(d==='bottom'){let h=+LS('tracks-dockh')||0;if(h&&h<dkMax()){h=Math.max(54,h);R.style.setProperty('--dbh',h+'px');icons=h<60}}
+  else icons=DKC.on;
+  R.dataset.dockc=icons?'on':'off';
+}
+function setDockC(on){/* Settings switch: icons only <-> normal size */
+  const d=getDock();
+  if(d==='top'){DKC.on=!!on;LS('tracks-dockc',on?'1':'0')}else LS(dkKey(),on?(d==='bottom'?'54':'58'):'');
+  dockSync();if(typeof npApply==='function')npApply();
+}
+(function(){
+  const dock=$('#dock');if(!dock||$('#dkg'))return;
+  dock.insertAdjacentHTML('afterbegin','<div id="dkg" role="separator" aria-label="Drag to resize the bar" title="Drag to make the bar smaller"></div>');
+  const g=$('#dkg');let st=null;
+  g.addEventListener('pointerdown',e=>{
+    if(e.button)return;const d=getDock(),r=dock.getBoundingClientRect();
+    st={id:e.pointerId,d,r,mx:dkMax()};g.setPointerCapture(e.pointerId);document.documentElement.classList.add('dkdrag');e.preventDefault();
+  });
+  g.addEventListener('pointermove',e=>{
+    if(!st||e.pointerId!==st.id)return;
+    const {d,r,mx}=st;let v=d==='left'?e.clientX-r.left:d==='right'?r.right-e.clientX:r.bottom-e.clientY;
+    const mn=d==='bottom'?54:58;v=Math.round(Math.min(mx,Math.max(mn,v)));
+    LS(dkKey(),v>=mx-2?'':String(v));dockSync();
+  });
+  const end=e=>{if(!st||(e&&e.pointerId!==st.id))return;st=null;document.documentElement.classList.remove('dkdrag');dockSync();if(typeof npApply==='function')npApply()};
+  g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+  g.addEventListener('dblclick',()=>{LS(dkKey(),'');dockSync();if(typeof npApply==='function')npApply()});/* double-click: back to normal size */
+  document.querySelectorAll('.tab').forEach(t=>{t.title=t.textContent.trim()});
+  dockSync();
+})();
 /* top bar look: colour, transparency and blur (applies to the section bar too when it is not on top) */
 const TPB={c:'',t:null,b:null};
 try{const j=JSON.parse(LS('tracks-topbar')||'null');if(j&&typeof j==='object'){if(/^#[0-9a-f]{6}$/i.test(j.c))TPB.c=j.c;if(typeof j.t==='number'&&isFinite(j.t))TPB.t=Math.min(100,Math.max(0,j.t));if(typeof j.b==='number'&&isFinite(j.b))TPB.b=Math.min(40,Math.max(0,j.b))}}catch(e){}
@@ -4974,7 +5267,7 @@ function openSettings(){
     <div class="scd"><h4>Theme</h4><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
     <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div><div class="tgs"><label>Background image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
-    <div class="scd"><h4>Navigation bar</h4><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><p class="dupn" style="margin:6px 6px 2px">Where Albums, Songs and Playlists sit.</p></div>
+    <div class="scd"><h4>Navigation bar</h4><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only, no labels. Works for every position.</small></span><span class="stog"></span></button><p class="dupn" style="margin:6px 6px 2px">Where Albums, Songs and Playlists sit.</p></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
     <div class="scd"><h4>Layout</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
     <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC layout only. Cover and lyrics on the right, with the player bar along the bottom.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
@@ -4984,6 +5277,7 @@ function openSettings(){
   <section class="stp" data-p="play">
     <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade, gapless, fade curve and more',esc(xfSummary()))}</div>
     <div class="scd"><h4>Smart playlists</h4><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Shows the songs you play most lately in Playlists. It updates itself over time.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Liked songs</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Adds a heart to songs and the player, and a Liked Songs playlist. Turning it off hides them but keeps your likes.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lib">
     <div class="scd"><h4>Audio</h4>${row('rfbulk','Replace audio in bulk','Match many files to songs by name and artist')}</div>
@@ -4995,7 +5289,7 @@ function openSettings(){
     <div class="scd"><h4>Backup file</h4>${row('exp','Export backup','Save your library details to a file')}${row('imp','Import backup','Restore from a backup file')}</div>
   </section>`);
   const sh=$('#ov .sheet');sh.classList.add('setsh');
-  const dkPaint=()=>{const d=getDock();sh.querySelectorAll('.setg[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===d));sh.querySelectorAll('#anst .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===ANIM.m))};
+  const dkPaint=()=>{sh.querySelectorAll('[data-dkc]').forEach(b=>b.setAttribute('aria-checked',String(document.documentElement.dataset.dockc==='on')));const d=getDock();sh.querySelectorAll('.setg[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===d));sh.querySelectorAll('#anst .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===ANIM.m))};
   const tpPaint=()=>{
     sh.querySelectorAll('#tpsw .swb').forEach(b=>b.classList.toggle('on',(b.dataset.c||'').toLowerCase()===TPB.c.toLowerCase()));
     const t=TPB.t===null?22:TPB.t,bl=TPB.b===null?18:TPB.b;
@@ -5013,7 +5307,7 @@ function openSettings(){
   const npPaint=()=>{
     const a=sh.querySelector('[data-npset=main]'),l=sh.querySelector('[data-npset=ly]'),m=$('#npmore'),n=$('#npn'),w=$('#npwr'),pc=document.documentElement.dataset.layout==='pc';
     if(a)a.setAttribute('aria-checked',!!NP.on);if(l)l.setAttribute('aria-checked',!!NP.ly);if(m)m.hidden=!NP.on;
-    if(w){w.value=NP.w;w.style.setProperty('--p',(Math.min(100,(NP.w-280)/620*100))+'%');w.parentNode.querySelector('b').textContent=NP.w+'px'}
+    if(w){const mx=npMax();w.max=mx;const v=Math.min(NP.w,mx);w.value=v;w.style.setProperty('--p',(mx>280?Math.min(100,(v-280)/(mx-280)*100):100)+'%');w.parentNode.querySelector('b').textContent=v+'px'}
     if(n)n.textContent=NP.on&&!pc?'Not showing right now: switch Layout to PC, or use a wider window.':'';
   };
   const paint=()=>{
@@ -5024,7 +5318,7 @@ function openSettings(){
     const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'':(LAY.m==='pc'?'PC mode: full-screen layout for computers.':'Phone mode: compact touch layout.');
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
-    const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);
+    const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);
     const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);
     tbPaint();dkPaint();tpPaint();npPaint();
   };
@@ -5036,8 +5330,10 @@ function openSettings(){
     const an_=e.target.closest('#anst .chip');if(an_){setAnim(an_.dataset.v);paint();return}
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
     const hn=e.target.closest('[data-hint]');if(hn){HINT.on=!HINT.on;LS('tracks-hints',HINT.on?'1':'0');hintApply();paint();return}
+    const dkc_=e.target.closest('[data-dkc]');if(dkc_){setDockC(document.documentElement.dataset.dockc!=='on');paint();return}
     const npb_=e.target.closest('[data-npset]');
     if(npb_){if(npb_.dataset.npset==='main'){NP.on=!NP.on;LS('tracks-np',NP.on?'1':'0')}else{NP.ly=!NP.ly;LS('tracks-npl',NP.ly?'1':'0')}npApply();paint();return}
+    const lkb_=e.target.closest('[data-lk]');if(lkb_){likeSet(!LIKE.on);paint();return}
     const sp=e.target.closest('[data-sp]');if(sp){rotSet(!rotOn);paint();return}
     const x=e.target.closest('[data-x]');
     if(x){const k=x.dataset.x;
@@ -5790,7 +6086,7 @@ try{rotPlays=JSON.parse(LS('tracks-plays')||'{}')||{}}catch(e){rotPlays={}}
 try{rotIds=JSON.parse(LS('tracks-rot')||'[]')||[]}catch(e){rotIds=[]}
 const ROT_COVER='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a3d'/><stop offset='.55' stop-color='#e8386d'/><stop offset='1' stop-color='#6d3bd6'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><g fill='none' stroke='#fff' stroke-width='11' stroke-linecap='round'><path d='M52 100a48 48 0 0 1 82-34' opacity='.95'/><path d='M148 100a48 48 0 0 1-82 34' opacity='.95'/></g><path d='M138 38l4 36-34-8z' fill='#fff'/><path d='M62 162l-4-36 34 8z' fill='#fff'/><path d='M90 82v36l30-18z' fill='#fff'/></svg>");
 const ROT={id:ROTID,name:'Rotation',cover:ROT_COVER,desc:'Your most played songs lately. It updates itself as your listening changes.',sys:true,songs:rotIds.slice()};
-function plGet(id){return id===ROTID?(rotOn?ROT:null):playlists.find(x=>x.id===id)}
+function plGet(id){return id===ROTID?(rotOn?ROT:null):id===LIKEID?(LIKE.on?(LIKEPL.songs=likedIds(),LIKEPL):null):playlists.find(x=>x.id===id)}
 const rotSave=()=>LS('tracks-plays',JSON.stringify(rotPlays));
 /* plays are logged even while the setting is off, so Rotation is already accurate when it is switched on */
 function rotLog(id){
@@ -5824,6 +6120,55 @@ function rotCard(){const n=ROT.songs.length;return `<div class="acard"><button c
 setInterval(()=>{if(rotOn)rotBuild()},3600000);
 addEventListener('pagehide',rotSave);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)rotSave();else if(rotOn){rotBuild();if(view.tab==='playlists'&&!view.pl&&!$('#ov').classList.contains('open'))render()}});
+/* ===== Liked songs. A liked song carries s.liked (the time it was liked) on the song itself, so it is saved, backed up and synced to Drive like every other song detail.
+   The Liked Songs playlist is built from those songs (newest like first). The Settings switch only shows or hides the hearts and the playlist; likes are never deleted by it. ===== */
+ICON.heart='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+ICON.heartO='M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z';
+ICON.likeOff='M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z';
+ICON.likeOn='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z';
+const LIKEID='__liked';
+var LIKE={on:LS('tracks-like')!=='0'};/* on unless switched off in Settings */
+document.documentElement.dataset.like=LIKE.on?'on':'off';
+const LIKED_COVER='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c4dff'/><stop offset='.55' stop-color='#c04df0'/><stop offset='1' stop-color='#ff4d8d'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><path fill='#fff' transform='translate(46 46) scale(4.5)' d='"+ICON.heart+"'/></svg>");
+const LIKEPL={id:LIKEID,name:'Liked Songs',cover:LIKED_COVER,desc:'Songs you have liked, newest first.',sys:true,songs:[]};
+const likedIds=()=>songs.filter(s=>s.liked).sort((a,b)=>b.liked-a.liked).map(s=>s.id);
+const likeBtn=s=>{const on=!!(s&&s.liked);return `<button class="ib lk${on?' on':''}" data-act="like" data-i="${on?1:0}" aria-pressed="${on}" aria-label="${on?'Unlike':'Like'}" title="${on?'Remove from Liked Songs':'Add to Liked Songs'}">${ic(on?'likeOn':'likeOff',22)}</button>`};
+/* small filled heart in song rows (tap to like or unlike); hidden while selecting */
+const likeBadgeHtml=s=>LIKE&&LIKE.on&&!selMode?`<button type="button" class="lkb${s.liked?' on':''}" data-act="like" data-id="${s.id}" aria-label="${s.liked?'Unlike':'Like'}" title="${s.liked?'Remove from Liked Songs':'Add to Liked Songs'}">${ic(s.liked?'likeOn':'likeOff',18)}</button>`:'';
+function likedCard(){const n=likedIds().length;return `<div class="acard"><button class="card" data-act="openpl" data-id="${LIKEID}">${plCover(LIKEPL)}<b>Liked Songs</b><span>${n} ${n===1?'song':'songs'}</span></button></div>`}
+/* make every heart button (mini player, big player, side player bar) match the song that is playing */
+function likePaint(){
+  if(!LIKE)return;
+  document.documentElement.dataset.like=LIKE.on?'on':'off';
+  const s=songs.find(x=>x.id===cur),on=!!(s&&s.liked);
+  document.querySelectorAll('.lk').forEach(b=>{
+    b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',on?'Unlike':'Like');b.title=on?'Remove from Liked Songs':'Add to Liked Songs';
+    const k=on?'1':'0';if(b.dataset.i!==k){b.dataset.i=k;b.innerHTML=ic(on?'likeOn':'likeOff',22)}
+  });
+}
+function likeRows(id){
+  const s=songs.find(x=>x.id===id);if(!s)return;
+  document.querySelectorAll('#main .row[data-id="'+id+'"] .d').forEach(d=>{const o=d.querySelector('.lkb');if(o)o.remove();const h=likeBadgeHtml(s);if(h)d.insertAdjacentHTML('afterbegin',h)});
+}
+async function toggleLike(id){
+  if(!LIKE.on||!id)return;
+  const s=songs.find(x=>x.id===id);if(!s)return;
+  const on=!s.liked;
+  if(on)s.liked=Date.now();else delete s.liked;
+  likePaint();likeRows(id);
+  if(on&&id===cur)document.querySelectorAll('.lk svg').forEach(pop);
+  toast(on?'Added to Liked Songs':'Removed from Liked Songs');
+  await put('songs',s);/* stamps s.mod, so Drive sync picks the newest change */
+  if(view.tab==='playlists'&&(!view.pl||view.pl===LIKEID))render();
+}
+function likeSet(on){
+  if(on===LIKE.on)return;
+  LIKE.on=on;LS('tracks-like',on?'1':'0');
+  if(!on&&view.pl===LIKEID)view.pl=null;
+  likePaint();render();
+  toast(on?'Liked Songs is on':'Liked Songs is off. Your likes are kept.');
+}
+{const _rm=renderMini;renderMini=function(){const r=_rm.apply(this,arguments);likePaint();return r}}
 const _cs=cloudSheet;cloudSheet=function(){_cs.apply(this,arguments);cloudQuota()};
 async function cloudQuota(){
   const B=x=>x>=1e9?(x/1e9).toFixed(1)+' GB':Math.round(x/1e6)+' MB';let h='';
@@ -5844,7 +6189,7 @@ function ui(){
   $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off"><button class="sbx" data-act="clearsearch" aria-label="Close search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
   $('#sq').oninput=()=>{view.q=$('#sq').value;render()};
   $('#sq').onblur=()=>{if(!$('#sq').value)closeSearch()};
-  $('#mini').innerHTML=`<video class="mbv mv" muted loop playsinline preload="none" disablepictureinpicture tabindex="-1" aria-hidden="true"></video><button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div><button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div>
+  $('#mini').innerHTML=`<video class="mbv mv" muted loop playsinline preload="none" disablepictureinpicture tabindex="-1" aria-hidden="true"></video><button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div>${likeBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div>
   <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button><button class="ib nmb mnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',17)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
   $('#app').insertAdjacentHTML('beforeend',`<div id="vp"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="vol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div>`);
   $('#vol').oninput=e=>{setVol(e.target.value/100);vpTimer()};
@@ -5853,7 +6198,7 @@ function ui(){
   $('#msk').onpointerdown=()=>{seeking=true};
   $('#app').insertAdjacentHTML('beforeend',`<div id="qp"><div class="qh"><h3>Queue</h3><div class="qa"><button class="ovx" data-act="qshuf" aria-label="Shuffle upcoming songs">${ic('shuffle',18)}</button><button class="pill" data-act="qclear">Clear</button><button class="ovx" data-act="qclose" aria-label="Close queue">${ic('close',16)}</button></div></div><div id="ql"></div></div>`);
   $('#mini .m1').addEventListener('click',e=>{if(e.target.closest('[data-act]'))return;openFull()});
-  $('#app').insertAdjacentHTML('beforeend',`<aside id="np" aria-label="Now playing"><div class="npg" id="npg" role="separator" aria-orientation="vertical" aria-label="Drag to resize the panel" title="Drag to resize (double-click to reset)"></div><div class="npge" id="npge"></div><div class="nph"><b>Now playing</b><button class="ib" data-npa="full" aria-label="Open full player" title="Full screen player">${ic('npx',22)}</button></div><div class="npc" id="npc" data-npa="full"></div><div class="npi"><div class="npn"><h2 id="npt"></h2><p id="nps"></p></div></div><div class="npl" id="npl"></div></aside><div id="npb"><div class="nl"><div class="nc" id="nbc" data-npa="full"></div><div class="nt"><b id="nbt"></b><span id="nbs"></span></div><div class="npa"><button class="ib" data-act="minialbum" aria-label="Add to album" title="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist" title="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div></div><div class="nm"><div class="nctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="nbp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div><div class="nsk"><span id="nbct">0:00</span><input type="range" class="rng" id="nbsk" min="0" max="1000" value="0" aria-label="Seek"><span id="nbdt">0:00</span></div></div><div class="nr"><button class="ib${NP.ly?' on':''}" data-npa="ly" aria-label="Show lyrics" title="Lyrics">${ic('mic',22)}</button><button class="ib nmb pnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="qopen" aria-label="Queue" title="Queue (hold for the full queue)">${ic('qm',22)}<svg class="qring" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17"/></svg></button><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="nbvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div></div>`);
+  $('#app').insertAdjacentHTML('beforeend',`<aside id="np" aria-label="Now playing"><div class="npg" id="npg" role="separator" aria-orientation="vertical" aria-label="Drag to resize the panel" title="Drag to resize (double-click to reset)"></div><div class="npge" id="npge"></div><div class="nph"><b>Now playing</b><span class="nphr"><button class="ib" data-npa="full" aria-label="Open full player" title="Full screen player">${ic('npx',22)}</button></span></div><div class="npc" id="npc" data-npa="full"></div><div class="npi"><div class="npn"><h2 id="npt"></h2><p id="nps"></p></div>${likeBtn()}</div><div class="npl" id="npl"></div></aside><div id="npb"><div class="nl"><div class="nc" id="nbc" data-npa="full"></div><div class="nt"><b id="nbt"></b><span id="nbs"></span></div><div class="npa">${likeBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album" title="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist" title="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib npm" data-act="npmore" aria-label="More options" title="Like, add to album or playlist, edit details">${ic('dots',22)}</button></div></div><div class="nm"><div class="nctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="nbp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div><div class="nsk"><span id="nbct">0:00</span><input type="range" class="rng" id="nbsk" min="0" max="1000" value="0" aria-label="Seek"><span id="nbdt">0:00</span></div></div><div class="nr"><button class="ib${NP.ly?' on':''}" data-npa="ly" aria-label="Show lyrics" title="Lyrics">${ic('mic',22)}</button><button class="ib nmb pnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="qopen" aria-label="Queue" title="Queue (hold for the full queue)">${ic('qm',22)}<svg class="qring" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17"/></svg></button><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="nbvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div></div>`);
   $('#np').addEventListener('click',npClick);$('#npb').addEventListener('click',npClick);nmPaint();
   $('#nbsk').oninput=e=>{if(vD())vSeek(e.target.value/1000*vD());e.target.style.setProperty('--p',(e.target.value/10)+'%');$('#nbct').textContent=fmt(vT())};
   $('#nbsk').onpointerdown=()=>{seeking=true};
