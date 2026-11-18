@@ -638,8 +638,8 @@ html[data-layout=pc] .acard:hover .alm,html[data-layout=pc] .fcard:hover .fm,htm
 html[data-layout=pc] .card:focus-visible,html[data-layout=pc] .row:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 
 /* songs, album and playlist rows become a table */
-html[data-layout=pc] #main .row{display:grid;grid-template-columns:44px 48px minmax(0,2fr) minmax(0,1.3fr) 64px 44px;column-gap:16px;align-items:center;padding:8px 14px}
-html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:44px minmax(0,2fr) minmax(0,1.3fr) 64px 44px}
+html[data-layout=pc] #main .row{display:grid;grid-template-columns:44px 48px minmax(0,2fr) minmax(0,1.3fr) 92px 44px;column-gap:16px;align-items:center;padding:8px 14px}
+html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:44px minmax(0,2fr) minmax(0,1.3fr) 92px 44px}
 html[data-layout=pc] #main .row .t{display:contents}
 html[data-layout=pc] #main .row .t b{grid-column:auto;font-size:16px}
 html[data-layout=pc] #main .row .t span{font-size:14px}
@@ -686,7 +686,7 @@ html[data-layout=pc] .sheet:has(.bgs){max-width:540px}
 html[data-layout=pc] .bgs .fop span{width:120px}
 html[data-layout=pc] .chip:hover,html[data-layout=pc] .swb:hover{opacity:.85}
 html[data-layout=pc] #qp #ql .row{padding:8px 4px}
-@media (min-width:1500px){html[data-layout=pc] #main .row{grid-template-columns:48px 52px minmax(0,2.2fr) minmax(0,1.4fr) 72px 48px}}
+@media (min-width:1500px){html[data-layout=pc] #main .row{grid-template-columns:48px 52px minmax(0,2.2fr) minmax(0,1.4fr) 96px 48px}}
 
 /* PC header toolbar: [create][sync] ........ tabs ........ [queue][settings] */
 html[data-layout=pc] .hr{height:52px;gap:12px}
@@ -737,8 +737,8 @@ html[data-layout=pc] #main:has(>.acv)>.am~.am{grid-column:2/-1;grid-row:3;margin
 html[data-layout=pc] #main:has(>.acv)>.at>.sh{grid-column:3;grid-row:1/span 2;align-self:center;width:48px;height:48px;margin-left:16px}
 html[data-layout=pc] #main:has(>.acv)>.at>.pbig{grid-column:4;grid-row:1/span 2;align-self:center;width:56px;height:56px;border-radius:18px;margin-left:8px}
 html[data-layout=pc] #main:has(>.acv)>.rl{grid-column:2/-1;grid-row:4;margin-top:24px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--text) 8%,transparent)}
-html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:36px minmax(0,1fr) 56px 44px;column-gap:14px;padding:8px 10px}
-html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:36px 48px minmax(0,1fr) 56px 44px}
+html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:36px minmax(0,1fr) 92px 44px;column-gap:14px;padding:8px 10px}
+html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:36px 48px minmax(0,1fr) 92px 44px}
 html[data-layout=pc] #main:has(>.acv) .row .t{display:block;min-width:0}
 html[data-layout=pc] #main:has(>.acv) .row .t b{font-size:15.5px}
 html[data-layout=pc] #main:has(>.acv) .row .d{text-align:right;margin:0;padding:0}
@@ -1188,6 +1188,15 @@ html[data-layout=pc][data-np=on] .qk{display:none}
 #np .npi .npa .ib:hover{opacity:1}
 #np .npl.npq{display:block;padding:4px 8px 16px;text-align:left}
 #np .npq .npqh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 8px 0;font-size:12px;color:var(--mute)}
+/* the lyrics buttons never squash into circles: smaller pills that stay on one line, and the header wraps when the panel is narrow */
+.npqh{flex-wrap:wrap;row-gap:6px}
+.npqh>span:first-child{flex:1 1 auto;min-width:0}
+.npqh>span:last-child:not(:first-child){display:flex;gap:6px;flex:0 1 auto;flex-wrap:wrap}
+.npqh .pill{padding:7px 12px;font-size:12px;white-space:nowrap;flex:none}
+@media (max-width:899px),(max-height:759px){
+  .npqh{padding:6px 4px 0}
+  .npqh .pill{padding:5px 9px;font-size:11px}
+}
 #np .npq .qs{margin:12px 8px 2px}
 #np .npq .row{padding:6px 8px;border-radius:10px;border-bottom:0}
 #np .npq .row .t{min-width:0;flex:1}
@@ -1420,8 +1429,8 @@ html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
   /* song rows: smaller, album column drops out when it would only be a sliver */
   html[data-layout=pc] #main .row{padding:5px 10px;column-gap:12px}
   html[data-layout=pc] #main .row .th,html[data-layout=pc] #main .row .th .cov{width:40px;height:40px}
-  html[data-layout=pc] #main .row{grid-template-columns:36px 40px minmax(0,2fr) minmax(0,1.2fr) 52px 40px}
-  html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:36px minmax(0,2fr) minmax(0,1.2fr) 52px 40px}
+  html[data-layout=pc] #main .row{grid-template-columns:36px 40px minmax(0,2fr) minmax(0,1.2fr) 86px 40px}
+  html[data-layout=pc] #main .row:not(:has(.th)){grid-template-columns:36px minmax(0,2fr) minmax(0,1.2fr) 86px 40px}
   html[data-layout=pc] #main .row .t b{font-size:14.5px}
   html[data-layout=pc] #main .row .t span{font-size:12.5px}
   html[data-layout=pc] #main .row .k{width:34px;height:34px}
@@ -1430,8 +1439,8 @@ html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
   html[data-layout=pc] #main:has(>.acv)>.at>h2{font-size:24px}
   html[data-layout=pc] #main:has(>.acv)>.at>.sh{width:42px;height:42px;margin-left:10px}
   html[data-layout=pc] #main:has(>.acv)>.at>.pbig{width:48px;height:48px;border-radius:16px}
-  html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:32px minmax(0,1fr) 50px 38px;padding:5px 8px}
-  html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:32px 40px minmax(0,1fr) 50px 38px}
+  html[data-layout=pc] #main:has(>.acv) .row{grid-template-columns:32px minmax(0,1fr) 86px 38px;padding:5px 8px}
+  html[data-layout=pc] #main:has(>.acv) .row:has(.th){grid-template-columns:32px 40px minmax(0,1fr) 86px 38px}
   /* full player: the cover gives way before the controls do */
   html[data-layout=pc] #fc{padding-top:14px;padding-bottom:16px;column-gap:clamp(20px,4vw,48px);padding-left:clamp(16px,3vw,40px);padding-right:clamp(16px,3vw,40px)}
   html[data-layout=pc] .fcv .cov{width:min(100%,calc(100dvh - 120px),520px)}
@@ -1441,24 +1450,6 @@ html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
   html[data-layout=pc] .ctl .big{width:64px;height:64px}
   /* sheets and menus use the room they have */
   html[data-layout=pc] .sheet{max-width:min(520px,calc(100vw - 20px))}
-}
-/* mini player (shown when the side player is off): one slim bar instead of a 3-row card */
-@media (max-width:899px),(max-height:759px){
-  html[data-layout=pc] #mini{container-type:inline-size;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:10px;row-gap:0;padding:14px 12px 6px;border-radius:18px;
-    left:max(calc(14px + var(--dl)),calc(50% + (var(--dl) - var(--dr))/2 - 360px));right:max(calc(14px + var(--dr)),calc(50% - (var(--dl) - var(--dr))/2 - 360px));bottom:calc(12px + var(--db))}
-  html[data-layout=pc] #mini .m1{order:1;flex:1 1 0;min-width:0;gap:8px}
-  html[data-layout=pc] #mini .m2{order:2;flex:0 1 auto;margin-top:0;justify-content:flex-end;gap:2px}
-  html[data-layout=pc] #mini .m3{order:3;flex:0 0 100%;margin-top:0}
-  html[data-layout=pc] #mini .m3 .rng{height:22px}
-  html[data-layout=pc] .mcv,html[data-layout=pc] .mcv .cov{width:42px;height:42px}
-  html[data-layout=pc] #mini .m1 .ib{width:36px;height:36px}
-  html[data-layout=pc] #mini .m2>.ib{width:36px;height:36px}
-  html[data-layout=pc] #mini .m2>.ib.mp{width:40px;height:40px}
-  html[data-layout=pc] #mini.vm .m2>.ib{width:36px}
-  html[data-layout=pc] #mini.vm .m2 .mvs{flex:0 0 130px;max-width:130px}
-  html[data-layout=pc] #mini .mhide{height:14px}
-  html[data-layout=pc] #app.hm #main{padding-bottom:108px}
-  html[data-layout=pc] #app.selmode #main{padding-bottom:150px}
 }
 @container (max-width:560px){
   #mini .m1 [data-act=minialbum],#mini .m1 [data-act=miniplaylist]{display:none}
@@ -1512,6 +1503,69 @@ html[data-dockc=on][data-dock=top] .tab.on{opacity:1;background:rgba(128,128,128
 html[data-dockc=on][data-dock=top] .tab .tic{display:block;width:26px;height:26px}
 html[data-dockc=on][data-dock=top] .tab .tl{display:none}
 html[data-dockc=on][data-dock=top] .tabs{gap:6px}
+
+/* ===== v73: fixed row-end slots, compact toolbar, Spotify-style small album page ===== */
+/* like (+), synced-lyrics mic and time each own a slot, so the + circles line up on every row whether or not the mic is shown */
+#main .row .d .lkb{order:-2;flex:none}
+#main .row .d .lyb{order:-1;width:14px;justify-content:center;flex:none}
+#main .row .d::before{content:"";order:-1;width:14px;flex:none}
+#main .row .d:has(.lyb)::before{display:none}
+#main .row .d .tm{min-width:4.4ch;text-align:right;font-variant-numeric:tabular-nums;color:inherit;font-size:inherit;font-weight:inherit;text-shadow:none;opacity:1}
+/* small window, section bar on the left/right/bottom: search sits after + and cloud, select and filter sit before the gear (they used to be drawn on top of them) */
+@media (max-width:899px),(max-height:759px){
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]){--hbl:calc(44px + 10px + 44px + 14px);--hbr:calc(44px + 10px)}
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]):not([data-np=on]){--hbr:calc(44px + 10px + 56px)}
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb{left:calc(var(--hx) + var(--hbl))}
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #flt{right:calc(var(--hx) + var(--hbr))}
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #selbtn{right:calc(var(--hx) + var(--hbr) + 38px + 10px)}
+}
+@media (max-width:899px){
+  html[data-layout=pc] #main:has(>.acv){--cv:min(140px,26vw);grid-template-columns:var(--cv) auto auto minmax(0,1fr);grid-template-rows:auto auto auto auto auto;column-gap:14px;padding-left:20px;padding-right:20px;padding-top:calc(var(--tp,100px) + 14px)}
+  html[data-layout=pc] #main:has(>.acv)>.acv{grid-column:1;grid-row:1/span 4;position:static;width:var(--cv)}
+  html[data-layout=pc] #main:has(>.acv)>.acv .cov{border-radius:12px;font-size:48px}
+  html[data-layout=pc] #main:has(>.acv)>.at>h2{grid-column:2/-1;grid-row:1;font-size:clamp(20px,5vw,28px);line-height:1.15}
+  html[data-layout=pc] #main:has(>.acv)>.am{grid-column:2/-1;grid-row:2;margin:4px 0 0!important;font-size:13px}
+  html[data-layout=pc] #main:has(>.acv)>.am~.am{grid-column:2/-1;grid-row:3;margin:4px 0 0!important}
+  html[data-layout=pc] #main:has(>.acv)>.at>.sh{grid-column:2;grid-row:4;align-self:end;margin-left:0;width:44px;height:44px}
+  html[data-layout=pc] #main:has(>.acv)>.at>.pbig{grid-column:3;grid-row:4;align-self:end;margin-left:0;width:52px;height:52px;border-radius:50%}
+  html[data-layout=pc] #main:has(>.acv)>.rl{grid-column:1/-1;grid-row:5;margin-top:18px;padding-top:6px}
+}
+@media (min-width:900px) and (max-width:1120px){
+  html[data-layout=pc][data-np=on] #main:has(>.acv){--cv:min(140px,26vw);grid-template-columns:var(--cv) auto auto minmax(0,1fr);grid-template-rows:auto auto auto auto auto;column-gap:14px;padding-left:20px;padding-right:20px;padding-top:calc(var(--tp,100px) + 14px)}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.acv{grid-column:1;grid-row:1/span 4;position:static;width:var(--cv)}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.acv .cov{border-radius:12px;font-size:48px}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.at>h2{grid-column:2/-1;grid-row:1;font-size:clamp(20px,5vw,28px);line-height:1.15}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.am{grid-column:2/-1;grid-row:2;margin:4px 0 0!important;font-size:13px}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.am~.am{grid-column:2/-1;grid-row:3;margin:4px 0 0!important}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.at>.sh{grid-column:2;grid-row:4;align-self:end;margin-left:0;width:44px;height:44px}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.at>.pbig{grid-column:3;grid-row:4;align-self:end;margin-left:0;width:52px;height:52px;border-radius:50%}
+  html[data-layout=pc][data-np=on] #main:has(>.acv)>.rl{grid-column:1/-1;grid-row:5;margin-top:18px;padding-top:6px}
+}
+
+/* ===== v74: small windows - Add, Cloud, Queue and Settings live on the navigation bar ===== */
+#hbx,#hby{display:none}
+html[data-hb=dock] #hbx,html[data-hb=dock] #hby{display:flex;align-items:center;gap:8px;flex:none;position:relative;z-index:3}
+html[data-hb=dock] #hbx .plus,html[data-hb=dock] #hby .gear,html[data-hb=dock] #hbx #cb,html[data-hb=dock] #hby .qk{width:40px;height:40px;min-width:0;border-radius:50%;margin:0!important;flex:none}
+html[data-hb=dock] #hbx .plus svg{width:22px;height:22px}
+html[data-hb=dock] #hby .qk{position:static;top:auto;right:auto;display:flex}
+html[data-hb=dock][data-np=on] #hby .qk{display:none}
+html[data-hb=dock] .hr{display:none}
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]){--ht:10px;--hbl:0px;--hbr:0px}
+/* the empty button row is only kept as a spacer for the search / select / filter row */
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #top:has(#tb.show) .hr{display:flex;pointer-events:none}
+html[data-hb=dock]:is([data-dock=left],[data-dock=right]) #dock{justify-content:space-between;padding:12px 0}
+html[data-hb=dock]:is([data-dock=left],[data-dock=right]) :is(#hbx,#hby){flex-direction:column}
+html[data-hb=dock]:is([data-dock=left],[data-dock=right]) #dock .tabs{margin:auto 0}
+html[data-hb=dock][data-dock=bottom] #dock{justify-content:space-between;align-items:center;gap:8px}
+html[data-hb=dock][data-dock=bottom] #dock .tabs{align-self:stretch}
+html[data-hb=dock][data-dock=top] #top header{display:flex;align-items:center;gap:8px;padding-top:6px;padding-bottom:2px}
+html[data-hb=dock][data-dock=top] .tabs{flex:1;min-width:0;height:40px;padding:0;gap:clamp(4px,2vw,18px);justify-content:center}
+html[data-hb=dock][data-dock=top] .tab{font-size:clamp(12px,3.2vw,18px);padding:2px 6px}
+/* open search never runs over select / filter / the side player */
+@media (max-width:899px),(max-height:759px){
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb.so #flt,html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb.so #selbtn{display:none}
+  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(560px,calc(100% - 2*var(--hx) - var(--hbl)));max-width:none}
+}
 </style>
 </head>
 <body>
@@ -2916,7 +2970,7 @@ function ask(title,val,ok){return new Promise(res=>{
 
 /* rendering */
 function rowHtml(s,i,withCover){
-  return `<div class="row ${cur===s.id?'on':''}" data-act="${selMode?'selrow':'play'}" data-id="${s.id}"><div class="n">${selMode?`<span class="ck ${selSet.has(s.id)?'on':''}">${selSet.has(s.id)?ic('check',14):''}</span>`:i+1}</div>${withCover?`<div class="th">${cover(songCover(s),s.name)}</div>`:''}<div class="t"><b>${esc(s.name)}</b><span>${view.album&&!withCover?fmtDate(s.added):subHtml(s,!(selMode))||'No album'}</span></div><span class="d">${likeBadgeHtml(s)}${lyBadgeHtml(s.id)}${fmt(effDur(s))}</span><button class="k" data-act="menu" data-id="${s.id}" aria-label="More options">${ic('dots',22)}</button></div>`;
+  return `<div class="row ${cur===s.id?'on':''}" data-act="${selMode?'selrow':'play'}" data-id="${s.id}"><div class="n">${selMode?`<span class="ck ${selSet.has(s.id)?'on':''}">${selSet.has(s.id)?ic('check',14):''}</span>`:i+1}</div>${withCover?`<div class="th">${cover(songCover(s),s.name)}</div>`:''}<div class="t"><b>${esc(s.name)}</b><span>${view.album&&!withCover?fmtDate(s.added):subHtml(s,!(selMode))||'No album'}</span></div><span class="d">${likeBadgeHtml(s)}${lyBadgeHtml(s.id)}<span class="tm">${fmt(effDur(s))}</span></span><button class="k" data-act="menu" data-id="${s.id}" aria-label="More options">${ic('dots',22)}</button></div>`;
 }
 function songsList(){
   const q=view.q.trim().toLowerCase();
@@ -3185,6 +3239,100 @@ async function lyScanAll(manual){
   }finally{lyScanning=false}
 }
 function lyBoot(){let tries=0;const go=()=>{if(!songs.length&&tries++<6)return setTimeout(go,3000);lyScanAll(false)};setTimeout(go,4000)}
+/* ===== LRCLIB: free online synced lyrics (https://lrclib.net) =====
+   Used only for songs that have no lyrics yet (or only unsynced ones), and only while you look at lyrics. It sends that song's title, artist, album and length to lrclib.net.
+   Found lyrics are stored locally like scanned ones. A miss is remembered for a week so the same song is not asked again and again. Switch: Settings > Library > Lyrics. */
+const LRL={on:LS('tracks-lrclib')!=='0'},LRL_RETRY=7*864e5,lrBusy=new Map();
+const lrTitle=n=>String(n||'').replace(/^\s*\d{1,3}\s*[-._)]\s*(?=\D)/,'').replace(/\s*[(\[][^)\]]*\b(lyrics?|lyric video|official|audio|video|hd|hq|remaster(ed)?)\b[^)\]]*[)\]]\s*/gi,' ').replace(/\s+/g,' ').trim();
+async function lrGet(u){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),9000);
+  try{const r=await fetch(u,{signal:c.signal});if(r.status===404)return null;if(!r.ok)throw new Error('http '+r.status);return await r.json()}
+  finally{clearTimeout(t)}
+}
+/* -> {s,l} (same shape as lyMake) | null when LRCLIB has nothing; throws when LRCLIB cannot be reached */
+async function lrFind(s){
+  const title=lrTitle(s.name),artist=artOf(s),al=albumOf(s),album=al?al.name:'',dur=Math.round(s.dur||0);
+  if(!title||(!artist&&!dur))return null;/* a bare title is too vague to trust a match */
+  const B='https://lrclib.net/api/',q=o=>Object.entries(o).filter(e=>e[1]).map(e=>e[0]+'='+encodeURIComponent(e[1])).join('&');
+  const artOk=x=>{if(!artist)return true;const a=nkey(artist),b=nkey(x.artistName);return !!b&&(a.includes(b)||b.includes(a))};
+  const pick=arr=>{
+    let best=null;
+    for(const x of Array.isArray(arr)?arr:[arr]){
+      if(!x||x.instrumental||!artOk(x))continue;
+      const sy=!!(x.syncedLyrics&&x.syncedLyrics.trim()),pl=!!(x.plainLyrics&&x.plainLyrics.trim());
+      if(!sy&&!pl)continue;
+      const dd=dur&&x.duration?Math.abs(x.duration-dur):0;
+      if(dur&&x.duration&&dd>4)continue;/* different recording or edit: its timings would not line up */
+      const sc=(sy?0:100)+dd;
+      if(!best||sc<best.sc)best={x,sc};
+    }
+    return best&&best.x;
+  };
+  let x=null;
+  if(artist&&album&&dur)x=pick(await lrGet(B+'get?'+q({track_name:title,artist_name:artist,album_name:album,duration:dur})));
+  if(!x)x=pick(await lrGet(B+'search?'+q({track_name:title,artist_name:artist})));
+  if(!x)return null;
+  return lyMake(null,x.syncedLyrics)||lyMake(null,x.plainLyrics)||null;
+}
+/* does this song's lyrics record call for an online look? 1 = no lyrics at all, 2 = only unsynced lyrics, 0 = no */
+function lyNeed(rec){
+  if(rec&&rec.m)return 0;/* added by hand: never overridden */
+  if(rec&&rec.o&&Date.now()-rec.o<LRL_RETRY)return 0;
+  if(!rec||!rec.l||!rec.l.length)return 1;
+  return rec.s?0:2;
+}
+const lyWant=(s,rec)=>LRL.on&&navigator.onLine!==false?lyNeed(rec):0;
+/* -> {rec,ok} found and stored | {rec,miss} nothing better | {rec,err} LRCLIB unreachable (nothing is remembered, so it is tried again later) */
+function lyOnline(s,force){
+  if(lrBusy.has(s.id))return lrBusy.get(s.id);
+  const p=(async()=>{
+    const old=LYM.get(s.id);let hit;
+    try{hit=await lrFind(s)}catch(e){return {rec:old||null,err:1}}
+    const stamp=Date.now();
+    if(hit&&(!old||!old.l||!old.l.length||(hit.s&&!old.s))){
+      const rec={id:s.id,v:LYR_V,s:hit.s,l:hit.l,o:stamp,src:'lrclib'};
+      if(force){rec.m=1;rec.mod=stamp}/* asked for by hand: keep it like a manual add */
+      LYM.set(s.id,rec);tx('lyrics','readwrite',st=>st.put(rec));lyBadge(s.id);npLyRefresh(s.id);
+      if(force)cloudDirty();
+      if(s.id===lyFor)lyPaint(rec);
+      return {rec,ok:1};
+    }
+    const rec={...(old||{id:s.id,v:LYR_V,s:null,l:null}),o:stamp};
+    LYM.set(s.id,rec);tx('lyrics','readwrite',st=>st.put(rec));
+    return {rec,miss:1};
+  })().finally(()=>lrBusy.delete(s.id));
+  lrBusy.set(s.id,p);return p;
+}
+const lyResolve=s=>lyEnsure(s).then(r=>lyWant(s,r)===1?lyOnline(s).then(o=>(o&&o.rec)||r):r);
+async function lyFind(id){
+  const s=songs.find(x=>x.id===id);if(!s)return;
+  if(navigator.onLine===false)return toast('You are offline');
+  toast('Searching LRCLIB\u2026');
+  await lyEnsure(s);
+  const o=await lyOnline(s,true);
+  if(o.err)return toast('Could not reach LRCLIB');
+  toast(o.ok?(o.rec.s?'Synced lyrics found':'Lyrics found (not time-synced)'):'LRCLIB has nothing better for this song');
+}
+let lrBulk=false;
+async function lyFindAll(){
+  if(lrBulk)return;
+  if(navigator.onLine===false)return toast('You are offline');
+  const todo=songs.filter(s=>lyNeed(LYM.get(s.id)));
+  if(!todo.length)return toast('Every song already has synced lyrics or was checked recently');
+  lrBulk=true;let n=0,i=0,fail=0;
+  toast('Searching LRCLIB for '+todo.length+(todo.length===1?' song':' songs')+'\u2026');
+  try{
+    for(const s of todo){
+      i++;
+      const r=await lyEnsure(s);if(!lyNeed(r))continue;/* the file itself had lyrics */
+      const o=await lyOnline(s);
+      if(o.err){if(++fail>=3)return toast('Could not reach LRCLIB')}else{fail=0;if(o.ok)n++}
+      if(i%25===0)toast('Checked '+i+' of '+todo.length+'\u2026');
+      await new Promise(r=>setTimeout(r,350));/* be gentle with a free service */
+    }
+    toast(n?'Lyrics found for '+n+(n===1?' song':' songs'):'No new lyrics found');
+  }finally{lrBulk=false}
+}
 /* ---- big player ---- */
 let lyT=[],lyI=-1,lyRaf=0,lyUser=0,lyFor=null;
 lyOn=LS('tracks-lyrics')==='1';
@@ -3192,9 +3340,10 @@ lyOn=LS('tracks-lyrics')==='1';
 let lyAuto=false;
 function lyInit(s,fresh){
   lyFor=s.id;lyT=[];lyI=-1;lyAuto=!!fresh&&lyOn;
-  const rec=LYM.get(s.id);
-  if(rec&&rec.v===LYR_V)lyPaint(rec);
-  else{lyPaint(null,true);lyEnsure(s).then(r=>{if(lyFor===s.id)lyPaint(r||0,false,true)})}
+  const rec=LYM.get(s.id),ok=!!(rec&&rec.v===LYR_V),need=ok?lyWant(s,rec):0;
+  if(ok&&need!==1)lyPaint(rec);
+  else{lyPaint(null,true);lyResolve(s).then(r=>{if(lyFor===s.id)lyPaint(r||0,false,true)})}
+  if(ok&&need===2)lyOnline(s);/* has unsynced lyrics: quietly look for a synced version */
   lyKick();
 }
 function lyPaint(rec,loading,late){
@@ -3206,7 +3355,7 @@ function lyPaint(rec,loading,late){
   lyAuto=false;
   if(!has){
     sc.className='lys none';
-    sc.innerHTML='<div class="lyx"><b>No lyrics for this song</b><span>Import an MP3 with synced lyrics (SYLT), keep an .lrc file next to it, or add one now.</span><button type="button" data-act="lyload">Add .lrc file</button></div>';
+    sc.innerHTML='<div class="lyx"><b>No lyrics for this song</b><span>Import an MP3 with synced lyrics (SYLT), keep an .lrc file next to it, or add one now.</span><button type="button" data-act="lyfind">Find on LRCLIB</button><button type="button" data-act="lyload">Add .lrc file</button></div>';
     return;
   }
   if(rec.s){
@@ -3214,7 +3363,7 @@ function lyPaint(rec,loading,late){
     sc.innerHTML=rec.l.map((x,i)=>`<p class="ll${x[1]?'':' gap'}" data-act="lyseek" data-i="${i}">${x[1]?esc(x[1]):'\u266A'}</p>`).join('');
   }else{
     sc.className='lys plain';
-    sc.innerHTML='<div class="lynw"><p class="lyn">Not time-synced</p><button type="button" class="lyswap" data-act="lyload">Swap in .lrc file</button></div>'+rec.l.map(t=>`<p class="ll">${t.trim()?esc(t):'&nbsp;'}</p>`).join('');
+    sc.innerHTML='<div class="lynw"><p class="lyn">Not time-synced</p><button type="button" class="lyswap" data-act="lyfind">Find synced online</button><button type="button" class="lyswap" data-act="lyload">Swap in .lrc file</button></div>'+rec.l.map(t=>`<p class="ll">${t.trim()?esc(t):'&nbsp;'}</p>`).join('');
   }
   sc.scrollTop=0;lySync(true);
 }
@@ -3569,16 +3718,17 @@ function npRender(s){
   npKick();
 }
 function npLy(s){
-  const rec=LYM.get(s.id);
-  if(rec&&rec.v===LYR_V)npLyPaint(rec);
-  else{npLyPaint(null,true);lyEnsure(s).then(r=>{if(NP.id===s.id)npLyPaint(r||0)})}
+  const rec=LYM.get(s.id),ok=!!(rec&&rec.v===LYR_V),need=ok?lyWant(s,rec):0;
+  if(ok&&need!==1)npLyPaint(rec);
+  else{npLyPaint(null,true);lyResolve(s).then(r=>{if(NP.id===s.id)npLyPaint(r||0)})}
+  if(ok&&need===2)lyOnline(s);
 }
 /* no lyrics for this song: the queue takes the lyrics' place in the panel */
 function npQPaint(){
   const sc=$('#npl');if(!sc||!sc.classList.contains('npq'))return;
   const keep=sc.scrollTop,s=songs.find(x=>x.id===cur);
   const ci=queue.indexOf(ctxCur),ctx=ci<0?[]:queue.slice(ci+1).map((id,j)=>({id,i:ci+1+j}));
-  let h=NP.q?'<div class="npqh"><span>Queue</span><button type="button" class="pill" data-act="qclear">Clear</button></div>':'<div class="npqh"><span>No lyrics for this song</span><button type="button" class="pill" data-npa="lyload">Add .lrc file</button></div>';
+  let h=NP.q?'<div class="npqh"><span>Queue</span><button type="button" class="pill" data-act="qclear">Clear</button></div>':'<div class="npqh"><span>No lyrics for this song</span><span style="display:flex;gap:6px"><button type="button" class="pill" data-npa="lyfind">Find on LRCLIB</button><button type="button" class="pill" data-npa="lyload">Add .lrc file</button></span></div>';
   h+='<div class="qs">Now playing</div>'+(s?qrow(s,'now',0):'<div class="empty">Nothing is playing.</div>');
   if(upNext.length)h+=`<div class="qs">Next in queue<span>${upNext.length}</span></div>`+upNext.map((id,i)=>{const x=songs.find(q=>q.id===id);return x?qrow(x,'up',i):''}).join('');
   if(ctx.length)h+=`<div class="qs">Next up<span>${ctx.length}</span></div>`+ctx.map(o=>{const x=songs.find(q=>q.id===o.id);return x?qrow(x,'ctx',o.i):''}).join('');
@@ -3657,6 +3807,7 @@ function npClick(e){
   if(a==='full')openFull();
   else if(a==='ly'){const wq=NP.q;if(wq){NP.q=0;NP.ly=true}else NP.ly=!NP.ly;LS('tracks-npl',NP.ly?'1':'0');npApply();if(wq)npQApply()}
   else if(a==='lyload')$('#li').click();
+  else if(a==='lyfind'){if(cur)lyFind(cur)}
   else if(a==='seek'){const t=NP.T[Number(b.dataset.i)];if(t>=0){vSeek(t/1000);NP.user=0;npSync(true)}}
 }
 au.addEventListener('timeupdate',()=>{npTime();npSync()});
@@ -4991,6 +5142,7 @@ document.addEventListener('click',async e=>{
   if(act==='lyrics')return lyToggle();
   if(act==='lyseek'){e.stopPropagation();return lySeek(b)}
   if(act==='lyload')return $('#li').click();
+  if(act==='lyfind'){e.stopPropagation();return cur?lyFind(cur):0}
   if(act==='closefull')return closeFull();
 });
 
@@ -5210,7 +5362,36 @@ function dockSync(){
   else if(d==='bottom'){let h=+LS('tracks-dockh')||0;if(h&&h<dkMax()){h=Math.max(54,h);R.style.setProperty('--dbh',h+'px');icons=h<60}}
   else icons=DKC.on;
   R.dataset.dockc=icons?'on':'off';
+  try{hbPlace()}catch(e){}
 }
+/* small windows: Add, Cloud sync, Queue and Settings move onto the navigation bar (works for top, left, right and bottom bars). The same buttons move, so every handler keeps working */
+function hbPlace(){
+  const R=document.documentElement,top=$('#top'),hr=top&&top.querySelector('.hr'),plus=$('#plus'),gear=$('#gear'),tabs=document.querySelector('.tabs');
+  if(!top||!hr||!plus||!gear||!tabs)return;
+  const d=getDock(),w=top.clientWidth,cb=$('#cb'),qk=$('#qk');
+  const want=R.dataset.layout==='pc'&&w>0&&w<(d==='top'?620:640);
+  let gx=$('#hbx'),gy=$('#hby');
+  if(want){
+    if(!gx){gx=document.createElement('div');gx.id='hbx';gy=document.createElement('div');gy.id='hby'}
+    const host=tabs.parentNode;
+    if(gx.parentNode!==host||gx.nextSibling!==tabs)host.insertBefore(gx,tabs);
+    if(gy.parentNode!==host||gy.previousSibling!==tabs)host.insertBefore(gy,tabs.nextSibling);
+    if(plus.parentNode!==gx)gx.appendChild(plus);
+    if(cb&&cb.parentNode!==gx)gx.appendChild(cb);
+    if(qk&&qk.parentNode!==gy)gy.appendChild(qk);
+    if(gear.parentNode!==gy)gy.appendChild(gear);
+    R.dataset.hb='dock';
+  }else if(R.dataset.hb==='dock'){
+    hr.insertBefore(plus,hr.firstChild);
+    if(cb)plus.after(cb);
+    hr.appendChild(gear);
+    if(qk)top.insertBefore(qk,$('#tb'));
+    if(gx)gx.remove();if(gy)gy.remove();
+    delete R.dataset.hb;
+  }
+}
+try{new ResizeObserver(()=>{try{hbPlace()}catch(e){}}).observe($('#top'))}catch(e){}
+try{hbPlace()}catch(e){}
 function setDockC(on){/* Settings switch: icons only <-> normal size */
   const d=getDock();
   if(d==='top'){DKC.on=!!on;LS('tracks-dockc',on?'1':'0')}else LS(dkKey(),on?(d==='bottom'?'54':'58'):'');
@@ -5281,7 +5462,7 @@ function openSettings(){
   </section>
   <section class="stp" data-p="lib">
     <div class="scd"><h4>Audio</h4>${row('rfbulk','Replace audio in bulk','Match many files to songs by name and artist')}</div>
-    <div class="scd"><h4>Lyrics</h4>${row('lyscan','Scan lyrics','Look for lyrics inside your song files')}${row('lymass','Add lyric files','Pick several .lrc files at once')}</div>
+    <div class="scd"><h4>Lyrics</h4><button type="button" class="srow" data-lrl="1" role="switch" aria-checked="true"><span class="st"><b>Find lyrics online (LRCLIB)</b><small>When a song has no synced lyrics, look it up on lrclib.net as you view lyrics. Sends the song title, artist, album and length.</small></span><span class="stog"></span></button>${row('lyfind','Find lyrics online now','Search LRCLIB for every song without synced lyrics')}${row('lyscan','Scan lyrics','Look for lyrics inside your song files')}${row('lymass','Add lyric files','Pick several .lrc files at once')}</div>
     <div class="scd"><h4>Insights</h4>${row('stats','Listening stats','Your most played songs and time listened')}</div>
   </section>
   <section class="stp" data-p="data">
@@ -5320,6 +5501,7 @@ function openSettings(){
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
     const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);
     const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);
+    const lr_=sh.querySelector('[data-lrl]');if(lr_)lr_.setAttribute('aria-checked',!!LRL.on);
     tbPaint();dkPaint();tpPaint();npPaint();
   };
   paint();
@@ -5329,6 +5511,7 @@ function openSettings(){
     const tw_=e.target.closest('#tpsw .swb');if(tw_){TPB.c=tw_.dataset.c||'';tpbSave();tpbApply();paint();return}
     const an_=e.target.closest('#anst .chip');if(an_){setAnim(an_.dataset.v);paint();return}
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
+    const lrl_=e.target.closest('[data-lrl]');if(lrl_){LRL.on=!LRL.on;LS('tracks-lrclib',LRL.on?'1':'0');paint();return}
     const hn=e.target.closest('[data-hint]');if(hn){HINT.on=!HINT.on;LS('tracks-hints',HINT.on?'1':'0');hintApply();paint();return}
     const dkc_=e.target.closest('[data-dkc]');if(dkc_){setDockC(document.documentElement.dataset.dockc!=='on');paint();return}
     const npb_=e.target.closest('[data-npset]');
@@ -5342,6 +5525,7 @@ function openSettings(){
       else if(k==='exp')exportBackup();
       else if(k==='imp')importBackup();
       else if(k==='lyscan')lyScanAll(true);
+      else if(k==='lyfind')lyFindAll();
       else if(k==='lymass'){closeOv();$('#lmi').click()}
       else if(k==='xfopen'){closeOv();setTimeout(xfSheet,380)}
       else if(k==='rfbulk'){closeOv();rfBulkPick()}
@@ -6212,7 +6396,7 @@ function ui(){
   try{await medLoad()}catch(e){}
   songs.sort((a,b)=>a.added-b.added);
   ui();mvInit();tbgApply();applyBg();restoreLast();render();if(window.splashReady)window.splashReady();
-  $('#plus').insertAdjacentHTML('afterend',`<button class="ib" id="cb" data-act="cloud" aria-label="Google Drive sync" title="Google Drive sync" style="margin-left:10px;margin-right:auto">${ic('cloud',24)}</button>`);$('#qk').title='Queue (Q)';$('#gear').title='Settings';$('#plus').title='Create / import';
+  $('#plus').insertAdjacentHTML('afterend',`<button class="ib" id="cb" data-act="cloud" aria-label="Google Drive sync" title="Google Drive sync" style="margin-left:10px;margin-right:auto">${ic('cloud',24)}</button>`);$('#qk').title='Queue (Q)';try{hbPlace()}catch(e){}$('#gear').title='Settings';$('#plus').title='Create / import';
   parseTok();if(LS('tracks-cloud')){cloudSt('Connected');if(navigator.onLine)cloudSync(false)}
   if(!db)toast('Storage unavailable, songs last until you close this page');
   for(const o of [...songs,...albums]){
