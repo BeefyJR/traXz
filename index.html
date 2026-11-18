@@ -953,6 +953,9 @@ html[data-layout=pc] #mini.vm .m2 .mvs{flex:1 1 0;max-width:170px}
 .stt{display:flex;gap:4px;padding:4px;border-radius:16px;background:rgba(128,128,128,.14)}
 .stt button{flex:1;padding:10px 4px;border-radius:12px;font-size:14px;font-weight:600;color:var(--mute);background:transparent;transition:background-color .2s,color .2s}
 .stt button.on{background:var(--text);color:var(--bg)}
+.stt button{position:relative}
+.tdot{position:absolute;top:5px;right:6px;width:8px;height:8px;border-radius:50%;background:rgb(var(--ac))}
+@media(max-width:430px){.stt{gap:2px}.stt button{font-size:13px;padding:10px 1px}}
 .stp{padding:6px 22px 0}
 .stp[hidden]{display:none}
 .scd{background:rgba(var(--bgc),.45);border:1px solid var(--line);border-radius:18px;padding:4px 16px 12px;margin:0 0 14px}
@@ -978,6 +981,7 @@ html[data-layout=pc] .sthd{grid-column:1;grid-row:1;position:static;display:flex
 html[data-layout=pc] .sth{padding:0 8px 18px}
 html[data-layout=pc] .stt{flex-direction:column;gap:2px;padding:0;background:none}
 html[data-layout=pc] .stt button{text-align:left;padding:11px 14px;font-size:15px}
+html[data-layout=pc] .tdot{top:50%;right:14px;margin-top:-4px}
 html[data-layout=pc] .stt button:hover:not(.on){background:rgba(128,128,128,.16);color:var(--text)}
 html[data-layout=pc] .stp{grid-column:2;grid-row:1;overflow-y:auto;overscroll-behavior:contain;padding:26px 32px 30px}
 html[data-layout=pc] .srow:hover{background:rgba(128,128,128,.08)}
@@ -1404,8 +1408,7 @@ html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
   html[data-layout=pc][data-dock=top] .plus,html[data-layout=pc][data-dock=top] .gear,html[data-layout=pc][data-dock=top] #cb,html[data-layout=pc][data-dock=top] .qk{width:40px;height:40px}
   html[data-layout=pc][data-dock=top] .qk{top:8px;right:calc(var(--hx) + 48px)}
   html[data-layout=pc][data-dock=top] #logo{display:none}
-  /* docked section bar: the logo would only crowd the single row */
-  html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #logo{display:none}
+  /* docked section bar: the logo stays (v77); with the buttons on the bar it sits in the toolbar row, see the v77 block at the end */
   html[data-layout=pc] #fb .abar,html[data-layout=pc] #fb .fh{padding-top:0;padding-bottom:4px}
   html[data-layout=pc] #fb .abar{margin-bottom:0}
   html[data-layout=pc] #fb .abar .back,html[data-layout=pc] #fb .abar .ab,html[data-layout=pc] .fbr .back,html[data-layout=pc] .fbr .ab{width:36px;height:36px;border-radius:12px}
@@ -1566,6 +1569,19 @@ html[data-hb=dock][data-dock=top] .tab{font-size:clamp(12px,3.2vw,18px);padding:
   html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb.so #flt,html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb.so #selbtn{display:none}
   html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(560px,calc(100% - 2*var(--hx) - var(--hbl)));max-width:none}
 }
+/* ===== v77: traX logo stays visible in small windows, and the Add / Cloud / Queue / Settings buttons can be put on the navigation bar from Settings ===== */
+/* top bar with the buttons on it: in a roomy window the logo gets its own strip above the tabs; compact windows keep the single row without it */
+html[data-hb=dock][data-dock=top] #logo{top:6px;width:80px;height:25px}
+html[data-hb=dock][data-dock=top] #top header{padding-top:34px}
+@media (max-width:899px),(max-height:759px){
+  html[data-hb=dock][data-dock=top] #logo{display:none}
+  html[data-hb=dock][data-dock=top] #top header{padding-top:6px}
+}
+/* side or bottom bar with the buttons on it: the logo sits centred in the toolbar row when it is shown, otherwise in a small strip above the content; it hides while search, the queue or the expanded player is open */
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #logo{top:4px;transition:opacity .2s,color .3s}
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #top:not(:has(#tb.show)) header{padding-top:32px}
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #app:has(#tb.show) #logo{top:calc(var(--ht) + (var(--hrh) - 25px)/2)}
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #app:is(:has(#tb.so),:has(#qp.open),:has(#full.open)) #logo{opacity:0!important}
 </style>
 </head>
 <body>
@@ -2572,10 +2588,17 @@ function cloudSheet(){
   const x=$('#cx');if(x)x.onclick=()=>{LS('tracks-cloud',null);CL.tok=null;closeOv();cloudSt('Not connected')};
 }
 
+/* app updates: a new version waits until the person taps Install in Settings > Backup */
+var SWU={reg:null,w:null,asked:false,t:0};
+function swuBadge(){const g=document.getElementById('gear');if(g)g.classList.toggle('swu',!!SWU.w)}
+function swuReady(w){SWU.w=w;swuBadge();try{toast('Update available. Open Settings > Backup to install it.')}catch(_){}}
 if('serviceWorker' in navigator){
-  const hadSW=!!navigator.serviceWorker.controller;/* only an update (not the very first install) deserves a notice */
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW){try{toast('App updated. Reload to use the new version.')}catch(_){}}});
-  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('Service worker registration failed',e)));
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(SWU.asked){SWU.asked=false;location.reload()}});
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js').then(r=>{
+    SWU.reg=r;if(r.waiting&&navigator.serviceWorker.controller)swuReady(r.waiting);
+    r.addEventListener('updatefound',()=>{const n=r.installing;if(n)n.addEventListener('statechange',()=>{if(n.state==='installed'&&navigator.serviceWorker.controller)swuReady(n)})});
+  }).catch(e=>console.warn('Service worker registration failed',e)));
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&SWU.reg&&Date.now()-SWU.t>1800000){SWU.t=Date.now();SWU.reg.update().catch(()=>{})}});
 }
 /* helpers */
 /* ===== animated media: GIF, animated WebP/APNG and video =====
@@ -3490,24 +3513,50 @@ function lyMatch(files){
   }
   return res;
 }
+async function lyMassPick(){
+  const v=await choose('Add lyric files',[{label:'Pick .lrc or .txt files',value:'f',ic:'filep'},{label:'Pick a folder',value:'d',ic:'impfld'}]);if(!v)return;
+  if(v==='f')return $('#lmi').click();
+  const i=document.createElement('input');i.type='file';i.multiple=true;i.webkitdirectory=true;
+  i.onchange=()=>{const fs=[...i.files];if(fs.length)lyMassApply(fs)};i.click();
+}
 async function lyMassApply(files){
   files=[...files].filter(f=>LY_EXT.test(f.name)&&!/^\._/.test(f.name));
   if(!files.length)return toast('No lyric files found (.lrc or .txt)');
   if(!songs.length)return toast('Add songs first');
-  const r=lyMatch(files);
-  if(files.length>2)toast('Adding lyrics\u2026');
-  let n=0;const bad=[],added=[];
-  for(const m of r.ok){if(await lyApplyFile(m.f,m.s,true)){n++;added.push(m)}else bad.push(m.f)}
-  const miss=r.none.length+r.dup.length+bad.length,fz=added.filter(m=>m.fz);
-  if(!miss&&!fz.length)return toast(n?'Lyrics added to '+n+(n===1?' song':' songs'):'No lyrics found in those files');
-  const row=(a,b)=>`<div style="display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(a)}</span>${b?`<span style="color:var(--mute);flex:none;max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b)}</span>`:''}</div>`;
-  let h=`<h3>Lyrics added to ${n} ${n===1?'song':'songs'}</h3><div style="max-height:48vh;overflow:auto">`;
-  if(miss){
-    h+=`<label>Not applied (${miss})</label>`+r.none.map(f=>row(f.name,'no matching song')).join('')+r.dup.map(o=>row(o.f.name,'already used for '+o.s.name)).join('')+bad.map(f=>row(f.name,'no lyrics inside')).join('');
+  if(files.length>2)toast('Reading '+files.length+' files\u2026');
+  const r=lyMatch(files),rows=[],mk=async f=>{try{const t=await f.text();return {t,m:lyMake(null,t)}}catch(e){return {t:'',m:0}}};
+  for(const m of r.ok){const x=await mk(m.f);rows.push({f:m.f,s:m.s,fz:m.fz,m:x.m})}
+  const used=new Set(rows.map(z=>z.s.id));
+  /* files the name did not match: try the [ti:] and [ar:] tags written inside the .lrc */
+  for(const f of r.none.concat(r.dup.map(o=>o.f))){
+    const x=await mk(f),z={f,s:null,m:x.m,fz:false},ti=/\[ti:([^\]]+)\]/i.exec(x.t),ar=/\[ar:([^\]]+)\]/i.exec(x.t);
+    if(ti){const k=lyFk(ti[1]),c=songs.filter(s=>!used.has(s.id)&&lyCands(s).has(k)),a=ar?nkey(ar[1]):'',p=c.find(s=>!a||nkey(artOf(s)).includes(a)||a.includes(nkey(artOf(s))))||c[0];if(p){z.s=p;z.fz=true;z.hdr=true;used.add(p.id)}}
+    rows.push(z);
   }
-  if(fz.length)h+=`<label>Matched by a similar name, please check (${fz.length})</label>`+fz.map(m=>row(m.f.name,'\u2192 '+m.s.name)).join('');
-  h+=`</div><div class="bt"><button class="pill acc" id="lmd">Done</button></div>`;
-  openOv(h);$('#lmd').onclick=closeOv;
+  const had=id=>{const h=LYM.get(id);return h&&h.l&&h.l.length?(h.s?'synced':'plain'):''};
+  rows.forEach(z=>{z.had=z.s?had(z.s.id):'';z.on=!!(z.s&&z.m&&!(z.had==='synced'&&!z.m.s))});   /* never swap synced lyrics for plain text unless ticked by hand */
+  const lab=s=>s.name+(artOf(s)?' \u2014 '+artOf(s):'');
+  const rowH=(z,i)=>`<div class="rbr ${z.s?'':'no'}" data-i="${i}"><input type="checkbox" ${z.on?'checked':''} ${z.s&&z.m?'':'disabled'} aria-label="Add these lyrics"><div class="rbt"><b>${z.s?esc(z.s.name):(z.m?'No matching song':'No lyrics inside')}</b><span>${z.s?esc(artOf(z.s)||'No artist'):''}</span><small>${esc(z.f.name)}${z.m?' \u00b7 '+(z.m.s?'synced':'plain text'):''}${z.s&&z.had?' \u00b7 replaces '+z.had+' lyrics':''}${z.hdr?' \u00b7 matched by file tags':(z.fz?' \u00b7 check this match':'')}</small></div>${z.m?`<button type="button" class="pill" data-c="${i}">${z.s?'Change':'Pick'}</button>`:''}</div>`;
+  const pick=async i=>{
+    const z=rows[i],q=await ask('Search songs',z.s?z.s.name:'');if(!q)return show();
+    const k=nkey(q),hits=songs.filter(s=>nkey(s.name).includes(k)||nkey(artOf(s)).includes(k)).slice(0,12);
+    if(!hits.length){toast('No songs found');return show()}
+    const id=await choose('Pick a song',hits.map(s=>({label:lab(s),value:s.id,noic:true})));
+    if(id){rows.forEach(y=>{if(y!==z&&y.s&&y.s.id===id){y.s=null;y.on=false;y.had=''}});z.s=songs.find(x=>x.id===id);z.fz=false;z.hdr=false;z.had=had(id);z.on=true}
+    show();
+  };
+  const show=()=>{
+    openOv(`<h3>Add lyrics</h3><p class="dupn" id="lm-n"></p><div class="rbl" id="lm-l">${rows.map(rowH).join('')}</div><div class="bt"><button type="button" class="pill" id="lm-c">Cancel</button><button type="button" class="pill acc" id="lm-g"></button></div>`);
+    const upd=()=>{const n=rows.filter(z=>z.on&&z.s&&z.m).length,m=rows.filter(z=>z.s&&z.m).length,g=$('#lm-g');
+      $('#lm-n').textContent=m+' of '+rows.length+(rows.length===1?' file matches':' files match')+' a song. Untick any you do not want, or tap Change to pick another song.';
+      g.textContent=n?'Add to '+n+(n===1?' song':' songs'):'Add lyrics';g.disabled=!n};
+    $('#lm-l').onchange=e=>{const rw=e.target.closest('.rbr');if(rw){rows[+rw.dataset.i].on=e.target.checked;upd()}};
+    $('#lm-l').onclick=e=>{const b=e.target.closest('[data-c]');if(b)pick(+b.dataset.c)};
+    $('#lm-c').onclick=()=>closeOv();$('#ov').onclick=e=>{if(e.target.id==='ov')closeOv()};
+    $('#lm-g').onclick=()=>{const sel=rows.filter(z=>z.on&&z.s&&z.m);closeOv();for(const z of sel){const rec=lySet(z.s.id,z.m,null,true);if(z.s.id===lyFor)lyPaint(rec)}toast('Lyrics added to '+sel.length+(sel.length===1?' song':' songs'))};
+    upd();
+  };
+  show();
 }
 ['wheel','touchstart','touchmove','pointerdown'].forEach(ev=>$('#fc').addEventListener(ev,e=>{if(e.target.closest&&e.target.closest('#lys'))lyUser=Date.now()},{passive:true}));
 ['play'].forEach(ev=>au.addEventListener(ev,lyKick));
@@ -3677,7 +3726,7 @@ au.addEventListener('timeupdate',()=>{
 });
 window.addEventListener('pointerup',()=>{seeking=false});
 
-/* ===== v30: Spotify style side player (PC only). Right panel: cover, title and synced lyrics. Bottom bar: controls. Turn it on in Settings > Appearance ===== */
+/* ===== v30: Spotify style side player (PC only). Right panel: cover, title and synced lyrics. Bottom bar: controls. Turn it on in Settings > Layout ===== */
 ICON.npx='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z';
 function npOn(){return NP.on&&document.documentElement.dataset.layout==='pc'}
 /* widest the side panel may be: the header keeps enough room (create/sync/search on the left, select/filter/settings on the right) so its buttons never run into each other */
@@ -3846,11 +3895,11 @@ async function replaceSong(old,nw){
 let rfTarget=null;
 function replaceAudio(s){if(!s)return;rfTarget=s.id;const i=$('#rfi');i.value='';i.click()}
 function rfConfirm(s,f,dur){return new Promise(res=>{
-  const was=s.blob?fmt(s.dur)+' \u00b7 '+fmtSize(s.blob.size):'Not on this device',dd=dur-(s.dur||0);
+  const was=s.blob?fmt(s.dur)+' \u00b7 '+fmtSize(s.blob.size)+' \u00b7 '+qInfo(s.blob,s.dur):'Not on this device',dd=dur-(s.dur||0);
   const warn=s.dur&&Math.abs(dd)>=2?` The new file is ${fmt(Math.abs(dd))} ${dd>0?'longer':'shorter'}${LYM.get(s.id)&&LYM.get(s.id).s?', so synced lyrics may no longer line up':''}.`:'';
   openOv(`<h3>Replace audio file</h3><p class="dupn">${esc(s.name)} keeps its name, artist, album, cover, playlists and lyrics. Only the sound changes.${esc(warn)}</p>
   <div class="dtag">Current file</div><p class="dupn" style="margin:0 0 10px">${esc(was)}</p>
-  <div class="dtag">New file</div><p class="dupn" style="margin:0 0 4px">${esc(f.name)}<br>${esc(fmt(dur)+' \u00b7 '+fmtSize(f.size))}</p>
+  <div class="dtag">New file</div><p class="dupn" style="margin:0 0 4px">${esc(f.name)}<br>${esc(fmt(dur)+' \u00b7 '+fmtSize(f.size)+' \u00b7 '+qInfo(f,dur))}</p>
   <div class="bt"><button class="pill" id="rfn">Cancel</button>${Math.abs(dd)>=1?'<button class="pill" id="rft">Replace and trim\u2026</button>':''}<button class="pill acc" id="rfy">Replace</button></div>`);
   const fin=v=>{closeOv();res(v)};
   $('#rfn').onclick=()=>fin(false);$('#rfy').onclick=()=>fin(true);{const rt=$('#rft');if(rt)rt.onclick=()=>fin('trim')}$('#ov').onclick=e=>{if(e.target.id==='ov')fin(false)};
@@ -5334,7 +5383,7 @@ try{const v=localStorage.getItem('tracks-layout');if(v==='phone'||v==='pc'||v===
 function detectLayout(){return(matchMedia('(hover:hover) and (pointer:fine)').matches&&innerWidth>=640)?'pc':'phone'}
 function curLayout(){return LAY.m==='auto'?detectLayout():LAY.m}
 function applyLayout(){document.documentElement.dataset.layout=curLayout();try{dockSync()}catch(e){}if(typeof npApply==='function')npApply()}
-function setLayout(m,save){LAY.m=m;if(save)try{localStorage.setItem('tracks-layout',m)}catch(e){}applyLayout()}
+function setLayout(m,save){LAY.m=m;if(save)try{localStorage.setItem('tracks-layout',m)}catch(e){}applyLayout();try{hbPlace()}catch(e){}}
 applyLayout();
 addEventListener('resize',()=>{if(LAY.m==='auto')applyLayout()});
 /* mouse wheel over the player-bar volume button or slider changes the volume */
@@ -5365,11 +5414,13 @@ function dockSync(){
   try{hbPlace()}catch(e){}
 }
 /* small windows: Add, Cloud sync, Queue and Settings move onto the navigation bar (works for top, left, right and bottom bars). The same buttons move, so every handler keeps working */
+const HBM={m:(()=>{const v=LS('tracks-hbm');return v==='on'||v==='off'?v:'auto'})()};/* auto = small windows only, on = always, off = never */
+function setHbm(m){if(m!=='auto'&&m!=='on'&&m!=='off')return;HBM.m=m;LS('tracks-hbm',m);try{hbPlace()}catch(e){}if(typeof npApply==='function')try{npApply()}catch(e){}}
 function hbPlace(){
   const R=document.documentElement,top=$('#top'),hr=top&&top.querySelector('.hr'),plus=$('#plus'),gear=$('#gear'),tabs=document.querySelector('.tabs');
   if(!top||!hr||!plus||!gear||!tabs)return;
   const d=getDock(),w=top.clientWidth,cb=$('#cb'),qk=$('#qk');
-  const want=R.dataset.layout==='pc'&&w>0&&w<(d==='top'?620:640);
+  const want=R.dataset.layout==='pc'&&(HBM.m==='on'||(HBM.m==='auto'&&w>0&&w<(d==='top'?620:640)));
   let gx=$('#hbx'),gy=$('#hby');
   if(want){
     if(!gx){gx=document.createElement('div');gx.id='hbx';gy=document.createElement('div');gy.id='hby'}
@@ -5441,36 +5492,42 @@ function openSettings(){
   const opt=(a,v,k,lb)=>`<button type="button" class="setg" ${a}="${v}">${ic(k,24)}<span>${lb}</span></button>`;
   const chev='<svg class="sch" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const row=(x,t,d,v)=>`<button type="button" class="srow" data-x="${x}"><span class="st"><b>${t}</b>${d?`<small>${d}</small>`:''}</span>${v?`<span class="sv">${v}</span>`:''}${chev}</button>`;
-  const TABS=[['app','Appearance'],['play','Playback'],['lib','Library'],['data','Backup']];
+  const TABS=[['app','Look'],['lay','Layout'],['play','Playback'],['lib','Library'],['data','Backup']];
+  const appCard=`<div class="scd"><h4>App</h4>${row('swu',SWU.w?'Update available':'Check for updates',SWU.w?'Tap to restart and use the newest version':'See if a newer version of the app is ready',SWU.w?'Install':'')}</div>`;
   openOv(`<div class="sthd"><div class="sth"><h3>Settings</h3><button type="button" class="pill acc" id="st-done">Done</button></div>
-  <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}</button>`).join('')}</div></div>
+  <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}${t[0]==='data'&&SWU.w?'<i class="tdot"></i>':''}</button>`).join('')}</div></div>
   <section class="stp" data-p="app">
     <div class="scd"><h4>Theme</h4><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
-    <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div><div class="tgs"><label>Background image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
+    <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div></div>
+    <div class="scd"><h4>Background</h4><div class="tgs"><label>Image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
-    <div class="scd"><h4>Navigation bar</h4><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only, no labels. Works for every position.</small></span><span class="stog"></span></button><p class="dupn" style="margin:6px 6px 2px">Where Albums, Songs and Playlists sit.</p></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
-    <div class="scd"><h4>Layout</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
-    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC layout only. Cover and lyrics on the right, with the player bar along the bottom.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
     <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Videos only play while visible. Turn this off to save battery.</p></div>
     <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Messages like \u201cNo playlists yet\u201d, \u201cNo albums yet\u201d or \u201cThis album is empty\u201d.</small></span><span class="stog"></span></button></div>
   </section>
+  <section class="stp" data-p="lay">
+    <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
+    <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where Albums, Songs and Playlists sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only, no labels. Works for every position.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud sync, Queue and Settings. PC layout only: keep them at the top of the page or move them onto the navigation bar.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows only</button><button type="button" class="chip" data-hbm="on">Always on the bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC layout only. Cover and lyrics on the right, with the player bar along the bottom.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
+  </section>
   <section class="stp" data-p="play">
     <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade, gapless, fade curve and more',esc(xfSummary()))}</div>
-    <div class="scd"><h4>Smart playlists</h4><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Shows the songs you play most lately in Playlists. It updates itself over time.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Liked songs</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Adds a heart to songs and the player, and a Liked Songs playlist. Turning it off hides them but keeps your likes.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Adds a heart to songs and the player, and a Liked Songs playlist. Turning it off hides them but keeps your likes.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Shows the songs you play most lately in Playlists. It updates itself over time.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lib">
-    <div class="scd"><h4>Audio</h4>${row('rfbulk','Replace audio in bulk','Match many files to songs by name and artist')}</div>
+    <div class="scd"><h4>Manage library</h4>${row('stats','Listening stats','Your most played songs and time listened')}${row('dups','Find duplicate songs','Same song twice? Review and remove extra copies')}${row('miss','Missing info finder','Songs with no artist, album, cover or lyrics, with online lookup')}${row('rfbulk','Replace audio in bulk','Match many files to songs by name and artist')}</div>
     <div class="scd"><h4>Lyrics</h4><button type="button" class="srow" data-lrl="1" role="switch" aria-checked="true"><span class="st"><b>Find lyrics online (LRCLIB)</b><small>When a song has no synced lyrics, look it up on lrclib.net as you view lyrics. Sends the song title, artist, album and length.</small></span><span class="stog"></span></button>${row('lyfind','Find lyrics online now','Search LRCLIB for every song without synced lyrics')}${row('lyscan','Scan lyrics','Look for lyrics inside your song files')}${row('lymass','Add lyric files','Pick several .lrc files at once')}</div>
-    <div class="scd"><h4>Insights</h4>${row('stats','Listening stats','Your most played songs and time listened')}</div>
   </section>
   <section class="stp" data-p="data">
+    ${SWU.w?appCard:''}
     <div class="scd"><h4>Sync</h4>${row('cloud','Google Drive sync','Back up and sync your library across devices')}</div>
-    <div class="scd"><h4>Backup file</h4>${row('exp','Export backup','Save your library details to a file')}${row('imp','Import backup','Restore from a backup file')}</div>
+    <div class="scd"><h4>Backup file</h4>${row('bkfull','Save full backup','Songs, covers, playlists, lyrics and settings in one file')}${row('bksmall','Save small backup','Playlists and details only, no songs')}${row('imp','Restore from backup','Pick a backup file saved by this app')}</div>
+    <div class="scd"><h4>Protection</h4><button type="button" class="srow" data-x="persist"><span class="st"><b>Keep library on this device</b><small id="stos">Checking\u2026</small></span><span class="sv" id="stov"></span>${chev}</button></div>
+    ${SWU.w?'':appCard}
   </section>`);
   const sh=$('#ov .sheet');sh.classList.add('setsh');
-  const dkPaint=()=>{sh.querySelectorAll('[data-dkc]').forEach(b=>b.setAttribute('aria-checked',String(document.documentElement.dataset.dockc==='on')));const d=getDock();sh.querySelectorAll('.setg[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===d));sh.querySelectorAll('#anst .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===ANIM.m))};
+  const dkPaint=()=>{sh.querySelectorAll('[data-dkc]').forEach(b=>b.setAttribute('aria-checked',String(document.documentElement.dataset.dockc==='on')));const d=getDock();sh.querySelectorAll('.setg[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===d));sh.querySelectorAll('#anst .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===ANIM.m));sh.querySelectorAll('#hbst .chip').forEach(c=>c.classList.toggle('on',c.dataset.hbm===HBM.m))};
   const tpPaint=()=>{
     sh.querySelectorAll('#tpsw .swb').forEach(b=>b.classList.toggle('on',(b.dataset.c||'').toLowerCase()===TPB.c.toLowerCase()));
     const t=TPB.t===null?22:TPB.t,bl=TPB.b===null?18:TPB.b;
@@ -5504,11 +5561,12 @@ function openSettings(){
     const lr_=sh.querySelector('[data-lrl]');if(lr_)lr_.setAttribute('aria-checked',!!LRL.on);
     tbPaint();dkPaint();tpPaint();npPaint();
   };
-  paint();
+  paint();stoPaint();
   sh.onclick=e=>{
     if(e.target.closest('#st-done')){closeOv();return}
     const tb=e.target.closest('[data-tab]');if(tb){setTab=tb.dataset.tab;paint();sh.scrollTop=0;return}
     const tw_=e.target.closest('#tpsw .swb');if(tw_){TPB.c=tw_.dataset.c||'';tpbSave();tpbApply();paint();return}
+    const hbm_=e.target.closest('#hbst .chip');if(hbm_){setHbm(hbm_.dataset.hbm);paint();return}
     const an_=e.target.closest('#anst .chip');if(an_){setAnim(an_.dataset.v);paint();return}
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
     const lrl_=e.target.closest('[data-lrl]');if(lrl_){LRL.on=!LRL.on;LS('tracks-lrclib',LRL.on?'1':'0');paint();return}
@@ -5522,11 +5580,16 @@ function openSettings(){
     if(x){const k=x.dataset.x;
       if(k==='stats'){closeOv();setTimeout(statsSheet,380)}
       else if(k==='cloud'){closeOv();setTimeout(cloudSheet,380)}
-      else if(k==='exp')exportBackup();
+      else if(k==='bkfull')bkExport(true);
+      else if(k==='bksmall')bkExport(false);
       else if(k==='imp')importBackup();
+      else if(k==='persist')stoAsk();
+      else if(k==='dups'){closeOv();setTimeout(dupSheet,380)}
+      else if(k==='miss'){closeOv();setTimeout(()=>missSheet('all'),380)}
+      else if(k==='swu')swuAct();
       else if(k==='lyscan')lyScanAll(true);
       else if(k==='lyfind')lyFindAll();
-      else if(k==='lymass'){closeOv();$('#lmi').click()}
+      else if(k==='lymass'){closeOv();setTimeout(lyMassPick,60)}
       else if(k==='xfopen'){closeOv();setTimeout(xfSheet,380)}
       else if(k==='rfbulk'){closeOv();rfBulkPick()}
       return}
@@ -6129,8 +6192,10 @@ function trimSheet(s){
 
 /* ===== Replace many audio files at once: each file is matched to a song by its tags and file name ===== */
 const AUDRE=/\.(mp3|wav|flac|m4a|aac|ogg|opus|wma|aiff?)$/i;
-function rfBulkPick(){
-  const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='audio/*,.mp3,.wav,.flac,.m4a,.aac,.ogg,.opus,.wma,.aiff';
+async function rfBulkPick(){
+  const v=await choose('Replace audio in bulk',[{label:'Pick audio files',value:'f',ic:'filep'},{label:'Pick a folder',value:'d',ic:'impfld'}]);if(!v)return;
+  const i=document.createElement('input');i.type='file';i.multiple=true;
+  if(v==='d')i.webkitdirectory=true;else i.accept='audio/*,.mp3,.wav,.flac,.m4a,.aac,.ogg,.opus,.wma,.aiff';
   i.onchange=()=>{const fs=[...i.files];if(fs.length)rfBulk(fs)};i.click();
 }
 const rfIndex=()=>songs.map(s=>({s,kt:tkey(s.name),sa:nkey(artOf(s)),full:nkey(artOf(s)+' '+s.name),nn:nkey(s.name)}));
@@ -6175,7 +6240,7 @@ async function rfBulk(files){
   rows.forEach(r=>{r.on=!!r.song&&r.score>=100});
   const o={trim:false,add:false},lab=s=>s.name+(artOf(s)?' \u2014 '+artOf(s):'');
   const diff=r=>{if(!r.song)return '';const d=r.dur-effDur(r.song);return Math.abs(d)<1?'same length':fmt(Math.abs(d))+(d>0?' longer':' shorter')};
-  const rowHtml=(r,i)=>`<div class="rbr ${r.song?'':'no'}" data-i="${i}"><input type="checkbox" ${r.on?'checked':''} ${r.song&&!r.bad?'':'disabled'} aria-label="Replace this song"><div class="rbt"><b>${r.song?esc(r.song.name):(r.bad?'Could not read this file':'No match found')}</b><span>${r.song?esc(artOf(r.song)||'No artist'):''}</span><small>${esc(r.f.name)} \u00b7 ${fmt(r.dur)}${r.song?' \u00b7 '+esc(diff(r)):''}</small></div>${r.bad?'':`<button type="button" class="pill" data-c="${i}">${r.song?'Change':'Pick'}</button>`}</div>`;
+  const rowHtml=(r,i)=>`<div class="rbr ${r.song?'':'no'}" data-i="${i}"><input type="checkbox" ${r.on?'checked':''} ${r.song&&!r.bad?'':'disabled'} aria-label="Replace this song"><div class="rbt"><b>${r.song?esc(r.song.name):(r.bad?'Could not read this file':'No match found')}</b><span>${r.song?esc(artOf(r.song)||'No artist'):''}</span><small>${esc(r.f.name)} \u00b7 ${fmt(r.dur)}${r.song?' \u00b7 '+esc(diff(r)):''}${r.song?' \u00b7 '+esc(qInfo(r.song.blob,r.song.dur)+' \u2192 '+qInfo(r.f,r.dur)):''}</small></div>${r.bad?'':`<button type="button" class="pill" data-c="${i}">${r.song?'Change':'Pick'}</button>`}</div>`;
   const pick=async i=>{
     const r=rows[i],cand=idx.map(x=>({x,sc:rfScore(r,x)})).filter(c=>c.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,8);
     const items=cand.map(c=>({label:lab(c.x.s),value:c.x.s.id,noic:true,sel:!!r.song&&r.song.id===c.x.s.id}));
@@ -6193,7 +6258,7 @@ async function rfBulk(files){
   };
   const show=()=>{
     const un=rows.filter(r=>!r.song&&!r.bad).length;
-    openOv(`<h3>Replace audio files</h3><p class="dupn" id="rb-n"></p><div class="rbl" id="rb-l">${rows.map(rowHtml).join('')}</div>
+    openOv(`<h3>Replace audio files</h3><p class="dupn" id="rb-n"></p><div class="rbl" id="rb-l">${rows.map(rowHtml).join('')}</div><div class="bgst" id="rb-q"><button type="button" class="chip" data-q="all">Select all matches</button><button type="button" class="chip" data-q="none">None</button><button type="button" class="chip" data-q="up">Only quality upgrades</button></div>
     <label class="pk dall"><input type="checkbox" id="rb-t" ${o.trim?'checked':''}><span class="t"><b>Trim longer files to the old length</b><small>Cuts extra seconds off the end, up to 30 s</small></span></label>
     ${un?`<label class="pk dall"><input type="checkbox" id="rb-a" ${o.add?'checked':''}><span class="t"><b>Add ${un} unmatched ${un===1?'file':'files'} as new songs</b></span></label>`:''}
     <div class="bt"><button class="pill" id="rb-c">Cancel</button><button class="pill acc" id="rb-g"></button></div>`);
@@ -6206,6 +6271,7 @@ async function rfBulk(files){
     $('#rb-l').onchange=e=>{const row=e.target.closest('.rbr');if(row){rows[+row.dataset.i].on=e.target.checked;upd()}};
     $('#rb-l').onclick=e=>{const b=e.target.closest('[data-c]');if(b)pick(+b.dataset.c)};
     $('#rb-t').onchange=e=>{o.trim=e.target.checked};
+    $('#rb-q').onclick=e=>{const c=e.target.closest('[data-q]');if(!c)return;const q=c.dataset.q;rows.forEach(r=>{r.on=!!r.song&&!r.bad&&(q==='all'||(q==='up'&&(!r.song.blob||kbps(r.f,r.dur)>kbps(r.song.blob,r.song.dur)*1.15)))});show()};
     const ad=$('#rb-a');if(ad)ad.onchange=e=>{o.add=e.target.checked;upd()};
     $('#rb-c').onclick=()=>closeOv();$('#ov').onclick=e=>{if(e.target.id==='ov')closeOv()};
     $('#rb-g').onclick=async()=>{
@@ -6234,9 +6300,10 @@ function exportSong(s){
   dlBlob(s.blob,((s.name||'song').replace(/[\\/:*?"<>|]+/g,'_'))+'.'+ext);
   toast('Song exported')}
 function importBackup(){
-  const f=document.createElement('input');f.type='file';f.accept='.json,application/json';
+  const f=document.createElement('input');f.type='file';f.accept='.trax,.json,application/json';
   f.onchange=async()=>{
     const file=f.files[0];if(!file)return;
+    if(/\.trax$/i.test(file.name))return bkImport(file);
     try{
       const d=JSON.parse(await file.text());
       if(!d||d.app!=='traXz'||!Array.isArray(d.songs))return toast('That is not a traXz backup file');
@@ -6361,6 +6428,244 @@ async function cloudQuota(){
   try{const q=await navigator.storage.estimate();if(q.quota)h+=(h?'<br>':'')+`This device: ${(q.usage/q.quota*100).toFixed(1)}% used, ${B(q.quota-q.usage)} left`}catch(e){}
   const e=$('#cst');if(h&&e&&!$('#cqt'))e.insertAdjacentHTML('afterend',`<p id="cqt" style="margin:0 0 12px;color:var(--mute);font-size:14px">${h}</p>`)}
 
+/* ===== backup file (.trax), storage protection, duplicate finder, shared files, app update ===== */
+{const st=document.createElement('style');st.textContent='#gear.swu{outline:2px solid rgb(var(--ac));outline-offset:-3px;border-radius:50%}';document.head.appendChild(st)}
+const BK_MAGIC='TRAXBK1\n',BK_STORES=['songs','albums','folders','playlists','pfolders','lyrics'],BK_SKIP=/^tracks-(tok|cid|cloud|dirty|tomb|last|reup)$/;
+const bkAll=async n=>(await tx(n,'readonly',s=>s.getAll()))||[];
+/* layout: magic | raw files | JSON index | 16-digit index length. Files are never loaded into memory, so big libraries work. */
+async function bkExport(withAudio){
+  const name='traXz-backup-'+new Date().toISOString().slice(0,10)+(withAudio?'':'-small')+'.trax';
+  let w=null;
+  if(window.showSaveFilePicker){try{w=await (await showSaveFilePicker({suggestedName:name,types:[{description:'traXz backup',accept:{'application/octet-stream':['.trax']}}]})).createWritable()}catch(e){if(e&&e.name==='AbortError')return}}
+  try{
+    toast('Preparing backup\u2026');
+    const parts=[BK_MAGIC];let off=BK_MAGIC.length;
+    const add=b=>{const o=off;parts.push(b);off+=b.size;return [o,b.size]};
+    const pack=(v,d)=>{
+      if(v instanceof Blob)return {$b:add(v),t:v.type};
+      if(Array.isArray(v))return v.map(x=>pack(x,d+1));
+      if(v&&typeof v==='object'&&d<4&&Object.getPrototypeOf(v)===Object.prototype){const o={};for(const k in v)o[k]=pack(v[k],d+1);return o}
+      return v};
+    const data={app:'traXz',kind:'full',v:2,date:new Date().toISOString(),audio:!!withAudio,stores:{},ls:{}};
+    for(const n of BK_STORES)data.stores[n]=(await bkAll(n)).map(r=>{if(n==='songs'&&!withAudio){r=Object.assign({},r);delete r.blob}return pack(r,0)});
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^tracks-/.test(k)&&!BK_SKIP.test(k))data.ls[k]=localStorage.getItem(k)}
+    const idx=new Blob([JSON.stringify(data)]);parts.push(idx,String(idx.size).padStart(16,'0'));
+    if(w){for(const p of parts)await w.write(p);await w.close()}else dlBlob(new Blob(parts,{type:'application/octet-stream'}),name);
+    toast(withAudio?'Full backup saved':'Small backup saved (no songs)');
+  }catch(e){try{w&&await w.abort()}catch(_){}toast('Could not save the backup. For big libraries try the small backup plus Google Drive.')}
+}
+async function bkImport(file){
+  try{
+    if(await file.slice(0,BK_MAGIC.length).text()!==BK_MAGIC)return toast('That is not a traXz backup file');
+    const n=+(await file.slice(-16).text()),end=file.size-16;if(!(n>0&&n<end))return toast('That backup file looks damaged');
+    const d=JSON.parse(await file.slice(end-n,end).text());
+    toast('Restoring\u2026');
+    const un=v=>{if(Array.isArray(v))return v.map(un);if(v&&typeof v==='object'){if(v.$b)return file.slice(v.$b[0],v.$b[0]+v.$b[1],v.t||'');const r={};for(const k in v)r[k]=un(v[k]);return r}return v};
+    const tm=tomb();let added=0;
+    for(const n2 of BK_STORES){
+      const have=new Map((await bkAll(n2)).map(r=>[r.id,r]));
+      for(const r0 of d.stores[n2]||[]){
+        const r=un(r0),o=have.get(r.id);
+        if(o){if((r.mod||0)<=(o.mod||0))continue;if(n2==='songs'&&!r.blob&&o.blob)r.blob=o.blob}
+        await tx(n2,'readwrite',s=>s.put(r));delete tm[n2+':'+r.id];added++}}
+    LS('tracks-tomb',JSON.stringify(tm));
+    for(const k in d.ls||{}){
+      if(BK_SKIP.test(k))continue;
+      if(k==='tracks-stats'){try{const a=JSON.parse(LS(k)||'{}'),b=JSON.parse(d.ls[k]);for(const i in b){const x=a[i];a[i]=x?{s:Math.max(x.s||0,b[i].s||0),n:Math.max(x.n||0,b[i].n||0)}:b[i]}LS(k,JSON.stringify(a))}catch(_){}}
+      else if(LS(k)===null)LS(k,d.ls[k])}
+    cloudDirty();toast('Restored '+added+' items. Reloading\u2026');setTimeout(()=>location.reload(),1400);
+  }catch(e){console.warn(e);toast('Could not restore that backup file')}
+}
+/* storage protection */
+async function stoPaint(){
+  const a=$('#stos'),b=$('#stov');if(!a||!navigator.storage||!navigator.storage.persisted){if(a)a.textContent='Not supported in this browser';return}
+  try{const p=await navigator.storage.persisted(),q=navigator.storage.estimate?await navigator.storage.estimate():{};
+    const u=q.quota?' ('+fmtSize(q.usage||0)+' used)':'';
+    a.textContent=p?'Protected. The browser will not clear your songs on its own.'+u:'Not protected. The browser may clear songs if space runs low. Tap to ask for protection.'+u;
+    b.textContent=p?'On':'Off'}catch(e){a.textContent='Could not check'}
+}
+async function stoAsk(){
+  try{if(await navigator.storage.persisted()){toast('Already protected');return}
+    const ok=navigator.storage.persist&&await navigator.storage.persist();
+    toast(ok?'Library is now protected':'The browser said no. Installing the app to your home screen usually helps.')}catch(e){}
+  stoPaint()}
+/* duplicate finder */
+function dupGroups(){
+  const par={},f=x=>{while(par[x]!==x){par[x]=par[par[x]];x=par[x]}return x},un=(a,b)=>{par[f(a)]=f(b)};
+  const bySize={},byT={},pc={};
+  for(const p of playlists)for(const i of p.songs||[])pc[i]=(pc[i]||0)+1;
+  for(const s of songs)par[s.id]=s.id;
+  for(const s of songs){
+    if(s.blob&&s.blob.size>0){const k=s.blob.size+':'+Math.round(s.dur||0);if(bySize[k]!==undefined)un(bySize[k],s.id);else bySize[k]=s.id}
+    const t=tkey(s.name);
+    if(t){const k=t+'|'+nkey(artOf(s)),a=byT[k]||(byT[k]=[]);for(const o of a)if(!(s.dur&&o.dur)||Math.abs(s.dur-o.dur)<=4)un(o.id,s.id);a.push(s)}}
+  const g={};for(const s of songs)(g[f(s.id)]||(g[f(s.id)]=[])).push(s);
+  const sc=s=>[s.blob?1:0,((ST[s.id]&&ST[s.id].n)||0)+(pc[s.id]||0)+(s.liked?1:0),s.blob?s.blob.size:0];
+  return Object.values(g).filter(a=>a.length>1).map(a=>a.sort((x,y)=>{const p=sc(x),q=sc(y);return q[0]-p[0]||q[1]-p[1]||q[2]-p[2]})).sort((a,b)=>tkey(a[0].name).localeCompare(tkey(b[0].name)));
+}
+async function dupMerge(k,r){
+  let ch=false;
+  if(!k.album&&r.album){k.album=r.album;ch=true}
+  if(r.liked&&!k.liked){k.liked=r.liked;ch=true}
+  if(!k.blob&&r.blob){k.blob=r.blob;ch=true}
+  if(ch)await put('songs',k);
+  for(const p of playlists)if((p.songs||[]).includes(r.id)){p.songs=p.songs.map(i=>i===r.id?k.id:i).filter((i,x,a)=>a.indexOf(i)===x);await put('playlists',p)}
+  const a=ST[r.id];if(a){const b=ST[k.id]||{s:0,n:0};ST[k.id]={s:(b.s||0)+(a.s||0),n:(b.n||0)+(a.n||0)};delete ST[r.id];stSave()}
+  const sw=x=>x.map(i=>i===r.id?k.id:i);queue=sw(queue);upNext=sw(upNext);if(ctxCur===r.id)ctxCur=k.id;
+  if(cur===r.id){au.pause();au.removeAttribute('src');cur=null;closeFull()}
+  await del('songs',r.id);songs=songs.filter(s=>s.id!==r.id);
+}
+function dupSheet(){
+  const G=dupGroups(),mm=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
+  if(!G.length){openOv('<h3>Duplicate songs</h3><p style="margin:0 0 14px;color:var(--mute)">No duplicates found. Your library is clean.</p><button type="button" class="pill acc" id="dpx">Close</button>');$('#dpx').onclick=closeOv;return}
+  const rows=G.map((g,gi)=>`<div style="margin:14px 0 2px;font-size:13px;font-weight:700;color:var(--mute)">${esc(g[0].name)}</div>`+g.map((s,i)=>`<label class="pk"><input type="checkbox" data-k="${gi}:${i}"${i?' checked':''}><span class="t"><b>${esc(s.name)}${i?'':' (best copy, kept)'}</b><small>${esc(artOf(s)||'Unknown artist')} \u00b7 ${s.dur?mm(s.dur)+' \u00b7 ':''}${s.blob?fmtSize(s.blob.size):'not on this device'}</small></span></label>`).join('')).join('');
+  openOv(`<h3>Duplicate songs</h3><p style="margin:0 0 4px;color:var(--mute)">${G.length} ${G.length===1?'song appears':'songs appear'} more than once. Ticked copies are removed; their playlist spots, likes and play counts move to the copy you keep.</p>${rows}<div class="bt" style="margin-top:14px"><button type="button" class="pill" id="dpx">Cancel</button><button type="button" class="pill acc" id="dpr"></button></div>`);
+  const boxes=()=>[...document.querySelectorAll('#ov [data-k]')],lab=()=>{const n=boxes().filter(b=>b.checked).length;$('#dpr').textContent='Remove '+n;$('#dpr').disabled=!n};
+  $('#ov').onchange=lab;lab();$('#dpx').onclick=closeOv;
+  $('#dpr').onclick=async()=>{
+    const on=new Set(boxes().filter(b=>b.checked).map(b=>b.dataset.k));let n=0;
+    for(let gi=0;gi<G.length;gi++){
+      let rm=G[gi].filter((s,i)=>on.has(gi+':'+i));if(rm.length===G[gi].length)rm=rm.slice(1);
+      const k=G[gi].find(s=>!rm.includes(s));for(const r of rm){await dupMerge(k,r);n++}}
+    closeOv();render();toast('Removed '+n+(n===1?' duplicate':' duplicates'))};
+}
+/* songs shared into the app from another app (Web Share Target, see sw.js) */
+async function shareIntake(){
+  try{
+    if(!/[?&]shared=/.test(location.search))return;
+    history.replaceState(null,'',location.pathname);
+    const c=await caches.open('trax-share'),fs=[];
+    for(const k of await c.keys()){const r=await c.match(k),b=await r.blob();fs.push(new File([b],decodeURIComponent(r.headers.get('X-Name')||'shared.mp3'),{type:r.headers.get('Content-Type')||b.type||'audio/mpeg'}));await c.delete(k)}
+    if(fs.length)await addFiles(fs);
+  }catch(e){toast('Could not import the shared songs')}
+}
+/* app update */
+function swuAct(){
+  if(SWU.w){SWU.asked=true;SWU.w.postMessage('SKIP_WAITING');toast('Updating\u2026');return}
+  if(!SWU.reg)return toast('Updates are not available here');
+  toast('Checking\u2026');SWU.reg.update().catch(()=>{});
+  setTimeout(()=>{if(SWU.w){setTab='data';openSettings()}else toast('You have the newest version')},2500);
+}
+
+/* ===== audio quality helpers, missing info finder ===== */
+const kbps=(b,d)=>b&&d>0?Math.round(b.size*8/d/1000):0;
+const qInfo=(b,d)=>{if(!b)return '';const t=((b.type||'').split('/')[1]||'').replace(/^x-/,'').replace('mpeg','mp3').replace('mp4','m4a'),k=kbps(b,d);return (t?t.toUpperCase():'?')+(k?' '+k+' kbps':'')};
+const missOf=s=>{const al=albumOf(s),m=[],L=LYM.get(s.id);if(!artOf(s))m.push('artist');if(!s.album)m.push('album');if(!s.cover&&!s.cmedia&&!(al&&(al.cover||al.cmedia)))m.push('cover');if(!(L&&L.l&&L.l.length))m.push('lyrics');return m};
+let missF='all';
+function missSheet(f){
+  if(f)missF=f;
+  const all=songs.map(s=>({s,m:missOf(s)})).filter(o=>o.m.length),cnt=k=>all.filter(o=>o.m.includes(k)).length;
+  if(!all.length){openOv('<h3>Missing info</h3><p class="dupn">Every song has an artist, album, cover and lyrics.</p><div class="bt"><button type="button" class="pill acc" id="msx">Close</button></div>');$('#msx').onclick=closeOv;return}
+  const F=[['all','All',all.length],['artist','No artist',cnt('artist')],['album','No album',cnt('album')],['cover','No cover',cnt('cover')],['lyrics','No lyrics',cnt('lyrics')]];
+  const rows=all.filter(o=>missF==='all'||o.m.includes(missF)).sort((a,b)=>cmp(a.s.name,b.s.name)),shown=rows.slice(0,200);
+  openOv(`<h3>Missing info</h3><p class="dupn">Tick songs, then use Find online to look up cover, song name, artist, featuring and album (nothing ticked means every song in this list), or fix them with Edit tags. Tap Edit on a song to change just that one.</p><div class="bgst" id="msf">${F.map(x=>`<button type="button" class="chip${x[0]===missF?' on':''}" data-f="${x[0]}">${x[1]} ${x[2]}</button>`).join('')}</div><div class="pl" id="msl">${shown.map(o=>`<label class="pk"><input type="checkbox" data-id="${esc(o.s.id)}"><span class="t"><b>${esc(o.s.name)}</b><small>Missing ${o.m.join(', ')}</small></span><button type="button" class="pill" data-e="${esc(o.s.id)}" style="margin-left:auto">Edit</button></label>`).join('')}</div>${rows.length>shown.length?`<p class="dupn">Showing the first ${shown.length} of ${rows.length}.</p>`:''}<div class="bt"><button type="button" class="pill" id="msa">Select all</button>${missF==='lyrics'||missF==='all'?'<button type="button" class="pill" id="msy">Find lyrics online</button>':''}<button type="button" class="pill" id="msn">Find online</button><button type="button" class="pill acc" id="msb">Edit tags</button></div>`);
+  const find=d=>songs.find(x=>String(x.id)===d),ids=()=>[...document.querySelectorAll('#msl input:checked')].map(b=>find(b.dataset.id)).filter(Boolean).map(s=>s.id);
+  const lab=()=>{const n=ids().length;$('#msb').textContent=n?'Edit tags ('+n+')':'Edit tags'};lab();
+  $('#msl').onchange=lab;
+  $('#msf').onclick=e=>{const c=e.target.closest('[data-f]');if(c)missSheet(c.dataset.f)};
+  $('#msa').onclick=()=>{const b=[...document.querySelectorAll('#msl input')],on=b.some(x=>!x.checked);b.forEach(x=>x.checked=on);lab()};
+  $('#msl').onclick=async e=>{const b=e.target.closest('[data-e]');if(!b)return;e.preventDefault();const s=find(b.dataset.e);if(s){await editSong(s);render();setTimeout(missSheet,300)}};
+  $('#msb').onclick=async()=>{const a=ids();if(!a.length)return toast('Tick some songs first');await bulkTag(a);render();setTimeout(missSheet,380)};
+  $('#msn').onclick=()=>{const a=ids();omSheet(a.length?a:rows.map(o=>o.s.id))};
+  const y=$('#msy');if(y)y.onclick=async()=>{closeOv();await lyFindAll();setTimeout(missSheet,300)};
+}
+/* ===== find missing info online (iTunes Search: cover, song name, artist, featuring, album) ===== */
+const OM={cache:new Map(),busy:false};
+const omTitle=t=>{const feat=[];let title=String(t||'').replace(FEAT_RE,(m,a,b)=>{feat.push(...(a||b).split(/,|&|\band\b/i).map(x=>x.trim()).filter(Boolean));return ''}).trim()||String(t||'').trim();return {title,feat}};
+async function omSearch(s){
+  const pm=songMeta(s.name||'',{}),ar=(s.artist||artOf(s)||pm.artist||'').trim(),ti=(pm.title||s.name||'').replace(FEAT_RE,'').trim();
+  if(!ti)return {c:[]};
+  const q=(ar+' '+ti).trim(),hit=OM.cache.get(q);if(hit)return hit;
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),12000);
+  let js;
+  try{
+    const r=await fetch('https://itunes.apple.com/search?media=music&entity=song&limit=12&term='+encodeURIComponent(q),{signal:ctl.signal});
+    if(!r.ok)return {err:1};
+    js=await r.json();
+  }catch(e){return {err:1}}finally{clearTimeout(tm)}
+  const tk=tkey(ti),ak=nkey(ar),out=[];
+  for(const x of (js.results||[])){
+    if(!x.trackName||!x.artistName)continue;
+    const o=omTitle(x.trackName),ck=tkey(o.title);let sc=0;
+    if(ck===tk)sc+=3;else if(tk.length>=4&&ck.length>=4&&(ck.includes(tk)||tk.includes(ck)))sc+=1.5;else continue;
+    if(ak){const xa=nkey(x.artistName);if(xa===ak||xa.includes(ak)||ak.includes(xa))sc+=2;else sc-=1}
+    if(sc<1.5)continue;
+    let album=(x.collectionName||'').trim();if(/\s-\s(single|ep)$/i.test(album))album='';
+    out.push({name:o.title,artist:x.artistName.trim(),feat:o.feat.filter(f=>!sameArt(f,x.artistName)),album,cover:x.artworkUrl100?x.artworkUrl100.replace(/\d+x\d+(bb|cc)?(?=\.\w+$)/,'600x600bb'):'',sc});
+  }
+  const seen=new Set(),c=out.sort((a,b)=>b.sc-a.sc).filter(x=>{const k=nkey(x.name+'|'+x.artist+'|'+x.album);if(seen.has(k))return false;seen.add(k);return true}).slice(0,5);
+  const res={c};OM.cache.set(q,res);return res;
+}
+async function omImg(u){
+  try{const r=await fetch(u);if(!r.ok)return null;const b=await r.blob();return await makeCover(new File([b],'cover.jpg',{type:b.type||'image/jpeg'}))}catch(e){return null}
+}
+/* which fields would change, and which of them are switched on by default (only the ones that are missing) */
+function omDiff(s,c){
+  const f=[],on=new Set(),cur=s.name||'';
+  if(c.cover&&!s.cover&&!s.cmedia){f.push('cover');on.add('cover')}
+  if(c.name&&c.name!==cur){f.push('name');if(/^\d{1,3}[\s._-]|\s-\s|_/.test(cur))on.add('name')}
+  if(c.artist&&!sameArt(c.artist,s.artist||'')){f.push('artist');if(!artOf(s))on.add('artist')}
+  if(c.feat.length&&featOf(s).join('|').toLowerCase()!==c.feat.join('|').toLowerCase()){f.push('feat');if(!featOf(s).length)on.add('feat')}
+  if(c.album&&!s.album){f.push('album');on.add('album')}
+  return {f,on};
+}
+const OM_LAB={cover:'Cover',name:'Song name',artist:'Artist',feat:'Featuring',album:'Album'};
+async function omSheet(ids){
+  if(OM.busy)return;
+  if(navigator.onLine===false)return toast('You are offline');
+  const list=ids.map(id=>songs.find(x=>x.id===id)).filter(Boolean);
+  if(!list.length)return toast('Nothing to look up');
+  let stop=false,fail=0;const R=[];
+  openOv(`<h3>Find online</h3><p class="dupn" id="omp">Searching 0 of ${list.length}\u2026</p><p class="dupn">Uses the free iTunes Search service. It is sent the song title and artist. About 3 seconds per song.</p><div class="bt"><button type="button" class="pill acc" id="omx">Stop and review</button></div>`);
+  $('#omx').onclick=()=>{stop=true};
+  OM.busy=true;
+  try{
+    for(let i=0;i<list.length&&!stop;i++){
+      const s=list[i],r=await omSearch(s);
+      if(r.err){if(++fail>=3){toast('Could not reach iTunes Search');break}}
+      else{fail=0;if(r.c.length)R.push({s,c:r.c,i:0,on:null})}
+      const p=$('#omp');if(!p)return;/* sheet was closed */
+      p.textContent='Searching '+(i+1)+' of '+list.length+' \u00b7 '+R.length+' matched';
+      if(i<list.length-1&&!r.fromCache)await new Promise(z=>setTimeout(z,3000));
+    }
+  }finally{OM.busy=false}
+  if(!$('#omp'))return;
+  omReview(R,list.length);
+}
+function omReview(R,total){
+  const init=r=>{const d=omDiff(r.s,r.c[r.i]);r.f=d.f;r.on=new Set(d.on)};
+  R.forEach(init);
+  const act=()=>R.filter(r=>r.on.size).length;
+  const row=(r,k)=>{
+    const c=r.c[r.i],cv=c.cover?`<img src="${esc(c.cover)}" alt="" loading="lazy" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none;background:rgba(128,128,128,.2)">`:'<div style="width:56px;height:56px;border-radius:8px;flex:none;background:rgba(128,128,128,.2)"></div>';
+    return `<div class="omr" data-k="${k}" style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)">${cv}<div style="flex:1;min-width:0"><b style="display:block">${esc(c.name)}</b><small style="display:block;color:var(--mute)">${esc(c.artist)}${c.feat.length?' feat. '+esc(c.feat.join(', ')):''}${c.album?' \u00b7 '+esc(c.album):''}</small><small style="display:block;color:var(--mute);margin-top:2px">Now: ${esc(r.s.name)}${artOf(r.s)?' \u00b7 '+esc(artOf(r.s)):''}</small><div class="bgst" style="margin-top:8px">${r.f.length?r.f.map(x=>`<button type="button" class="chip${r.on.has(x)?' on':''}" data-f="${x}">${OM_LAB[x]}</button>`).join(''):'<small style="color:var(--mute)">Nothing new to add</small>'}${r.c.length>1?`<button type="button" class="pill" data-nx="1">Other match ${r.i+1}/${r.c.length}</button>`:''}</div></div></div>`};
+  openOv(`<h3>Found online</h3><p class="dupn">${R.length} of ${total} songs matched. Switched-on items will be saved. Tap an item to switch it on or off. Existing names, artists and covers stay unless you switch them on.</p><div class="pl" id="oml">${R.map(row).join('')||'<p class="dupn">No confident matches found.</p>'}</div><div class="bt"><button type="button" class="pill" id="omc">Cancel</button>${R.length?'<button type="button" class="pill acc" id="oma"></button>':''}</div>`);
+  const lab=()=>{const b=$('#oma');if(b){const n=act();b.textContent=n?'Apply ('+n+')':'Apply';b.disabled=!n}};lab();
+  $('#omc').onclick=()=>{closeOv();setTimeout(missSheet,300)};
+  $('#oml').onclick=e=>{
+    const rw=e.target.closest('.omr');if(!rw)return;const k=+rw.dataset.k,r=R[k];
+    const ch=e.target.closest('[data-f]');
+    if(ch){const f=ch.dataset.f;r.on.has(f)?r.on.delete(f):r.on.add(f)}
+    else if(e.target.closest('[data-nx]')){r.i=(r.i+1)%r.c.length;init(r)}
+    else return;
+    rw.outerHTML=row(r,k);lab();
+  };
+  const ap=$('#oma');if(ap)ap.onclick=async()=>{
+    ap.disabled=true;let n=0,cf=0;
+    for(const r of R){
+      if(!r.on.size)continue;const s=r.s,c=r.c[r.i];
+      if(r.on.has('name'))s.name=c.name;
+      if(r.on.has('artist'))s.artist=c.artist;
+      if(r.on.has('feat')||r.on.has('artist')){const ft=r.on.has('feat')?c.feat:featOf(s);s.feat=ft.filter(x=>!sameArt(x,s.artist||''))}
+      if(r.on.has('album')&&c.album){const ex=albums.find(a=>a.name.toLowerCase()===c.album.toLowerCase());s.album=ex?ex.id:newAlbum(c.album).id;s.pos=Date.now()}
+      if(r.on.has('cover')&&c.cover){toast('Downloading cover for '+s.name+'\u2026');const im=await omImg(c.cover);if(im){s.cover=im.data;s.ccol=im.color}else cf++}
+      await put('songs',s);if(cur===s.id)setSession(s);n++;
+    }
+    render();closeOv();
+    toast('Updated '+n+(n===1?' song':' songs')+(cf?' \u00b7 '+cf+' cover'+(cf===1?'':'s')+' could not be downloaded':''));
+    setTimeout(missSheet,380);
+  };
+}
 /* static UI and init */
 function ui(){
   try{const t=localStorage.getItem('tracks-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;else if(t==='custom'){document.documentElement.dataset.theme='custom';applyCustom(CT.hex)}}catch(e){}
@@ -6402,7 +6707,7 @@ function ui(){
   for(const o of [...songs,...albums]){
     if(o.cover&&!o.ccol){const c=await colorFromUrl(o.cover);if(c){o.ccol=c;await put(songs.includes(o)?'songs':'albums',o)}}
   }
-  renderMini();lyBoot();medBootGC();
+  renderMini();lyBoot();medBootGC();shareIntake();
 })();
 </script>
 </body>
