@@ -999,7 +999,18 @@ html[data-layout=pc] .scd{padding:4px 20px 14px}
 #cmk .cmpal{width:38px;height:38px;border-radius:50%;border:2px solid transparent;flex:none}
 #cmk .cmpal.on{border-color:var(--text)}
 #cmk .cmcol{width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:none;flex:none;overflow:hidden}
-#cmk .bt{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+#cmk .bt{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;position:sticky;bottom:-18px;background:var(--bg);padding:10px 0 2px;z-index:2}
+#cmk .cmd{gap:8px}
+#cmk canvas{width:min(100%,260px)!important}
+#cmk .cmtabs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#cmk .cmtabs .chip{text-align:center;padding:9px 12px;font-size:14px;font-weight:700;max-width:none}
+#cmk .cmsw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);flex:none;padding:0}
+#cmk .cmsw.on{border-color:var(--text);box-shadow:0 0 0 2px var(--bg) inset}
+#cmk .cmcl{width:34px;height:34px;border-radius:50%;flex:none;overflow:hidden;position:relative;border:2px solid var(--line);background:conic-gradient(#f43f5e,#f59e0b,#84cc16,#06b6d4,#6366f1,#d946ef,#f43f5e)}
+#cmk .cmcl.on{border-color:var(--text)}
+#cmk .cmcl input{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px);opacity:0;cursor:pointer}
+#cmk #cmf .chip{font-size:15px;padding:7px 13px}
+#cmk [hidden]{display:none!important}
 /* v26: background, cover transition and beat effects live behind one button that expands into a centred pill */
 .tbm{position:absolute;left:-8px;top:50%;margin-top:-22px;z-index:6}
 .tbmb{transition:background-color .2s,color .2s}
@@ -6683,84 +6694,241 @@ function omReview(R,total){
 }
 /* ===== cover maker: draws a square cover (gradients, patterns, photo, text) and hands back a JPEG file ===== */
 const CM_PAL=[['#ff5a36','#ffb199','#2b1220'],['#2563eb','#7dd3fc','#0f172a'],['#10b981','#a7f3d0','#052e2b'],['#a855f7','#f0abfc','#1e1033'],['#f59e0b','#fde68a','#3b1d05'],['#ef4444','#fca5a5','#111827'],['#111827','#6b7280','#f9fafb'],['#f472b6','#fbcfe8','#4a044e'],['#14b8a6','#fde047','#134e4a'],['#e5e7eb','#9ca3af','#111827']];
-const CM_STY=[['mesh','Mesh'],['grad','Gradient'],['stripes','Stripes'],['circles','Circles'],['rings','Rings'],['blocks','Blocks'],['vinyl','Vinyl'],['photo','Photo']];
-const CM_FONT={sans:['800','"Helvetica Neue",Arial,sans-serif',0,'Bold'],serif:['italic 700','Georgia,"Times New Roman",serif',0,'Serif'],mono:['700','ui-monospace,Menlo,Consolas,monospace',0,'Mono'],cond:['800','"Arial Narrow","Helvetica Neue",Arial,sans-serif',1,'Caps']};
+const CM_STY=[['mesh','Mesh'],['grad','Gradient'],['aurora','Aurora'],['retro','Retro sun'],['halftone','Halftone'],['liquid','Liquid'],['vinyl','Vinyl'],['photo','Photo']];
+/* fonts use system stacks (the app works offline); [weight/style, stack, caps, label] */
+const CM_FONT={
+  sans:['800',"'Helvetica Neue',Arial,sans-serif",0,'Bold'],
+  thin:['300',"'Helvetica Neue',Helvetica,Arial,sans-serif",0,'Light'],
+  serif:['italic 700',"Georgia,'Times New Roman',serif",0,'Serif'],
+  classic:['700',"'Palatino Linotype',Palatino,'Book Antiqua',serif",0,'Classic'],
+  fashion:['700',"Didot,'Bodoni MT','Bodoni 72',Georgia,serif",0,'Fashion'],
+  slab:['800',"Rockwell,'Roboto Slab','Courier New',serif",0,'Slab'],
+  mono:['700',"ui-monospace,Menlo,Consolas,monospace",0,'Mono'],
+  type:['400',"'Courier New',Courier,monospace",0,'Typewriter'],
+  cond:['800',"'Arial Narrow','Helvetica Neue',Arial,sans-serif",1,'Caps'],
+  poster:['400',"Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif",1,'Poster'],
+  wide:['900',"Verdana,'DejaVu Sans',sans-serif",1,'Wide'],
+  geo:['700',"Futura,'Century Gothic','Avenir Next','Trebuchet MS',sans-serif",1,'Geometric'],
+  round:['800',"'Arial Rounded MT Bold',ui-rounded,'SF Pro Rounded',Nunito,'Trebuchet MS',sans-serif",0,'Round'],
+  human:['600',"'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',sans-serif",0,'Humanist'],
+  engr:['700',"Copperplate,'Copperplate Gothic Light',Papyrus,fantasy",1,'Engraved'],
+  script:['italic 400',"'Brush Script MT','Snell Roundhand','Segoe Script','Lucida Handwriting',cursive",0,'Script'],
+  marker:['700',"'Marker Felt','Chalkboard SE','Comic Sans MS',cursive",0,'Marker']
+};
+const CM_FX=[['none','None'],['shadow','Shadow'],['glow','Glow'],['neon','Neon'],['outline','Outline'],['glitch','Glitch'],['retro','3D']];
+const CM_IFX=[['none','None'],['glow','Glow'],['neon','Neon'],['glitch','Glitch'],['blur','Blur'],['vignette','Vignette'],['duotone','Duotone']];
+const cmCv=w=>{const c=document.createElement('canvas');c.width=c.height=w;return c};
+/* soft blur that works in every browser (no ctx.filter): shrink in halves, then grow back in halves */
+function cmBlur(src,W,r){
+  const t=Math.max(2,Math.round(W/Math.max(1,r)));let w=W,c=src;
+  const step=nw=>{const n=cmCv(nw),g=n.getContext('2d');g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(c,0,0,nw,nw);c=n};
+  while(w>t){w=Math.max(t,Math.round(w/2));step(w)}
+  while(w<W){w=Math.min(W,w*2);step(w)}
+  return c}
+/* image effects: drawn on the finished background, before the grain */
+function cmFx(x,S,W){
+  const fx=S.ife,am=(S.ifa==null?50:S.ifa)/100;if(!fx||fx==='none')return;
+  const [c0,c1,c2]=S.c,tint=S.igc&&S.igc!=='auto'?S.igc:null;
+  const copy=()=>{const t=cmCv(W);t.getContext('2d').drawImage(x.canvas,0,0);return t};
+  const reset=()=>{x.globalCompositeOperation='source-over';x.globalAlpha=1};
+  const bloom=(r,a)=>{
+    let b=cmBlur(copy(),W,r),t=cmCv(W),g=t.getContext('2d');
+    g.drawImage(b,0,0);g.globalCompositeOperation='lighter';g.drawImage(b,0,0);
+    if(tint){g.globalCompositeOperation='multiply';g.fillStyle=tint;g.fillRect(0,0,W,W)}
+    x.globalCompositeOperation='screen';x.globalAlpha=Math.min(1,a);x.drawImage(t,0,0);reset()};
+  if(fx==='glow'){bloom(34+am*120,.4+am*.5);bloom(10+am*30,.22+am*.38)}
+  else if(fx==='neon'){
+    x.globalCompositeOperation='saturation';x.globalAlpha=.5+am*.5;x.fillStyle='#f00';x.fillRect(0,0,W,W);reset();
+    x.globalCompositeOperation='overlay';x.globalAlpha=.5+am*.4;x.drawImage(copy(),0,0);reset();
+    x.globalAlpha=.12+am*.25;x.fillStyle='#000';x.fillRect(0,0,W,W);reset();
+    bloom(26+am*90,.55+am*.4);bloom(8+am*24,.4)}
+  else if(fx==='glitch'){
+    const R=cmRng((S.seed|0)+7),d=Math.round(6+am*40),src=copy(),out=cmCv(W),g=out.getContext('2d');
+    g.fillStyle='#000';g.fillRect(0,0,W,W);g.globalCompositeOperation='lighter';
+    [['#f00',-d],['#0f0',0],['#00f',d]].forEach(([col,dx])=>{const t=cmCv(W),h=t.getContext('2d');h.drawImage(src,0,0);h.globalCompositeOperation='multiply';h.fillStyle=col;h.fillRect(0,0,W,W);g.drawImage(t,dx,0)});
+    g.globalCompositeOperation='source-over';
+    const snap=cmCv(W);snap.getContext('2d').drawImage(out,0,0);
+    for(let i=0,n=Math.round(4+am*14);i<n;i++){const y=R()*W,h=8+R()*(30+am*60),sx=(R()-.5)*(60+am*220);g.drawImage(snap,0,y,W,h,sx,y,W,h)}
+    x.drawImage(out,0,0)}
+  else if(fx==='blur'){x.drawImage(cmBlur(copy(),W,4+am*60),0,0)}
+  else if(fx==='vignette'){
+    const g=x.createRadialGradient(W/2,W/2,W*(.62-am*.4),W/2,W/2,W*.78);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+(.35+am*.6).toFixed(3)+')');
+    x.fillStyle=g;x.fillRect(0,0,W,W)}
+  else if(fx==='duotone'){
+    const id=x.getImageData(0,0,W,W),d=id.data,A=cmRgb(c2),B=cmRgb(c1),C=cmRgb(c0),m=.2+.8*am;
+    for(let i=0;i<d.length;i+=4){
+      const l=(.299*d[i]+.587*d[i+1]+.114*d[i+2])/255,lo=l<.5,k=lo?l*2:(l-.5)*2,P=lo?A:B,Q=lo?B:C;
+      d[i]+=(P[0]+(Q[0]-P[0])*k-d[i])*m;d[i+1]+=(P[1]+(Q[1]-P[1])*k-d[i+1])*m;d[i+2]+=(P[2]+(Q[2]-P[2])*k-d[i+2])*m}
+    x.putImageData(id,0,0)}
+}
 function cmRng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function cmDraw(cv,S){
-  const W=cv.width=cv.height=1024,x=cv.getContext('2d'),R=cmRng(S.seed),[c0,c1,c2]=S.c;
+function cmRgb(h){h=String(h||'#000').replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');const n=parseInt(h,16)||0;return[n>>16&255,n>>8&255,n&255]}
+const cmLum=h=>{const c=cmRgb(h);return .299*c[0]+.587*c[1]+.114*c[2]};
+const cmMixW=(h,t)=>{const c=cmRgb(h);return 'rgb('+c.map(v=>Math.round(v+(255-v)*t)).join(',')+')'};
+/* the background is drawn once and cached; moving or restyling text only re-draws the text on top */
+function cmBg(S){
+  const W=1024,key=[S.style,S.seed,S.c.join(),S.grain,S.dim,S.imgUrl||'',S.ife,S.ifa,S.igc].join('|');
+  if(S._bk===key&&S._bc)return S._bc;
+  const cv=S._bc||(S._bc=document.createElement('canvas'));cv.width=cv.height=W;
+  const x=cv.getContext('2d',{willReadFrequently:true}),R=cmRng(S.seed),[c0,c1,c2]=S.c,st=S.style;
   x.globalAlpha=1;x.globalCompositeOperation='source-over';x.fillStyle=c2;x.fillRect(0,0,W,W);
-  const st=S.style;
   if(st==='grad'){const a=R()*Math.PI*2,cx=W/2,cy=W/2,r=W*.75,g=x.createLinearGradient(cx-Math.cos(a)*r,cy-Math.sin(a)*r,cx+Math.cos(a)*r,cy+Math.sin(a)*r);g.addColorStop(0,c0);g.addColorStop(.55,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(0,0,W,W)}
   else if(st==='mesh'){for(let i=0;i<6;i++){const px=R()*W,py=R()*W,r=W*(.35+R()*.5),g=x.createRadialGradient(px,py,0,px,py,r),c=i%2?c1:c0;g.addColorStop(0,c);g.addColorStop(1,c+'00');x.fillStyle=g;x.fillRect(0,0,W,W)}}
-  else if(st==='stripes'){x.save();x.translate(W/2,W/2);x.rotate((R()*60-30)*Math.PI/180);let p=-W,i=0;while(p<W){const w=40+R()*140;x.fillStyle=[c0,c1,c2][i++%3];x.fillRect(p,-W,w+1,W*2);p+=w}x.restore()}
-  else if(st==='circles'){for(let i=0;i<7;i++){x.globalAlpha=.85;x.fillStyle=i%2?c1:c0;x.beginPath();x.arc(R()*W,R()*W,90+R()*300,0,7);x.fill()}x.globalAlpha=1}
-  else if(st==='rings'){const cx=W*(.25+R()*.5),cy=W*(.25+R()*.5);for(let i=16;i>=1;i--){x.fillStyle=i%3===0?c2:i%3===1?c0:c1;x.beginPath();x.arc(cx,cy,i*70,0,7);x.fill()}}
-  else if(st==='blocks'){const n=4,w=W/n,cs=[c0,c1,c2];for(let i=0;i<n;i++)for(let j=0;j<n;j++){const a=cs[Math.floor(R()*3)],b=cs[Math.floor(R()*3)],k=Math.floor(R()*4);x.fillStyle=a;x.fillRect(i*w,j*w,w,w);x.fillStyle=b;x.beginPath();if(k===0)x.arc(i*w,j*w,w,0,Math.PI/2);else if(k===1)x.arc(i*w+w,j*w,w,Math.PI/2,Math.PI);else if(k===2)x.arc(i*w,j*w+w,w,-Math.PI/2,0);else x.arc(i*w+w,j*w+w,w,Math.PI,Math.PI*1.5);x.lineTo(k===0?i*w:k===1?i*w+w:k===2?i*w:i*w+w,k===0?j*w:k===1?j*w:k===2?j*w+w:j*w+w);x.fill()}}
+  else if(st==='aurora'){
+    x.fillStyle=c2;x.fillRect(0,0,W,W);
+    for(let i=0;i<70;i++){x.globalAlpha=.15+R()*.6;x.fillStyle='#fff';const s=R()<.15?3:2;x.fillRect(R()*W,R()*W*.75,s,s)}
+    x.globalAlpha=1;x.globalCompositeOperation='screen';
+    for(let b=0;b<4;b++){
+      const col=b%2?c1:c0,ph=R()*6.28,amp=W*(.06+R()*.12),fr=.8+R()*1.4,by=W*(.3+R()*.4);
+      for(let i=0;i<=64;i++){
+        const t=i/64,px=-W*.1+t*W*1.2,py=by+Math.sin(t*fr*6.28+ph)*amp,r=W*(.07+.03*Math.sin(t*9+ph)),g=x.createRadialGradient(0,0,0,0,0,r);
+        g.addColorStop(0,col+'2e');g.addColorStop(1,col+'00');
+        x.save();x.translate(px,py);x.scale(1,3.2);x.fillStyle=g;x.beginPath();x.arc(0,0,r,0,7);x.fill();x.restore();
+      }
+    }
+    x.globalCompositeOperation='source-over';
+  }
+  else if(st==='retro'){
+    const hz=W*.62,sky=x.createLinearGradient(0,0,0,hz);sky.addColorStop(0,c2);sky.addColorStop(.7,c0);sky.addColorStop(1,c1);x.fillStyle=sky;x.fillRect(0,0,W,hz);
+    for(let i=0;i<60;i++){x.globalAlpha=R()*.7;x.fillStyle='#fff';x.fillRect(R()*W,R()*hz*.55,2,2)}x.globalAlpha=1;
+    const sx=W/2+(R()-.5)*W*.16,sr=W*.25,sy=hz-sr*.4,t=document.createElement('canvas');t.width=t.height=W;const tx=t.getContext('2d');
+    const sg=tx.createLinearGradient(0,sy-sr,0,sy+sr);sg.addColorStop(0,c1);sg.addColorStop(1,c0);tx.fillStyle=sg;tx.beginPath();tx.arc(sx,sy,sr,0,7);tx.fill();
+    tx.globalCompositeOperation='destination-out';for(let i=0;i<7;i++)tx.fillRect(0,sy+sr*(.08+i*.13),W,3+i*3.2);
+    x.shadowColor=c1;x.shadowBlur=60;x.drawImage(t,0,0);x.shadowBlur=0;
+    x.fillStyle=c2;x.fillRect(0,hz,W,W-hz);
+    const fg=x.createLinearGradient(0,hz,0,W);fg.addColorStop(0,c0+'88');fg.addColorStop(1,c0+'00');x.fillStyle=fg;x.fillRect(0,hz,W,W-hz);
+    x.strokeStyle=c1;x.lineWidth=3;x.shadowColor=c1;x.shadowBlur=14;x.beginPath();
+    for(let k=0;k<=12;k++){const y=hz+Math.pow(k/12,2.2)*(W-hz);x.moveTo(0,y);x.lineTo(W,y)}
+    for(let k=-16;k<=16;k++){x.moveTo(W/2,hz);x.lineTo(W/2+k*W*.17,W)}
+    x.stroke();x.shadowBlur=0;x.fillStyle=c1;x.fillRect(0,hz-1.5,W,3);
+  }
+  else if(st==='halftone'){
+    x.fillStyle=c2;x.fillRect(0,0,W,W);
+    const a=R()*Math.PI*2,ca=Math.cos(a),sa=Math.sin(a),sp=32,q=Math.SQRT1_2;
+    const dots=(col,off,inv,k)=>{x.fillStyle=col;x.beginPath();for(let i=-46;i<=46;i++)for(let j=-46;j<=46;j++){const u=(i+off)*sp,v=(j+off)*sp,px=W/2+(u-v)*q,py=W/2+(u+v)*q;if(px<-sp||py<-sp||px>W+sp||py>W+sp)continue;let t=((px-W/2)*ca+(py-W/2)*sa)/(W*.8)*.5+.5;t=Math.max(0,Math.min(1,t));if(inv)t=1-t;const r=sp*k*t;if(r<.6)continue;x.moveTo(px+r,py);x.arc(px,py,r,0,7)}x.fill()};
+    dots(c1,.5,true,.55);dots(c0,0,false,.78);
+  }
+  else if(st==='liquid'){
+    const n=240,t=document.createElement('canvas');t.width=t.height=n;const tx=t.getContext('2d'),id=tx.createImageData(n,n),p1=R()*6.28,p2=R()*6.28,p3=R()*6.28,fq=2.4+R()*2.4,A=cmRgb(c0),B=cmRgb(c1),C=cmRgb(c2);
+    for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+      const u=i/n*fq,w=j/n*fq;
+      let f=(Math.sin(u+1.8*Math.sin(w*1.2+p1)+p2)+Math.sin(w+1.6*Math.sin(u*1.1+p3))+.6*Math.sin((u+w)*.8+p2))/2.6*.5+.5;
+      f=f*f*(3-2*f);
+      const lo=f<.5,k=lo?f*2:(f-.5)*2,P=lo?C:A,Q=lo?A:B,o=(j*n+i)*4;
+      id.data[o]=P[0]+(Q[0]-P[0])*k;id.data[o+1]=P[1]+(Q[1]-P[1])*k;id.data[o+2]=P[2]+(Q[2]-P[2])*k;id.data[o+3]=255;
+    }
+    tx.putImageData(id,0,0);x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(t,0,0,W,W);
+  }
   else if(st==='vinyl'){const g=x.createRadialGradient(W*.3,W*.3,0,W/2,W/2,W);g.addColorStop(0,c0);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(0,0,W,W);const cx=W/2,cy=W/2;x.fillStyle='#0a0a0a';x.beginPath();x.arc(cx,cy,W*.46,0,7);x.fill();x.strokeStyle='rgba(255,255,255,.07)';x.lineWidth=2;for(let r=W*.2;r<W*.45;r+=11){x.beginPath();x.arc(cx,cy,r,0,7);x.stroke()}x.fillStyle=c1;x.beginPath();x.arc(cx,cy,W*.16,0,7);x.fill();x.fillStyle='#0a0a0a';x.beginPath();x.arc(cx,cy,W*.02,0,7);x.fill()}
   else if(st==='photo'){if(S.img){const im=S.img,k=Math.max(W/im.width,W/im.height),w=im.width*k,h=im.height*k;x.drawImage(im,(W-w)/2,(W-h)/2,w,h);x.fillStyle='rgba(0,0,0,'+(S.dim/100)+')';x.fillRect(0,0,W,W)}else{x.fillStyle=c0;x.fillRect(0,0,W,W)}}
+  cmFx(x,S,W);
   if(S.grain>0){const n=document.createElement('canvas');n.width=n.height=256;const nx=n.getContext('2d'),d=nx.createImageData(256,256),G=cmRng(7);for(let i=0;i<d.data.length;i+=4){const v=G()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255}nx.putImageData(d,0,0);x.globalCompositeOperation='overlay';x.globalAlpha=S.grain/100*.6;x.fillStyle=x.createPattern(n,'repeat');x.fillRect(0,0,W,W);x.globalAlpha=1;x.globalCompositeOperation='source-over'}
+  let lum=0,kk=0;for(let i=1;i<6;i++)for(let j=1;j<6;j++){const p=x.getImageData(i*W/6|0,j*W/6|0,1,1).data;lum+=(.299*p[0]+.587*p[1]+.114*p[2]);kk++}
+  S._lum=lum/kk;S._bk=key;return cv;
+}
+function cmDraw(cv,S){
+  const W=1024,bg=cmBg(S);cv.width=cv.height=W;const x=cv.getContext('2d');x.drawImage(bg,0,0);
   const any=S.T.some(T=>(T.title||'').trim()||(T.sub||'').trim());if(!any)return false;
-  let lum=0,kk=0;for(let i=1;i<6;i++)for(let j=1;j<6;j++){const p=x.getImageData(i*W/6|0,j*W/6|0,1,1).data;lum+=(.299*p[0]+.587*p[1]+.114*p[2]);kk++}lum/=kk;
-  let moved=false;
+  const lum=S._lum;let moved=false;
   S.T.forEach(T=>{
     const title=(T.title||'').trim(),sub=(T.sub||'').trim();if(!title&&!sub){T.bb=null;return}
-    const col=T.tc==='white'?'#fff':T.tc==='black'?'#111':(lum>150?'#111':'#fff');
+    const col=T.tc==='white'?'#fff':T.tc==='black'?'#111':/^#/.test(T.tc||'')?T.tc:(lum>150?'#111':'#fff');
     const F=CM_FONT[T.font]||CM_FONT.sans,px=T.size*2.2,pad=84,mw=W-pad*2,lh=1.06;
     const fit=(txt,size,wt)=>{x.font=wt+' '+size+'px '+F[1];const out=[];let line='';for(const w of txt.split(/\s+/)){const t=line?line+' '+w:w;if(x.measureText(t).width>mw&&line){out.push(line);line=w}else line=t}if(line)out.push(line);return out};
-    const tt=F[2]?title.toUpperCase():title,tl=title?fit(tt,px,F[0]):[],sp=px*.4,sl=sub?fit(F[2]?sub.toUpperCase():sub,sp,'600'):[];
+    const tt=F[2]?title.toUpperCase():title,tl=title?fit(tt,px,F[0]):[],sp=px*.4,sl=sub?fit(F[2]?sub.toUpperCase():sub,sp,F[0]):[];
     const th=tl.length*px*lh,sh=sl.length*sp*1.3,gap=tl.length&&sl.length?px*.18:0,tot=th+gap+sh;
-    let bw=0;x.font=F[0]+' '+px+'px '+F[1];tl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});x.font='600 '+sp+'px '+F[1];sl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});
+    let bw=0;x.font=F[0]+' '+px+'px '+F[1];tl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});x.font=F[0]+' '+sp+'px '+F[1];sl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});
     T.bb={w:bw,h:tot};
-    if(T.pv||T.x==null){const k=T.pv||'bl';T.pv=null;const vy=k==='tl'?pad+tot/2:k==='c'?W/2:W-pad-tot/2;T.y=Math.round(vy/W*100);T.x=T.al==='center'?50:Math.round((T.al==='left'?pad+bw/2:W-pad-bw/2)/W*100);moved=true}
-    x.save();x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);
-    x.textAlign=T.al;x.textBaseline='top';x.fillStyle=col;x.shadowColor='rgba(0,0,0,.18)';x.shadowBlur=18;
-    const X=T.al==='center'?0:T.al==='left'?-bw/2:bw/2;let y=-tot/2;
-    x.font=F[0]+' '+px+'px '+F[1];tl.forEach((l,i)=>x.fillText(l,X,y+i*px*lh));y+=th+gap;
-    x.globalAlpha=.8;x.font='600 '+sp+'px '+F[1];sl.forEach((l,i)=>x.fillText(l,X,y+i*sp*1.3));x.globalAlpha=1;x.shadowBlur=0;x.restore();
+    if(T.pv||T.x==null){const k=T.pv||'b';T.pv=null;T.y=Math.round((k==='t'?pad+tot/2:k==='c'?W/2:W-pad-tot/2)/W*100);T.x=50;moved=true}
+    const fx=T.fx||'shadow',am=(T.fa==null?50:T.fa)/100,contrast=cmLum(col)>140?'#000':'#fff',gc=T.gc&&T.gc!=='auto'?T.gc:(fx==='outline'||fx==='retro'?contrast:col);
+    /* run draws every line of this text with the current canvas style; a = opacity of the title, the subtitle is a little softer */
+    const run=(op,a)=>{let y=-tot/2;x.font=F[0]+' '+px+'px '+F[1];x.globalAlpha=a;tl.forEach((l,i)=>op(l,0,y+i*px*lh));y+=th+gap;x.font=F[0]+' '+sp+'px '+F[1];x.globalAlpha=a*.8;sl.forEach((l,i)=>op(l,0,y+i*sp*1.3));x.globalAlpha=1};
+    const fill=(t,X,y)=>x.fillText(t,X,y);
+    x.save();x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);x.textAlign='center';x.textBaseline='top';x.lineJoin='round';x.fillStyle=col;
+    if(fx==='shadow'){x.shadowColor='rgba(0,0,0,'+(.1+am*.4)+')';x.shadowBlur=8+am*34;x.shadowOffsetY=3+am*10;run(fill,1)}
+    else if(fx==='glow'){const b=20+am*90;x.shadowColor=gc;x.shadowBlur=b;run(fill,1);x.shadowBlur=b*.45;run(fill,1);x.shadowBlur=0;run(fill,1)}
+    else if(fx==='neon'){const b=18+am*70;x.shadowColor=gc;x.fillStyle=gc;x.shadowBlur=b*1.4;run(fill,1);x.shadowBlur=b*.6;run(fill,1);x.shadowBlur=b*.2;run(fill,1);x.shadowBlur=0;x.fillStyle=cmMixW(col,.7);run(fill,1)}
+    else if(fx==='outline'){x.lineWidth=4+am*24;x.strokeStyle=gc;run((t,X,y)=>x.strokeText(t,X,y),1);x.fillStyle=col;run(fill,1)}
+    else if(fx==='glitch'){const d=6+am*26;x.fillStyle='#ff2a6d';run((t,X,y)=>x.fillText(t,X-d,y+d*.15),.85);x.fillStyle='#00e5ff';run((t,X,y)=>x.fillText(t,X+d,y-d*.15),.85);x.fillStyle=col;run(fill,1)}
+    else if(fx==='retro'){const n=Math.round(4+am*26);x.fillStyle=gc;for(let i=n;i>=1;i--)run((t,X,y)=>x.fillText(t,X+i*.75,y+i*.75),1);x.fillStyle=col;run(fill,1)}
+    else run(fill,1);
+    x.restore();
   });
   return moved;
 }
-const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',al:i?'center':'left',x:null,y:null,rot:0,pv:i?'c':'bl',size:i?36:46,tc:'auto',bb:null});
+const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',x:null,y:null,rot:0,pv:i?'c':'b',size:i?36:46,tc:'auto',gc:'auto',fx:'shadow',fa:50,bb:null});
 function covMaker(o){return new Promise(res=>{
   o=o||{};
-  const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,img:null,imgUrl:null};
+  const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,ife:'none',ifa:50,igc:'auto',img:null,imgUrl:null,tab:'bg'};
   if(/^#[0-9a-f]{6}$/i.test(o.color||'')){S.c=[o.color,S.c[1],S.c[2]];S.pal=-1}
   const cur=()=>S.T[S.k];
   const e=document.createElement('div');e.id='cmk';e.setAttribute('role','dialog');e.setAttribute('aria-modal','true');e.setAttribute('aria-label','Make cover');
-  const chips=(id,list)=>`<div class="cmw" id="${id}">${list.map(l=>`<button type="button" class="chip" data-v="${l[0]}">${l[1]}</button>`).join('')}</div>`;
-  e.innerHTML=`<div class="cmd"><h3>Make cover</h3><div class="cmp"><canvas id="cmv" width="1024" height="1024"></canvas></div>
-  <div class="cml">Style</div>${chips('cms',CM_STY)}
-  <div class="cmw" id="cmph" hidden><button type="button" class="pill" id="cmpb">Choose a photo\u2026</button><input type="file" id="cmpf" accept="image/*" hidden></div>
-  <div class="cml">Colors</div><div class="cmw" id="cmpl">${CM_PAL.map((p,i)=>`<button type="button" class="cmpal" data-i="${i}" aria-label="Palette ${i+1}" style="background:linear-gradient(135deg,${p[0]} 0 40%,${p[1]} 40% 70%,${p[2]} 70%)"></button>`).join('')}</div>
-  <div class="cmw"><input type="color" class="cmcol" data-k="0" aria-label="Main color"><input type="color" class="cmcol" data-k="1" aria-label="Second color"><input type="color" class="cmcol" data-k="2" aria-label="Background color"><button type="button" class="pill" id="cmsh">Shuffle</button></div>
-  <div class="cml">Texts \u2013 tap one to edit it, or tap it on the preview</div><div class="cmw" id="cmly"></div>
-  <input type="text" id="cmt" maxlength="80" placeholder="Title" autocomplete="off"><input type="text" id="cmu" maxlength="80" placeholder="Subtitle (optional)" autocomplete="off">
-  ${chips('cmf',Object.keys(CM_FONT).map(k=>[k,CM_FONT[k][3]]))}${chips('cmo',[['left','Align left'],['center','Center'],['right','Align right']])}${chips('cmc',[['auto','Auto color'],['white','White'],['black','Black']])}
-  <div class="cml">Text position \u2013 drag the text on the preview, or use the sliders</div><div class="cmw" id="cmpp"><button type="button" class="pill" data-p="tl">Top</button><button type="button" class="pill" data-p="c">Middle</button><button type="button" class="pill" data-p="bl">Bottom</button><button type="button" class="pill" id="cmdel">Delete this text</button></div>
-  <div class="fop"><span>Across</span><input type="range" class="rng" id="cmsx" min="0" max="100" aria-label="Text position across"><b></b></div>
-  <div class="fop"><span>Down</span><input type="range" class="rng" id="cmsy" min="0" max="100" aria-label="Text position down"><b></b></div>
-  <div class="fop"><span>Rotate</span><input type="range" class="rng" id="cmsr" min="-180" max="180" aria-label="Text rotation"><b></b></div>
-  <div class="fop"><span>Text size</span><input type="range" class="rng" id="cmz" min="20" max="90" aria-label="Text size"><b></b></div>
-  <div class="cml">Cover</div>
-  <div class="fop"><span>Grain</span><input type="range" class="rng" id="cmg" min="0" max="100" aria-label="Grain"><b></b></div>
-  <div class="fop" id="cmdw" hidden><span>Dim photo</span><input type="range" class="rng" id="cmd2" min="0" max="85" aria-label="Dim photo"><b></b></div>
+  const chips=(id,list,st)=>`<div class="cmw" id="${id}">${list.map(l=>`<button type="button" class="chip" data-v="${l[0]}"${st&&st[l[0]]?` style="${st[l[0]]}"`:''}>${l[1]}</button>`).join('')}</div>`;
+  const fst={};Object.keys(CM_FONT).forEach(k=>{const F=CM_FONT[k],w=/\d+/.exec(F[0]),it=/italic/.test(F[0]);fst[k]=`font-family:${F[1]};font-weight:${w?w[0]:400};font-style:${it?'italic':'normal'}`});
+  const swatches=`<button type="button" class="cmsw" data-sw="0" aria-label="Palette color 1"></button><button type="button" class="cmsw" data-sw="1" aria-label="Palette color 2"></button><button type="button" class="cmsw" data-sw="2" aria-label="Palette color 3"></button>`;
+  e.innerHTML=`<div class="cmd"><div class="cmp"><canvas id="cmv" width="1024" height="1024"></canvas></div>
+  <div class="cmw cmtabs" id="cmtab"><button type="button" class="chip" data-v="bg">Background</button><button type="button" class="chip" data-v="tx">Text</button></div>
+  <div id="cmbg">
+    <div class="cml">Style</div>${chips('cms',CM_STY)}
+    <div class="cmw" id="cmph" hidden><button type="button" class="pill" id="cmpb">Choose a photo\u2026</button><input type="file" id="cmpf" accept="image/*" hidden></div>
+    <div class="fop" id="cmdw" hidden><span>Dim photo</span><input type="range" class="rng" id="cmd2" min="0" max="85" aria-label="Dim photo"><b></b></div>
+    <div class="cml">Image effect</div>${chips('cmie',CM_IFX)}
+    <div id="cmio" hidden>
+      <div class="fop"><span>Strength</span><input type="range" class="rng" id="cmia" min="0" max="100" aria-label="Image effect strength"><b></b></div>
+      <div class="cml" id="cmil">Glow color</div><div class="cmw" id="cmic"><button type="button" class="chip" data-v="auto">Auto</button>${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><label class="cmcl" aria-label="Custom effect color"><input type="color" id="cmici"></label></div>
+    </div>
+    <div class="cml">Colors</div><div class="cmw" id="cmpl">${CM_PAL.map((p,i)=>`<button type="button" class="cmpal" data-i="${i}" aria-label="Palette ${i+1}" style="background:linear-gradient(135deg,${p[0]} 0 40%,${p[1]} 40% 70%,${p[2]} 70%)"></button>`).join('')}</div>
+    <div class="cmw"><input type="color" class="cmcol" data-k="0" aria-label="Main color"><input type="color" class="cmcol" data-k="1" aria-label="Second color"><input type="color" class="cmcol" data-k="2" aria-label="Background color"><button type="button" class="pill" id="cmsh">Shuffle</button></div>
+    <div class="fop"><span>Grain</span><input type="range" class="rng" id="cmg" min="0" max="100" aria-label="Grain"><b></b></div>
+  </div>
+  <div id="cmtx" hidden>
+    <div class="cml">Texts: tap one to edit it, or tap it on the preview</div><div class="cmw" id="cmly"></div>
+    <input type="text" id="cmt" maxlength="80" placeholder="Title" autocomplete="off"><input type="text" id="cmu" maxlength="80" placeholder="Subtitle (optional)" autocomplete="off">
+    <div class="cml">Font</div>${chips('cmf',Object.keys(CM_FONT).map(k=>[k,CM_FONT[k][3]]),fst)}
+    <div class="cml">Text color</div><div class="cmw" id="cmtc"><button type="button" class="chip" data-v="auto">Auto</button><button type="button" class="chip" data-v="white">White</button><button type="button" class="chip" data-v="black">Black</button>${swatches}<label class="cmcl" aria-label="Custom text color"><input type="color" id="cmtci"></label></div>
+    <div class="cml">Effect</div>${chips('cme',CM_FX)}
+    <div id="cmfo">
+      <div class="fop"><span>Strength</span><input type="range" class="rng" id="cmfa" min="0" max="100" aria-label="Effect strength"><b></b></div>
+      <div class="cml" id="cmgl">Effect color</div><div class="cmw" id="cmgc"><button type="button" class="chip" data-v="auto">Auto</button>${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><label class="cmcl" aria-label="Custom effect color"><input type="color" id="cmgci"></label></div>
+    </div>
+    <div class="cml">Size and position</div>
+    <div class="fop"><span>Size</span><input type="range" class="rng" id="cmz" min="20" max="90" aria-label="Text size"><b></b></div>
+    <div class="fop"><span>Rotate</span><input type="range" class="rng" id="cmsr" min="-180" max="180" aria-label="Text rotation"><b></b></div>
+    <div class="cmw" id="cmpp"><button type="button" class="pill" data-p="t">Top</button><button type="button" class="pill" data-p="c">Middle</button><button type="button" class="pill" data-p="b">Bottom</button><button type="button" class="pill" id="cmdel">Delete text</button></div>
+  </div>
   <div class="bt"><button type="button" class="pill" id="cmx">Cancel</button><button type="button" class="pill acc" id="cmok">Use cover</button></div></div>`;
   const q=s=>e.querySelector(s),qa=s=>[...e.querySelectorAll(s)];
   let done=false;
   const kd=ev=>{if(ev.key==='Escape'){ev.stopPropagation();fin(null)}};
   const fin=v=>{if(done)return;done=true;document.removeEventListener('keydown',kd,true);if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);e.remove();res(v)};
-  const sl=()=>{const T=cur();[['#cmsx',T.x==null?50:T.x,'%',0,100],['#cmsy',T.y==null?50:T.y,'%',0,100],['#cmsr',T.rot,'\u00b0',-180,180],['#cmz',T.size,'',20,90],['#cmg',S.grain,'%',0,100],['#cmd2',S.dim,'%',0,85]].forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
+  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
   const lay=()=>{q('#cmly').innerHTML=S.T.map((T,i)=>`<button type="button" class="chip${i===S.k?' on':''}" data-l="${i}">${esc((T.title||'').trim().slice(0,14)||'Text '+(i+1))}</button>`).join('')+'<button type="button" class="pill" data-add="1">+ Add text</button>';q('#cmdel').style.display=S.T.length>1?'':'none'};
   const load=()=>{const T=cur();q('#cmt').value=T.title;q('#cmu').value=T.sub};
   let raf=0;const draw=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{if(cmDraw(q('#cmv'),S))sl()})};
+  const same=(a,b)=>String(a||'').toLowerCase()===String(b||'').toLowerCase();
   const sync=()=>{
-    const T=cur();
+    const T=cur(),fx=T.fx||'shadow';
+    qa('#cmtab .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===S.tab));q('#cmbg').hidden=S.tab!=='bg';q('#cmtx').hidden=S.tab!=='tx';
     qa('#cms .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===S.style));
     qa('#cmf .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===T.font));
-    qa('#cmo .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===T.al));
-    qa('#cmc .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===T.tc));
+    qa('#cme .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===fx));
     qa('#cmpl .cmpal').forEach(b=>b.classList.toggle('on',+b.dataset.i===S.pal));
     qa('.cmcol').forEach(i=>i.value=S.c[+i.dataset.k]);
+    qa('.cmsw').forEach(b=>{const c=b.dataset.sw==='w'?'#ffffff':S.c[+b.dataset.sw];b.style.background=c;b.dataset.c=c});
+    const tc=T.tc||'auto',gc=T.gc||'auto',hx=v=>/^#/.test(v);
+    qa('#cmtc .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===tc));
+    qa('#cmtc .cmsw').forEach(b=>b.classList.toggle('on',hx(tc)&&same(tc,b.dataset.c)));
+    q('#cmtci').value=hx(tc)?tc:'#ffffff';q('#cmtci').parentNode.classList.toggle('on',hx(tc)&&![...qa('#cmtc .cmsw')].some(b=>same(tc,b.dataset.c)));
+    qa('#cmgc .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===gc));
+    qa('#cmgc .cmsw').forEach(b=>b.classList.toggle('on',hx(gc)&&same(gc,b.dataset.c)));
+    q('#cmgci').value=hx(gc)?gc:'#ffffff';q('#cmgci').parentNode.classList.toggle('on',hx(gc)&&![...qa('#cmgc .cmsw')].some(b=>same(gc,b.dataset.c)));
+    const ie=S.ife||'none',ig=S.igc||'auto';
+    qa('#cmie .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===ie));
+    qa('#cmic .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===ig));
+    qa('#cmic .cmsw').forEach(b=>b.classList.toggle('on',hx(ig)&&same(ig,b.dataset.c)));
+    q('#cmici').value=hx(ig)?ig:'#ffffff';q('#cmici').parentNode.classList.toggle('on',hx(ig)&&![...qa('#cmic .cmsw')].some(b=>same(ig,b.dataset.c)));
+    q('#cmio').hidden=ie==='none';q('#cmic').hidden=q('#cmil').hidden=!(ie==='glow'||ie==='neon');
+    q('#cmfo').hidden=fx==='none';q('#cmgc').hidden=q('#cmgl').hidden=!(fx==='glow'||fx==='neon'||fx==='outline'||fx==='retro');
     q('#cmph').hidden=S.style!=='photo';q('#cmdw').hidden=S.style!=='photo'||!S.img;
     q('#cmpb').textContent=S.img?'Change photo\u2026':'Choose a photo\u2026';
     lay();sl();draw();
@@ -6768,8 +6936,13 @@ function covMaker(o){return new Promise(res=>{
   e.addEventListener('click',ev=>{
     const b=ev.target.closest('button');if(!b)return;
     const grp=b.parentNode.id,v=b.dataset.v,T=cur();
-    if(grp==='cms'){S.style=v;if(v==='photo'&&!S.img)q('#cmpf').click()}
-    else if(grp==='cmf')T.font=v;else if(grp==='cmo')T.al=v;else if(grp==='cmc')T.tc=v;
+    if(grp==='cmtab')S.tab=v;
+    else if(grp==='cms'){S.style=v;if(v==='photo'&&!S.img)q('#cmpf').click()}
+    else if(grp==='cmf')T.font=v;else if(grp==='cme')T.fx=v;
+    else if(grp==='cmtc'){if(b.dataset.sw!=null)T.tc=b.dataset.c;else T.tc=v}
+    else if(grp==='cmgc'){if(b.dataset.sw!=null)T.gc=b.dataset.c;else T.gc=v}
+    else if(grp==='cmie')S.ife=v;
+    else if(grp==='cmic'){if(b.dataset.sw!=null)S.igc=b.dataset.c;else S.igc=v}
     else if(b.dataset.p)T.pv=b.dataset.p;
     else if(b.dataset.l!=null){S.k=+b.dataset.l;load()}
     else if(b.dataset.add){if(S.T.length>=8)return toast('That is enough texts for one cover');S.T.push(cmLayer(1,'New text'));S.k=S.T.length-1;load();q('#cmt').focus();q('#cmt').select()}
@@ -6783,15 +6956,17 @@ function covMaker(o){return new Promise(res=>{
     sync();
   });
   q('#cmt').oninput=ev=>{cur().title=ev.target.value;lay();draw()};q('#cmu').oninput=ev=>{cur().sub=ev.target.value;draw()};
-  q('#cmsx').oninput=ev=>{cur().x=+ev.target.value;sync()};q('#cmsy').oninput=ev=>{cur().y=+ev.target.value;sync()};q('#cmsr').oninput=ev=>{cur().rot=+ev.target.value;sync()};
+  q('#cmsr').oninput=ev=>{cur().rot=+ev.target.value;sync()};q('#cmfa').oninput=ev=>{cur().fa=+ev.target.value;sync()};
   q('#cmz').oninput=ev=>{cur().size=+ev.target.value;sync()};q('#cmg').oninput=ev=>{S.grain=+ev.target.value;sync()};q('#cmd2').oninput=ev=>{S.dim=+ev.target.value;sync()};
+  q('#cmtci').oninput=ev=>{cur().tc=ev.target.value;sync()};q('#cmgci').oninput=ev=>{cur().gc=ev.target.value;sync()};
+  q('#cmia').oninput=ev=>{S.ifa=+ev.target.value;sync()};q('#cmici').oninput=ev=>{S.igc=ev.target.value;sync()};
   qa('.cmcol').forEach(i=>i.oninput=ev=>{S.c[+i.dataset.k]=ev.target.value;S.pal=-1;sync()});
   {const cv=q('#cmv');let dr=null;
    /* tap a text on the preview to pick it (topmost first), then drag to move it */
    const hit=ev=>{const r=cv.getBoundingClientRect(),W=1024,px=(ev.clientX-r.left)/r.width*W,py=(ev.clientY-r.top)/r.height*W;
      for(let i=S.T.length-1;i>=0;i--){const T=S.T[i];if(!T.bb||T.x==null)continue;const dx=px-T.x/100*W,dy=py-T.y/100*W,a=-(T.rot||0)*Math.PI/180,rx=dx*Math.cos(a)-dy*Math.sin(a),ry=dx*Math.sin(a)+dy*Math.cos(a);if(Math.abs(rx)<=T.bb.w/2+30&&Math.abs(ry)<=T.bb.h/2+30)return i}return -1};
-   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}const i=hit(ev);if(i>=0&&i!==S.k){S.k=i;load();sync()}dr=[ev.clientX,ev.clientY]};
-   cv.onpointermove=ev=>{if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();T.x=Math.max(0,Math.min(100,(T.x==null?50:T.x)+(ev.clientX-dr[0])/r.width*100));T.y=Math.max(0,Math.min(100,(T.y==null?50:T.y)+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];sl();cmDraw(cv,S)};
+   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}const i=hit(ev);if(i>=0){if(i!==S.k){S.k=i;load()}S.tab='tx';sync()}dr=[ev.clientX,ev.clientY]};
+   cv.onpointermove=ev=>{if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();T.x=Math.max(0,Math.min(100,(T.x==null?50:T.x)+(ev.clientX-dr[0])/r.width*100));T.y=Math.max(0,Math.min(100,(T.y==null?50:T.y)+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];cmDraw(cv,S)};
    cv.onpointerup=cv.onpointercancel=()=>{dr=null}}
   q('#cmpf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);S.imgUrl=u;S.img=im;S.style='photo';sync()};im.onerror=()=>{URL.revokeObjectURL(u);toast('Could not read that image')};im.src=u};
   e.addEventListener('pointerdown',ev=>{if(ev.target===e)fin(null)});
