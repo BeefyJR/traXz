@@ -948,6 +948,11 @@ html[data-layout=pc] #mini.vm .m2 .mvs{flex:1 1 0;max-width:170px}
 .rbr .pill{padding:7px 12px;font-size:13px;flex:none}
 /* trim and loop sheet */
 .trw{height:128px}
+.trsl{display:none;height:34px;margin:0 0 2px;--f:rgb(var(--sc,var(--ac)));touch-action:pan-y}
+.trsl::-webkit-slider-runnable-track{height:8px;border-radius:8px;background:rgba(128,128,128,.22)}
+.trsl::-moz-range-track{height:8px;border-radius:8px;background:rgba(128,128,128,.22)}
+.trsl::-webkit-slider-thumb{width:26px;height:26px;margin-top:-9px;background:var(--f);box-shadow:0 2px 8px rgba(0,0,0,.35),0 0 0 3px rgba(255,255,255,.25)}
+.trsl::-moz-range-thumb{width:26px;height:26px;border:0;border-radius:50%;background:var(--f);box-shadow:0 2px 8px rgba(0,0,0,.35)}
 .trov{position:relative;height:10px;border-radius:6px;background:rgba(128,128,128,.18);margin:0 0 6px;touch-action:none;display:none}
 .trov i{position:absolute;top:0;bottom:0;border-radius:6px;background:rgb(var(--ac));min-width:12px;opacity:.85}
 .trz{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 2px 0}
@@ -1817,18 +1822,29 @@ html[data-layout=pc] .lshint{display:block}
 .lys .lyed{padding:20px 0 48px;text-align:center}
 .lsopen{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.16);color:#fff;font-size:13px;font-weight:600}
 
+.pfl{display:flex;flex-direction:column;gap:2px;margin:10px 0 0}
+.pfr{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:left;padding:11px 6px;border-radius:12px;color:var(--text)}
+.pfr:active{background:var(--surf2)}
+.pft{display:flex;flex-direction:column;min-width:0}
+.pft b{font-size:15px;font-weight:600}
+.pft small{font-size:12px;color:var(--mute);margin-top:2px}
+.pfs{position:relative;flex:none;width:46px;height:28px;border-radius:14px;background:rgba(128,128,128,.35);transition:background .18s}
+.pfs::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:transform .18s}
+.pfr.on .pfs{background:rgb(var(--ac))}
+.pfr.on .pfs::after{transform:translateX(18px)}
 /* ===== Performance mode (Settings > Look > Performance): html[data-perf=on] ===== */
-html[data-perf=on] *,html[data-perf=on] *::before,html[data-perf=on] *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;transition-duration:.001s!important;transition-delay:0s!important;scroll-behavior:auto!important}
-html[data-perf=on] :is(#top,#dock){background:rgb(var(--tpc,var(--bgc)))!important}
-html[data-perf=on] .fh{background:rgb(var(--bgc))!important}
-html[data-perf=on] #dz{background:rgba(var(--bgc),.94)!important}
-html[data-perf=on] :is(#mini,.sheet,#vp,#selbar,#mshow,.qk,.gear,.theme,#qp,.crp,.sthd){background-color:rgb(var(--sfc))!important}
-html[data-perf=on] .tbmp{background:rgb(32,32,36)!important}
-html[data-perf=on] #mini::after,html[data-perf=on] #mini>.mbv{display:none!important}
-html[data-perf=on] :is(.bimg,.bvid){filter:blur(min(var(--cb,46px),24px))!important}
-html[data-perf=on] :is(.bl,.bgr){animation:none!important;will-change:auto!important}
-html[data-perf=on] #tbg.tbl .tgm{filter:none!important}
-html[data-perf=on] .ghost{box-shadow:none!important;will-change:auto!important}
+html[data-pgl=on] *,html[data-pgl=on] *::before,html[data-pgl=on] *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html[data-pui=on] *,html[data-pui=on] *::before,html[data-pui=on] *::after{transition-duration:.001s!important;transition-delay:0s!important;scroll-behavior:auto!important}
+html[data-pgl=on] :is(#top,#dock){background:rgb(var(--tpc,var(--bgc)))!important}
+html[data-pgl=on] .fh{background:rgb(var(--bgc))!important}
+html[data-pgl=on] #dz{background:rgba(var(--bgc),.94)!important}
+html[data-pgl=on] :is(#mini,.sheet,#vp,#selbar,#mshow,.qk,.gear,.theme,#qp,.crp,.sthd){background-color:rgb(var(--sfc))!important}
+html[data-pgl=on] .tbmp{background:rgb(32,32,36)!important}
+html[data-pgl=on] #mini::after,html[data-pgl=on] #mini>.mbv{display:none!important}
+html[data-pbg=on] :is(.bimg,.bvid){filter:blur(min(var(--cb,46px),24px))!important}
+html[data-pbg=on] :is(.bl,.bgr){animation:none!important;will-change:auto!important}
+html[data-pbg=on] #tbg.tbl .tgm{filter:none!important}
+html[data-ptr=on] .ghost{box-shadow:none!important;will-change:auto!important}
 
 /* ===== one combined like / add-to-album / add-to-playlist button (Settings > Playback > Player buttons) ===== */
 .ib.one{display:none}
@@ -1908,26 +1924,41 @@ html[data-layout=pc]:root:root #fc>.fbot .fg{gap:0}
 <script>
 const $=s=>document.querySelector(s),au=$('#au');
 /* Performance mode: Off / Auto / On. Auto switches on for weak devices, Data Saver and low battery. It only lightens the look (no frosted glass, no animated media, lighter beat effects, shorter animations); nothing is removed. */
-const PERF={m:'off',on:false,bat:false};
-try{const v=localStorage.getItem('tracks-perf');if(v==='on'||v==='auto'||v==='off')PERF.m=v}catch(e){}
+/* Each feature can be lightened on its own: PF lists them. Off / Auto / On set all of them together; Custom lets you pick (checked = animated). PERF.f[key] is true when that feature runs in its light form. */
+const PF=[['glass','Frosted glass','Blurred bars, sheets and the player'],['ui','Interface animations','Sheets opening, lists fading in, button transitions'],['bg','Moving background','Drifting blobs and the animated gradient'],['media','GIF and video covers','Animated covers play instead of staying still'],['beat','Beat effects','Glow, ripple and bars that follow the music'],['trans','Song change transitions','Slide, cube, flip and the other transitions in the big player']];
+const PERF={m:'off',on:false,bat:false,f:{},c:{},sig:''};
+try{const v=localStorage.getItem('tracks-perf');if(v==='on'||v==='auto'||v==='off'||v==='custom')PERF.m=v}catch(e){}
+try{const c=JSON.parse(localStorage.getItem('tracks-perf-c')||'null');if(c&&typeof c==='object')PF.forEach(k=>{PERF.c[k[0]]=!!c[k[0]]});else PF.forEach(k=>{PERF.c[k[0]]=false})}catch(e){PF.forEach(k=>{PERF.c[k[0]]=false})}
 function perfCalc(){
+  if(PERF.m==='custom')return false;
   if(PERF.m==='on')return true;if(PERF.m==='off')return false;
   try{const n=navigator;return !!((n.deviceMemory&&n.deviceMemory<=2)||(n.hardwareConcurrency&&n.hardwareConcurrency<=4)||(n.connection&&n.connection.saveData)||PERF.bat)}catch(e){return false}
 }
-function perfApply(){PERF.on=perfCalc();document.documentElement.dataset.perf=PERF.on?'on':'off'}
+function perfApply(){
+  PERF.on=perfCalc();
+  PF.forEach(k=>{PERF.f[k[0]]=PERF.m==='custom'?!!PERF.c[k[0]]:PERF.on});
+  const d=document.documentElement.dataset,F=PERF.f;
+  d.perf=PERF.on?'on':'off';d.pgl=F.glass?'on':'off';d.pui=F.ui?'on':'off';d.pbg=F.bg?'on':'off';d.ptr=F.trans?'on':'off';
+  PERF.sig=PF.map(k=>F[k[0]]?1:0).join('');
+}
 perfApply();
 /* the screen is redrawn only when the effective state really changed */
 function perfRefresh(){
-  const was=PERF.on;perfApply();
-  if(was===PERF.on)return;try{if(!db)return}catch(e){return}
+  const was=PERF.sig;perfApply();
+  if(was===PERF.sig)return;try{if(!db)return}catch(e){return}
   try{render()}catch(e){}
   miniSig=null;try{renderMini()}catch(e){}
   if($('#full').classList.contains('open')){fullSig=null;try{renderFull()}catch(e){}}
   try{applyBg();tbgApply();mvEval();fxKick()}catch(e){}
 }
-function setPerf(m){PERF.m=(m==='on'||m==='auto')?m:'off';try{localStorage.setItem('tracks-perf',PERF.m)}catch(e){}perfRefresh()}
+function perfSaveC(){try{localStorage.setItem('tracks-perf-c',JSON.stringify(PERF.c))}catch(e){}}
+function setPerf(m){
+  m=(m==='on'||m==='auto'||m==='custom')?m:'off';
+  if(m==='custom'&&PERF.m!=='custom'){PF.forEach(k=>{PERF.c[k[0]]=!!PERF.f[k[0]]});perfSaveC()}/* Custom starts from whatever is active right now */
+  PERF.m=m;try{localStorage.setItem('tracks-perf',PERF.m)}catch(e){}perfRefresh()}
+function setPerfF(key,lite){PERF.c[key]=!!lite;perfSaveC();if(PERF.m==='custom')perfRefresh()}
 try{if(navigator.getBattery)navigator.getBattery().then(b=>{const f=()=>{PERF.bat=!b.charging&&b.level<=.2;if(PERF.m==='auto')perfRefresh()};b.addEventListener('levelchange',f);b.addEventListener('chargingchange',f);f()}).catch(()=>{})}catch(e){}
-const PERF_NOTE={off:'Everything looks and animates as designed.',auto:'Turns on by itself on devices with little memory or a slow processor, when Data Saver is on, or when the battery is low.',on:'Solid bars instead of frosted glass, GIF and video covers stay still, beat effects are limited to bounce and squash, and animations are shorter. Playback and your library are not affected.'};
+const PERF_NOTE={off:'Everything looks and animates as designed.',auto:'Turns on by itself on devices with little memory or a slow processor, when Data Saver is on, or when the battery is low.',on:'Solid bars instead of frosted glass, GIF and video covers stay still, beat effects are limited to bounce and squash, and animations are shorter. Playback and your library are not affected.',custom:'Choose for each feature below. Switched on keeps its full animation, switched off keeps it light.'};
 let lyOn=false;/* lyrics mode of the big player (declared early: the beat-effect loop reads it) */
 const ICON={cut:'M9.64 7.64c.23-.5.36-1.05.36-1.64 0-2.21-1.79-4-4-4S2 3.79 2 6s1.79 4 4 4c.59 0 1.14-.13 1.64-.36L10 12l-2.36 2.36C7.14 14.13 6.59 14 6 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4c0-.59-.13-1.14-.36-1.64L12 14l7 7h3v-1L9.64 7.64zM6 8c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm0 12c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm6-7.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM19 3l-6 6 2 2 7-7V3z',norm:'M7 3.5h10L12 9.5zM7 20.5h10L12 14.5zM3.5 11h17v2h-17z',rst:'M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 2.97-2.17 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93 0-4.42-3.58-8-8-8zm-6 8c0-1.65.67-3.15 1.76-4.24L6.34 7.34C4.9 8.79 4 10.79 4 13c0 4.08 3.05 7.44 7 7.93v-2.02c-2.83-.48-5-2.94-5-5.91z',fxi:'M10.5 4.5a1.5 1.5 0 013 0v15a1.5 1.5 0 01-3 0zM6 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM15 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM1.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0zM19.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0z',plist:'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z',tune:'M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z',edit:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',szs:'M3 3h5v5H3zM9.5 3h5v5h-5zM16 3h5v5h-5zM3 9.5h5v5H3zM9.5 9.5h5v5h-5zM16 9.5h5v5h-5zM3 16h5v5H3zM9.5 16h5v5h-5zM16 16h5v5h-5z',szm:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',szl:'M5 5h14v14H5z',play:'M8 5v14l11-7z',pause:'M6 5h4v14H6zM14 5h4v14h-4z',next:'M6 6l9 6-9 6zM17 6h2v12h-2z',prev:'M18 6l-9 6 9 6zM5 6h2v12H5z',
 more:'M12 8a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4z',down:'M7 10l5 5 5-5z',
@@ -1978,12 +2009,12 @@ const colorFromUrl=url=>new Promise(r=>{const i=new Image();i.onload=()=>{try{r(
 const RM=matchMedia('(prefers-reduced-motion: reduce)');
 const EASE='cubic-bezier(.22,.8,.24,1)',EASE_OUT='cubic-bezier(.16,1,.3,1)';
 const SP=.6; /* global animation speed factor, lower is faster */
-const an=(el,kf,o)=>{if(!el||RM.matches||!el.animate)return null;const k=PERF.on?.3:SP;return el.animate(kf,Object.assign({},o,{duration:Math.max(1,Math.round((o.duration||0)*k)),delay:Math.round((o.delay||0)*k)}))};
+const an=(el,kf,o)=>{if(!el||RM.matches||!el.animate)return null;const k=PERF.f.ui?.3:SP;return el.animate(kf,Object.assign({},o,{duration:Math.max(1,Math.round((o.duration||0)*k)),delay:Math.round((o.delay||0)*k)}))};
 const pop=el=>an(el,[{transform:'scale(.55)',opacity:0},{transform:'scale(1)',opacity:1}],{duration:260,easing:'cubic-bezier(.2,.9,.3,1.35)'});
 const rowOut=async id=>{const r=document.querySelector('#main .row[data-id="'+id+'"]');const a=an(r,[{opacity:1,transform:'none'},{opacity:0,transform:'translateX(36px)'}],{duration:220,easing:EASE,fill:'forwards'});if(a)try{await a.finished}catch(e){}};
 function enterAnim(m,dir){
   an(m,[{opacity:0,transform:'translateX('+(dir*20)+'px)'},{opacity:1,transform:'none'}],{duration:260,easing:EASE});
-  if(!PERF.on)[...m.querySelectorAll('.row,.card')].slice(0,8).forEach((el,i)=>an(el,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:260,delay:i*20,easing:EASE_OUT,fill:'backwards'}));
+  if(!PERF.f.ui)[...m.querySelectorAll('.row,.card')].slice(0,8).forEach((el,i)=>an(el,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:260,delay:i*20,easing:EASE_OUT,fill:'backwards'}));
 }
 
 /* state */
@@ -2150,7 +2181,7 @@ try{const j=JSON.parse(localStorage.getItem('tracks-tr')||'null');if(j&&typeof j
 /* plays the old cover out and the new one in; works on any two stacked elements, so the settings preview uses it too */
 function trRun(oldEl,newEl,dir,o){
   if(RM.matches||o.st==='none'||!oldEl||!newEl||!newEl.animate)return Promise.resolve();
-  const n=dir<0?-1:1,sc=o.sc/100,z=1+(1-sc)*1.2,tl=o.rot/4,d=o.dist,r=o.rot,bl=PERF.on?0:o.bl,S=PERF.on&&o.st==='blur'?'fade':o.st,W=newEl.offsetWidth||300;
+  const n=dir<0?-1:1,sc=o.sc/100,z=1+(1-sc)*1.2,tl=o.rot/4,d=o.dist,r=o.rot,bl=PERF.f.trans?0:o.bl,S=PERF.f.trans&&o.st==='blur'?'fade':o.st,W=newEl.offsetWidth||300;
   const B=v=>v?'blur('+v+'px)':'none',F=(t,op,b)=>({transform:t,opacity:op,filter:B(b||0)});
   let a,b;
   if(S==='fade'){a=[F('none',1),F('none',0,bl)];b=[F('none',0,bl),F('none',1)]}
@@ -2163,7 +2194,7 @@ function trRun(oldEl,newEl,dir,o){
   else if(S==='drop'){a=[F('none',1),F('translateY('+(-n*d)+'%) scale('+sc+')',0,bl)];b=[F('translateY('+(n*d)+'%) scale('+sc+')',0,bl),F('none',1)]}
   else if(S==='blur'){a=[F('none',1),F('scale(1.04)',0,bl||16)];b=[F('scale(.96)',0,bl||16),F('none',1)]}
   else return Promise.resolve();
-  const T=PERF.on?Math.min(o.dur,320):o.dur,ov=o.ov/100,dd=T/(2-ov),dl=T-dd,ease=(TRE[o.ea]||TRE.smooth)[1],st=S==='stack';
+  const T=PERF.f.trans?Math.min(o.dur,320):o.dur,ov=o.ov/100,dd=T/(2-ov),dl=T-dd,ease=(TRE[o.ea]||TRE.smooth)[1],st=S==='stack';
   oldEl.style.zIndex=st?2:1;newEl.style.zIndex=st?1:2;
   if(S==='flip'||S==='cube')oldEl.style.backfaceVisibility=newEl.style.backfaceVisibility='hidden';
   const A1=oldEl.animate(a,{duration:dd,easing:ease,fill:'forwards'}),A2=newEl.animate(b,{duration:dd,delay:dl,easing:ease,fill:'backwards'});
@@ -2318,7 +2349,7 @@ function fxReset(t,r){
 }
 function fxFrame(t,r,spec,dt,now,col,bw,lv){
   const o=fxS,amt=o.amt/100,cov=r.cov;if(!cov)return false;
-  let E=o.e;if(PERF.on){fxPE.bounce=E.bounce;fxPE.squash=E.squash;E=fxPE}/* performance mode: no glow, ripple or bars */
+  let E=o.e;if(PERF.f.beat){fxPE.bounce=E.bounce;fxPE.squash=E.squash;E=fxPE}/* performance mode: no glow, ripple or bars */
   const W=cov.offsetWidth,H=cov.offsetHeight;/* measured before anything is written, so the browser does not lay out twice per frame */
   let v=0;
   if(spec){
@@ -2404,7 +2435,7 @@ function fxFrame(t,r,spec,dt,now,col,bw,lv){
 }
 function fxLoop(now){
   fxRaf=0;
-  if(PERF.on&&fxPrev&&now-fxPrev<28){fxRaf=requestAnimationFrame(fxLoop);return}/* performance mode: 30 frames per second */
+  if(PERF.f.beat&&fxPrev&&now-fxPrev<28){fxRaf=requestAnimationFrame(fxLoop);return}/* performance mode: 30 frames per second */
   const dt=Math.min(.05,Math.max(.001,(now-(fxPrev||now))/1000));fxPrev=now;
   const playing=!au.paused&&!au.ended;let live=false,spec=null,realBW=43.07,lv=null;
   const rs=fxT.map(t=>t.get());/* what is on screen right now: the big player cover and the settings preview */
@@ -2942,7 +2973,7 @@ const MED=new Map();let mdb=null,MEDERR='';
 const MED_LIM={gif:20*1048576,video:60*1048576};
 const ANIM={m:'all'};{const v=LS('tracks-anim');if(v==='all'||v==='big'||v==='off')ANIM.m=v}
 /* live = the big player, mini player and album / playlist page; everywhere else follows the "Animated media" setting */
-const animM=()=>PERF.on?'off':ANIM.m;/* performance mode keeps GIF and video covers still */
+const animM=()=>PERF.f.media?'off':ANIM.m;/* performance mode keeps GIF and video covers still */
 const animOn=live=>{const a=animM();return !RM.matches&&a!=='off'&&(live===true||a==='all')};
 function medOpen(){return new Promise(res=>{try{const r=indexedDB.open('tracks-media',1);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('m'))d.createObjectStore('m',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=r.onblocked=()=>res(null)}catch(e){res(null)}})}
 async function medLoad(){
@@ -3271,7 +3302,7 @@ const artOf=s=>(s.artist||(albumOf(s)||{}).artist||'').trim();
 const sameArt=(a,b)=>a.toLowerCase()===b.toLowerCase();
 const artLink=(n,link=true)=>link?`<span class="alink" data-act="gotoart" data-art="${esc(n)}">${esc(n)}</span>`:esc(n);
 const subHtml=(s,link=true)=>{const al=albumOf(s),ar=artOf(s),ft=featOf(s);const nm=al?(link?`<span class="alink" data-act="gotoalb" data-alb="${al.id}">${esc(al.name)}</span>`:esc(al.name)):'';const who=[ar?artLink(ar,link):'',ft.length?'feat. '+ft.map(x=>artLink(x,link)).join(', '):''].filter(Boolean).join(' ');return [who,nm].filter(Boolean).join(' \u00b7 ')};
-const fullKey=s=>s.id+'|'+s.name+'|'+sub(s)+'|'+((songCover(s).cover||'').length)+'|'+(s.color||'')+'|'+((songCover(s).cmedia||{}).id||'')+'|'+animM()+(PERF.on?'|p':'');
+const fullKey=s=>s.id+'|'+s.name+'|'+sub(s)+'|'+((songCover(s).cover||'').length)+'|'+(s.color||'')+'|'+((songCover(s).cmedia||{}).id||'')+'|'+animM()+(PERF.f.media?'|p':'');
 function accent(s){
   if(s.color)return hexRgb(s.color).split(',').map(Number);
   if(ownCov(s)&&s.ccol)return s.ccol;
@@ -3359,14 +3390,14 @@ function openOv(html){
   ovLook(sh);ovA11y(sh,was);
   if(!was)an(ov,[{opacity:0},{opacity:1}],{duration:220,easing:'linear'});
   an(sh,was?[{opacity:0,transform:'scale(.97)'},{opacity:1,transform:'none'}]:[{transform:'translateY(100%)'},{transform:'none'}],{duration:was?200:380,easing:EASE_OUT});
-  if(!PERF.on)sh.querySelectorAll('.it').forEach((b,i)=>an(b,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:300,delay:90+Math.min(i,8)*22,easing:EASE_OUT,fill:'backwards'}));
+  if(!PERF.f.ui)sh.querySelectorAll('.it').forEach((b,i)=>an(b,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:300,delay:90+Math.min(i,8)*22,easing:EASE_OUT,fill:'backwards'}));
 }
 function closeOv(){
   const ov=$('#ov');if(!ov.classList.contains('open'))return;
-  const g=PERF.on||RM.matches?null:ov.cloneNode(true);if(g){g.className='ovg';g.removeAttribute('id');g.removeAttribute('style');g.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
+  const g=PERF.f.ui||RM.matches?null:ov.cloneNode(true);if(g){g.className='ovg';g.removeAttribute('id');g.removeAttribute('style');g.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
   ov.classList.remove('open');ov.innerHTML='';
   {const f=ovFrom;ovFrom=null;if(f&&f.isConnected&&f.focus)try{f.focus({preventScroll:true})}catch(_){}}
-  if(RM.matches||PERF.on)return;
+  if(RM.matches||PERF.f.ui)return;
   document.body.appendChild(g);
   an(g.firstElementChild,[{transform:'none'},{transform:'translateY(100%)'}],{duration:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});
   an(g,[{opacity:1},{opacity:0}],{duration:260,easing:'linear',fill:'forwards'});
@@ -6240,7 +6271,7 @@ function openSettings(){
   openOv(`<div class="sthd"><div class="sth"><h3>Settings</h3><button type="button" class="pill acc" id="st-done">Done</button></div>
   <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}${t[0]==='data'&&SWU.w?'<i class="tdot"></i>':''}</button>`).join('')}</div></div>
   <section class="stp" data-p="app">
-    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button></div><p class="dupn" id="pfn" style="margin:8px 6px 2px"></p></div>
+    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button><button type="button" class="chip" data-pf="custom">Custom</button></div><p class="dupn" id="pfn" style="margin:8px 6px 2px"></p><div class="pfl" id="pfl" hidden>${PF.map(k=>`<button type="button" class="pfr" data-pfk="${k[0]}" role="switch" aria-checked="false"><span class="pft"><b>${k[1]}</b><small>${k[2]}</small></span><i class="pfs" aria-hidden="true"></i></button>`).join('')}</div></div>
     <div class="scd"><h4>Theme</h4><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
     <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div></div>
     <div class="scd"><h4>Background</h4><div class="tgs"><label>Image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
@@ -6293,7 +6324,7 @@ function openSettings(){
     if(w){const mx=npMax();w.max=mx;const v=Math.min(NP.w,mx);w.value=v;w.style.setProperty('--p',(mx>280?Math.min(100,(v-280)/(mx-280)*100):100)+'%');w.parentNode.querySelector('b').textContent=v+'px'}
     if(n)n.textContent=NP.on&&!pc?'Not showing right now: switch Layout to PC, or use a wider window.':'';
   };
-  const pfPaint=()=>{sh.querySelectorAll('#pfst .chip').forEach(c=>c.classList.toggle('on',c.dataset.pf===PERF.m));const n=$('#pfn');if(n)n.textContent=PERF_NOTE[PERF.m]+(PERF.m==='auto'?(PERF.on?' Active right now.':' Not needed right now.'):'')};
+  const pfPaint=()=>{sh.querySelectorAll('#pfst .chip').forEach(c=>c.classList.toggle('on',c.dataset.pf===PERF.m));const pl_=$('#pfl');if(pl_){pl_.hidden=PERF.m!=='custom';pl_.querySelectorAll('.pfr').forEach(b=>{const an=!PERF.c[b.dataset.pfk];b.classList.toggle('on',an);b.setAttribute('aria-checked',an?'true':'false')})}const n=$('#pfn');if(n)n.textContent=PERF_NOTE[PERF.m]+(PERF.m==='auto'?(PERF.on?' Active right now.':' Not needed right now.'):'')};
   const paint=()=>{
     paintTheme();
     sh.querySelectorAll('.setg[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===LAY.m));
@@ -6314,6 +6345,7 @@ function openSettings(){
     const tw_=e.target.closest('#tpsw .swb');if(tw_){TPB.c=tw_.dataset.c||'';tpbSave();tpbApply();paint();return}
     const hbm_=e.target.closest('#hbst .chip');if(hbm_){setHbm(hbm_.dataset.hbm);paint();return}
     const pf_=e.target.closest('#pfst .chip');if(pf_){setPerf(pf_.dataset.pf);paint();return}
+    const pfr_=e.target.closest('#pfl .pfr');if(pfr_){const k=pfr_.dataset.pfk;setPerfF(k,!PERF.c[k]);paint();return}
     const an_=e.target.closest('#anst .chip');if(an_){setAnim(an_.dataset.v);paint();return}
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
     const lrl_=e.target.closest('[data-lrl]');if(lrl_){LRL.on=!LRL.on;LS('tracks-lrclib',LRL.on?'1':'0');paint();return}
@@ -7075,7 +7107,7 @@ function trimSheet(s){
   const lch=(k,arr)=>arr.map(x=>`<button type="button" class="chip" data-lk="${k}" data-v="${x[1]}">${x[0]}</button>`).join('');
   /* a start / end box: typed time, nudges (the big step is one beat once the tempo is known) and a button that takes the playhead */
   const tcol=(k,label)=>`<div class="tmc"><label for="tm-i-${k}">${label}</label><input type="text" inputmode="decimal" id="tm-i-${k}" aria-label="${label}, type m:ss.s" autocomplete="off"><div class="tmn"><button type="button" data-t="${k}" data-d="-B" data-bg="-"></button><button type="button" data-t="${k}" data-d="-.1">\u2212.1</button><button type="button" data-t="${k}" data-d=".1">+.1</button><button type="button" data-t="${k}" data-d="B" data-bg="+"></button></div><button type="button" class="pill" data-here="${k}">At playhead</button></div>`;
-  const wv=(k,aria)=>`<div class="trw"><canvas id="tw-${k}" aria-label="${aria}"></canvas><span class="trl" id="tl-${k}">Reading waveform\u2026</span></div><div class="trov" id="to-${k}"><i></i></div><div class="trz"><span class="trtm" id="tr-${k}"></span><div class="trzb"><button type="button" id="tzo-${k}" aria-label="Zoom out">\u2212</button><output id="tzl-${k}">1\u00d7</output><button type="button" id="tzi-${k}" aria-label="Zoom in">+</button></div></div>`;
+  const wv=(k,aria)=>`<div class="trw"><canvas id="tw-${k}" aria-label="${aria}"></canvas><span class="trl" id="tl-${k}">Reading waveform\u2026</span></div><div class="trov" id="to-${k}"><i></i></div><input type="range" class="rng trsl" id="ts-${k}" min="0" max="1000" step="1" value="0" aria-label="Scroll the waveform"><div class="trz"><span class="trtm" id="tr-${k}"></span><div class="trzb"><button type="button" id="tzo-${k}" aria-label="Zoom out">\u2212</button><output id="tzl-${k}">1\u00d7</output><button type="button" id="tzi-${k}" aria-label="Zoom in">+</button></div></div>`;
   openOv(`<h3>Trim &amp; loop</h3><p class="dupn">Edit \u201c${esc(s.name)}\u201d. Trim sets where it starts and ends. Join parts and Loop build a new audio file when you save, and you can always undo back to the original.</p>
   ${s.orig?`<div class="trc"><div class="trh"><span><b>Edited audio</b></span><button type="button" class="pill acc" id="tm-un">Undo, back to original</button></div><p class="dupn" style="margin:2px 0 0">You are editing from the original file. Saving builds the edited audio again.</p></div>`:''}
   <div class="tmbar" id="tm-bar">
@@ -7221,6 +7253,7 @@ function trimSheet(s){
     $('#tm-t1').textContent=ft(head);$('#tm-t2').textContent=' / '+ft(D);
     VL.forEach(V=>{
       const t=$('#to-'+V.key+' i');if(t){t.style.left=(V.vs/D*100)+'%';t.style.width=(100/V.z)+'%'}
+      const sl=$('#ts-'+V.key);if(sl&&!V.sd){const rg=D-V.span();sl.value=rg>0?Math.round(V.vs/rg*1000):0;sl.style.setProperty('--p',(sl.value/10)+'%')}
       const e=$('#tr-'+V.key);if(e)e.textContent=V.z>1?ft(V.vs)+' \u2013 '+ft(V.vs+V.span()):'Whole song';
       drawV(V);
     });
@@ -7268,7 +7301,7 @@ function trimSheet(s){
       (G.state==='man'?'Faint lines are beats and bold lines start a bar.':G.conf<1.8?'The beat was hard to hear, so check the lines by ear. Try \u00f72 or \u00d72, or press Beat 1 at playhead on a beat.':'Faint lines are beats and bold lines start a bar. If they sit on the wrong beat, try \u00f72 or \u00d72, or press Beat 1 at playhead on a beat.');
     $('#tm-b1').disabled=!bs;
     ['h','d'].forEach(i=>{$('#tm-'+i).disabled=!bs});
-    const sz=VL.map(V=>{const z=Math.round(V.z*10)/10;$('#tzl-'+V.key).textContent=z+'\u00d7';$('#to-'+V.key).style.display=V.z>1?'':'none'});
+    const sz=VL.map(V=>{const z=Math.round(V.z*10)/10;$('#tzl-'+V.key).textContent=z+'\u00d7';$('#to-'+V.key).style.display=V.z>1?'':'none';$('#ts-'+V.key).style.display=V.z>1?'block':'none'});
     light();
   };
   const set=(k,v)=>{
@@ -7340,6 +7373,9 @@ function trimSheet(s){
     },{passive:false});
     $('#tzi-'+V.key).onclick=()=>setZ(V,V.z*2);$('#tzo-'+V.key).onclick=()=>setZ(V,V.z/2);
     const ov=$('#to-'+V.key),ovMv=e=>{if(!V.od)return;const rc=ov.getBoundingClientRect();V.vs=(e.clientX-rc.left)/rc.width*D-V.span()/2;V.clamp();light()};
+    const ss=$('#ts-'+V.key);
+    ss.oninput=()=>{V.sd=true;const rg=D-V.span();V.vs=rg>0?ss.value/1000*rg:0;V.clamp();light()};
+    ss.onchange=ss.onpointerup=ss.onblur=()=>{V.sd=false};
     ov.onpointerdown=e=>{V.od=true;try{ov.setPointerCapture(e.pointerId)}catch(_){}ovMv(e)};
     ov.onpointermove=ovMv;ov.onpointerup=ov.onpointercancel=()=>{V.od=false};
   });
@@ -7781,7 +7817,7 @@ function oneOpen(btn){
     else if(k==='album'){await moveSong(s2);render()}
     else if(k==='pl'){await addToPlaylist([id]);render()}
   });
-  if(!PERF.on&&!RM.matches)an(el,[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:140,easing:EASE_OUT});
+  if(!PERF.f.ui&&!RM.matches)an(el,[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:140,easing:EASE_OUT});
   items[0].focus();
 }
 function oneSet(on){
@@ -7800,7 +7836,7 @@ async function cloudQuota(){
 
 /* ===== backup file (.trax), storage protection, duplicate finder, shared files, app update ===== */
 {const st=document.createElement('style');st.textContent='#gear.swu{outline:2px solid rgb(var(--ac));outline-offset:-3px;border-radius:50%}';document.head.appendChild(st)}
-const BK_MAGIC='TRAXBK1\n',BK_STORES=['songs','albums','folders','playlists','pfolders','lyrics'],BK_SKIP=/^tracks-(tok|cid|cloud|dirty|tomb|last|reup|perf)$/;
+const BK_MAGIC='TRAXBK1\n',BK_STORES=['songs','albums','folders','playlists','pfolders','lyrics'],BK_SKIP=/^tracks-(tok|cid|cloud|dirty|tomb|last|reup|perf|perf-c)$/;
 const bkAll=async n=>(await tx(n,'readonly',s=>s.getAll()))||[];
 /* layout: magic | raw files | JSON index | 16-digit index length. Files are never loaded into memory, so big libraries work. */
 async function bkExport(withAudio){
@@ -8070,6 +8106,8 @@ const CM_FONT={
 };
 const CM_FX=[['none','None'],['shadow','Shadow'],['glow','Glow'],['neon','Neon'],['outline','Outline'],['glitch','Glitch'],['retro','3D']];
 const CM_IFX=[['none','None'],['glow','Glow'],['neon','Neon'],['glitch','Glitch'],['blur','Blur'],['vignette','Vignette'],['duotone','Duotone']];
+/* several image effects can be on together; they are applied in this order whatever order they were tapped in */
+const CM_IORD=['duotone','blur','neon','glow','glitch','vignette'];
 const cmCv=w=>{const c=document.createElement('canvas');c.width=c.height=w;return c};
 /* soft blur that works in every browser (no ctx.filter): shrink in halves, then grow back in halves */
 function cmBlur(src,W,r){
@@ -8080,7 +8118,7 @@ function cmBlur(src,W,r){
   return c}
 /* image effects: drawn on the finished background, before the grain */
 function cmFx(x,S,W){
-  const fx=S.ife,am=(S.ifa==null?50:S.ifa)/100;if(!fx||fx==='none')return;
+  const list=CM_IORD.filter(k=>(S.ifx||[]).includes(k)),am=(S.ifa==null?50:S.ifa)/100;if(!list.length)return;
   const [c0,c1,c2]=S.c,tint=S.igc&&S.igc!=='auto'?S.igc:null;
   const copy=()=>{const t=cmCv(W);t.getContext('2d').drawImage(x.canvas,0,0);return t};
   const reset=()=>{x.globalCompositeOperation='source-over';x.globalAlpha=1};
@@ -8089,6 +8127,7 @@ function cmFx(x,S,W){
     g.drawImage(b,0,0);g.globalCompositeOperation='lighter';g.drawImage(b,0,0);
     if(tint){g.globalCompositeOperation='multiply';g.fillStyle=tint;g.fillRect(0,0,W,W)}
     x.globalCompositeOperation='screen';x.globalAlpha=Math.min(1,a);x.drawImage(t,0,0);reset()};
+  list.forEach(fx=>{
   if(fx==='glow'){bloom(34+am*120,.4+am*.5);bloom(10+am*30,.22+am*.38)}
   else if(fx==='neon'){
     x.globalCompositeOperation='saturation';x.globalAlpha=.5+am*.5;x.fillStyle='#f00';x.fillRect(0,0,W,W);reset();
@@ -8113,6 +8152,7 @@ function cmFx(x,S,W){
       const l=(.299*d[i]+.587*d[i+1]+.114*d[i+2])/255,lo=l<.5,k=lo?l*2:(l-.5)*2,P=lo?A:B,Q=lo?B:C;
       d[i]+=(P[0]+(Q[0]-P[0])*k-d[i])*m;d[i+1]+=(P[1]+(Q[1]-P[1])*k-d[i+1])*m;d[i+2]+=(P[2]+(Q[2]-P[2])*k-d[i+2])*m}
     x.putImageData(id,0,0)}
+  });
 }
 function cmRng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function cmRgb(h){h=String(h||'#000').replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');const n=parseInt(h,16)||0;return[n>>16&255,n>>8&255,n&255]}
@@ -8120,7 +8160,7 @@ const cmLum=h=>{const c=cmRgb(h);return .299*c[0]+.587*c[1]+.114*c[2]};
 const cmMixW=(h,t)=>{const c=cmRgb(h);return 'rgb('+c.map(v=>Math.round(v+(255-v)*t)).join(',')+')'};
 /* the background is drawn once and cached; moving or restyling text only re-draws the text on top */
 function cmBg(S){
-  const W=1024,key=[S.style,S.seed,S.c.join(),S.grain,S.dim,S.imgUrl||'',S.ife,S.ifa,S.igc].join('|');
+  const W=1024,key=[S.style,S.seed,S.c.join(),S.grain,S.dim,S.imgUrl||'',(S.ifx||[]).join('+'),S.ifa,S.igc].join('|');
   if(S._bk===key&&S._bc)return S._bc;
   const cv=S._bc||(S._bc=document.createElement('canvas'));cv.width=cv.height=W;
   const x=cv.getContext('2d',{willReadFrequently:true}),R=cmRng(S.seed),[c0,c1,c2]=S.c,st=S.style;
@@ -8165,13 +8205,15 @@ function cmBg(S){
   let lum=0,kk=0;for(let i=1;i<6;i++)for(let j=1;j<6;j++){const p=x.getImageData(i*W/6|0,j*W/6|0,1,1).data;lum+=(.299*p[0]+.587*p[1]+.114*p[2]);kk++}
   S._lum=lum/kk;S._bk=key;return cv;
 }
-function cmDraw(cv,S){
+function cmDraw(cv,S,clean){
   const W=1024,bg=cmBg(S);cv.width=cv.height=W;const x=cv.getContext('2d');x.drawImage(bg,0,0);
   const any=S.T.some(T=>(T.title||'').trim()||(T.sub||'').trim());if(!any)return false;
   const lum=S._lum;let moved=false;
   S.T.forEach(T=>{
     const title=(T.title||'').trim(),sub=(T.sub||'').trim();if(!title&&!sub){T.bb=null;return}
-    const col=T.tc==='white'?'#fff':T.tc==='black'?'#111':/^#/.test(T.tc||'')?T.tc:(lum>150?'#111':'#fff');
+    const col0=T.tc==='white'?'#fff':T.tc==='black'?'#111':/^#/.test(T.tc||'')?T.tc:(lum>150?'#111':'#fff');
+    /* gradient fill: the first stop acts as the text's base color for outlines and glows */
+    const gg=!!T.gr,g1=T.g1||S.c[0],g2=T.g2||S.c[1],col=gg?g1:col0;
     const F=CM_FONT[T.font]||CM_FONT.sans,px=T.size*2.2,pad=84,mw=W-pad*2,lh=1.06;
     const fit=(txt,size,wt)=>{x.font=wt+' '+size+'px '+F[1];const out=[];let line='';for(const w of txt.split(/\s+/)){const t=line?line+' '+w:w;if(x.measureText(t).width>mw&&line){out.push(line);line=w}else line=t}if(line)out.push(line);return out};
     const tt=F[2]?title.toUpperCase():title,tl=title?fit(tt,px,F[0]):[],sp=px*.4,sl=sub?fit(F[2]?sub.toUpperCase():sub,sp,F[0]):[];
@@ -8179,26 +8221,56 @@ function cmDraw(cv,S){
     let bw=0;x.font=F[0]+' '+px+'px '+F[1];tl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});x.font=F[0]+' '+sp+'px '+F[1];sl.forEach(l=>{bw=Math.max(bw,x.measureText(l).width)});
     T.bb={w:bw,h:tot};
     if(T.pv||T.x==null){const k=T.pv||'b';T.pv=null;T.y=Math.round((k==='t'?pad+tot/2:k==='c'?W/2:W-pad-tot/2)/W*100);T.x=50;moved=true}
-    const fx=T.fx||'shadow',am=(T.fa==null?50:T.fa)/100,contrast=cmLum(col)>140?'#000':'#fff',gc=T.gc&&T.gc!=='auto'?T.gc:(fx==='outline'||fx==='retro'?contrast:col);
+    const fxs=Array.isArray(T.fx)?T.fx:[],has=k=>fxs.includes(k),am=(T.fa==null?50:T.fa)/100,contrast=cmLum(col)>140?'#000':'#fff';
+    const ac=k=>T.gc&&T.gc!=='auto'?T.gc:(k==='outline'||k==='retro'?contrast:col);
     /* run draws every line of this text with the current canvas style; a = opacity of the title, the subtitle is a little softer */
     const run=(op,a)=>{let y=-tot/2;x.font=F[0]+' '+px+'px '+F[1];x.globalAlpha=a;tl.forEach((l,i)=>op(l,0,y+i*px*lh));y+=th+gap;x.font=F[0]+' '+sp+'px '+F[1];x.globalAlpha=a*.8;sl.forEach((l,i)=>op(l,0,y+i*sp*1.3));x.globalAlpha=1};
     const fill=(t,X,y)=>x.fillText(t,X,y);
-    x.save();x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);x.textAlign='center';x.textBaseline='top';x.lineJoin='round';x.fillStyle=col;
-    if(fx==='shadow'){x.shadowColor='rgba(0,0,0,'+(.1+am*.4)+')';x.shadowBlur=8+am*34;x.shadowOffsetY=3+am*10;run(fill,1)}
-    else if(fx==='glow'){const b=20+am*90;x.shadowColor=gc;x.shadowBlur=b;run(fill,1);x.shadowBlur=b*.45;run(fill,1);x.shadowBlur=0;run(fill,1)}
-    else if(fx==='neon'){const b=18+am*70;x.shadowColor=gc;x.fillStyle=gc;x.shadowBlur=b*1.4;run(fill,1);x.shadowBlur=b*.6;run(fill,1);x.shadowBlur=b*.2;run(fill,1);x.shadowBlur=0;x.fillStyle=cmMixW(col,.7);run(fill,1)}
-    else if(fx==='outline'){x.lineWidth=4+am*24;x.strokeStyle=gc;run((t,X,y)=>x.strokeText(t,X,y),1);x.fillStyle=col;run(fill,1)}
-    else if(fx==='glitch'){const d=6+am*26;x.fillStyle='#ff2a6d';run((t,X,y)=>x.fillText(t,X-d,y+d*.15),.85);x.fillStyle='#00e5ff';run((t,X,y)=>x.fillText(t,X+d,y-d*.15),.85);x.fillStyle=col;run(fill,1)}
-    else if(fx==='retro'){const n=Math.round(4+am*26);x.fillStyle=gc;for(let i=n;i>=1;i--)run((t,X,y)=>x.fillText(t,X+i*.75,y+i*.75),1);x.fillStyle=col;run(fill,1)}
-    else run(fill,1);
+    const noSh=()=>{x.shadowColor='rgba(0,0,0,0)';x.shadowBlur=0;x.shadowOffsetX=0;x.shadowOffsetY=0};
+    x.save();x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);x.textAlign='center';x.textBaseline='top';x.lineJoin='round';
+    /* the gradient is made after the move and turn, so it travels with the text */
+    let fs=col;
+    if(gg){const a=(T.ga==null?90:T.ga)*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a),L=Math.abs(ca)*(bw/2+8)+Math.abs(sa)*(tot/2+8),gr=x.createLinearGradient(-ca*L,-sa*L,ca*L,sa*L);gr.addColorStop(0,g1);gr.addColorStop(1,g2);fs=gr}
+    x.fillStyle=fs;
+    /* effects stack in a fixed order, back to front: 3D, shadow, glitch, glow, neon, outline, then the letters themselves */
+    if(has('retro')){const n=Math.round(4+am*26);x.fillStyle=ac('retro');for(let i=n;i>=1;i--)run((t,X,y)=>x.fillText(t,X+i*.75,y+i*.75),1)}
+    if(has('shadow')){x.fillStyle=fs;x.shadowColor='rgba(0,0,0,'+(.1+am*.4)+')';x.shadowBlur=8+am*34;x.shadowOffsetY=3+am*10;run(fill,1);noSh()}
+    if(has('glitch')){const d=6+am*26;x.fillStyle='#ff2a6d';run((t,X,y)=>x.fillText(t,X-d,y+d*.15),.85);x.fillStyle='#00e5ff';run((t,X,y)=>x.fillText(t,X+d,y-d*.15),.85)}
+    if(has('glow')){const b=20+am*90,g=ac('glow');x.fillStyle=fs;x.shadowColor=g;x.shadowBlur=b;run(fill,1);x.shadowBlur=b*.45;run(fill,1);noSh()}
+    if(has('neon')){const b=18+am*70,g=ac('neon');x.fillStyle=g;x.shadowColor=g;x.shadowBlur=b*1.4;run(fill,1);x.shadowBlur=b*.6;run(fill,1);x.shadowBlur=b*.2;run(fill,1);noSh()}
+    if(has('outline')){x.lineWidth=4+am*24;x.strokeStyle=ac('outline');run((t,X,y)=>x.strokeText(t,X,y),1)}
+    x.fillStyle=(has('neon')&&!gg)?cmMixW(col,.7):fs;run(fill,1);
     x.restore();
   });
+  if(!clean)cmGuideDraw(x,S,W);
   return moved;
 }
-const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',x:null,y:null,rot:0,pv:i?'c':'b',size:i?36:46,tc:'auto',gc:'auto',fx:'shadow',fa:50,bb:null});
+/* ---- guides: lines the text snaps to. Canvas units (1024). Margins match the 84px text padding. ---- */
+const cmGX=()=>[84,1024/3,512,2048/3,940];
+function cmSnap(S,T){
+  const A={x:[],y:[]};if(S.snap===false||!T.bb||T.x==null)return A;
+  const W=1024,th=(T.rot||0)*Math.PI/180,c=Math.abs(Math.cos(th)),n=Math.abs(Math.sin(th)),hw=T.bb.w/2*c+T.bb.h/2*n,hh=T.bb.w/2*n+T.bb.h/2*c,TH=14;
+  const gx=cmGX(),gy=cmGX();
+  S.T.forEach(o=>{if(o!==T&&o.bb&&o.x!=null){gx.push(o.x/100*W);gy.push(o.y/100*W)}});
+  const fit=(p,h,gs)=>{let best=null;for(const g of gs)for(const e of [-h,0,h]){const d=g-(p+e);if(Math.abs(d)<=TH&&(!best||Math.abs(d)<Math.abs(best.d)))best={d,g}}return best};
+  const bx=fit(T.x/100*W,hw,gx),by=fit(T.y/100*W,hh,gy);
+  if(bx){T.x=(T.x/100*W+bx.d)/W*100;A.x.push(bx.g)}
+  if(by){T.y=(T.y/100*W+by.d)/W*100;A.y.push(by.g)}
+  return A;
+}
+function cmGuideDraw(x,S,W){
+  const A=S.ga||{x:[],y:[]};if(!S.grid&&!A.x.length&&!A.y.length&&!S.drag)return;
+  x.save();x.globalCompositeOperation='source-over';x.globalAlpha=1;x.setLineDash([14,12]);
+  const line=(a,b,c,d)=>{x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.stroke()};
+  if(S.grid||S.drag){x.lineWidth=2;x.strokeStyle='rgba(255,255,255,.55)';x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=3;cmGX().forEach(g=>{line(g,0,g,W);line(0,g,W,g)});x.shadowBlur=0}
+  x.setLineDash([]);x.lineWidth=3;x.strokeStyle='#ff3d81';x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=4;
+  A.x.forEach(g=>line(g,0,g,W));A.y.forEach(g=>line(0,g,W,g));
+  x.restore();
+}
+const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',x:null,y:null,rot:0,pv:i?'c':'b',size:i?36:46,tc:'auto',gc:'auto',fx:['shadow'],fa:50,gr:false,g1:null,g2:null,ga:90,bb:null});
 function covMaker(o){return new Promise(res=>{
   o=o||{};
-  const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,ife:'none',ifa:50,igc:'auto',img:null,imgUrl:null,tab:'bg'};
+  const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,ifx:[],ifa:50,igc:'auto',img:null,imgUrl:null,tab:'bg',snap:true,grid:false,ga:null,drag:false};
   if(/^#[0-9a-f]{6}$/i.test(o.color||'')){S.c=[o.color,S.c[1],S.c[2]];S.pal=-1}
   const cur=()=>S.T[S.k];
   const e=document.createElement('div');e.id='cmk';e.setAttribute('role','dialog');e.setAttribute('aria-modal','true');e.setAttribute('aria-label','Make cover');
@@ -8218,7 +8290,7 @@ function covMaker(o){return new Promise(res=>{
     </div>
     <div class="cmsec"><div class="cml">Finish</div>
       <div class="fop"><span>Grain</span><input type="range" class="rng" id="cmg" min="0" max="100" aria-label="Grain"><b></b></div>
-      <div class="cml sub">Image effect</div>${chips('cmie',CM_IFX)}
+      <div class="cml sub">Image effect</div>${chips('cmie',CM_IFX)}<div class="cmh" style="margin-top:8px">Tap more than one to combine them.</div>
       <div id="cmio" hidden>
         <div class="fop" style="margin-top:12px"><span>Strength</span><input type="range" class="rng" id="cmia" min="0" max="100" aria-label="Image effect strength"><b></b></div>
         <div class="cml sub" id="cmil">Glow color</div><div class="cmw" id="cmic"><button type="button" class="chip" data-v="auto">Auto</button>${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><label class="cmcl" aria-label="Custom effect color"><input type="color" id="cmici"></label></div>
@@ -8232,13 +8304,21 @@ function covMaker(o){return new Promise(res=>{
       <input type="text" id="cmu" maxlength="80" placeholder="Subtitle (optional)" autocomplete="off">
     </div>
     <div class="cmsec"><div class="cml">Font</div>${chips('cmf',Object.keys(CM_FONT).map(k=>[k,CM_FONT[k][3]]),fst)}</div>
-    <div class="cmsec"><div class="cml">Color</div><div class="cmw" id="cmtc"><button type="button" class="chip" data-v="auto">Auto</button><button type="button" class="chip" data-v="white">White</button><button type="button" class="chip" data-v="black">Black</button>${swatches}<label class="cmcl" aria-label="Custom text color"><input type="color" id="cmtci"></label></div></div>
-    <div class="cmsec"><div class="cml">Effect</div>${chips('cme',CM_FX)}
+    <div class="cmsec"><div class="cml">Color</div><div class="cmg" id="cmfm" style="margin-bottom:10px"><button type="button" class="chip" data-v="solid">Solid</button><button type="button" class="chip" data-v="grad">Gradient</button></div>
+      <div id="cmgo" hidden>
+        <div class="cml sub">Start color</div><div class="cmw" id="cmg1">${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><button type="button" class="cmsw" data-sw="k" aria-label="Black" style="background:#111"></button><label class="cmcl" aria-label="Custom start color"><input type="color" id="cmg1i"></label></div>
+        <div class="cml sub">End color</div><div class="cmw" id="cmg2">${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><button type="button" class="cmsw" data-sw="k" aria-label="Black" style="background:#111"></button><label class="cmcl" aria-label="Custom end color"><input type="color" id="cmg2i"></label></div>
+        <div class="fop" style="margin-top:12px"><span>Angle</span><input type="range" class="rng" id="cmga" min="0" max="360" aria-label="Gradient angle"><b></b></div>
+        <div class="cmw" style="margin-top:6px"><button type="button" class="pill" id="cmgsw">Swap colors</button></div>
+      </div>
+      <div class="cmw" id="cmtc"><button type="button" class="chip" data-v="auto">Auto</button><button type="button" class="chip" data-v="white">White</button><button type="button" class="chip" data-v="black">Black</button>${swatches}<label class="cmcl" aria-label="Custom text color"><input type="color" id="cmtci"></label></div></div>
+    <div class="cmsec"><div class="cml">Effect</div>${chips('cme',CM_FX)}<div class="cmh" style="margin-top:8px">Tap more than one to combine them. They share one strength and one color.</div>
       <div id="cmfo">
         <div class="fop" style="margin-top:12px"><span>Strength</span><input type="range" class="rng" id="cmfa" min="0" max="100" aria-label="Effect strength"><b></b></div>
         <div class="cml sub" id="cmgl">Effect color</div><div class="cmw" id="cmgc"><button type="button" class="chip" data-v="auto">Auto</button>${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><label class="cmcl" aria-label="Custom effect color"><input type="color" id="cmgci"></label></div>
       </div>
     </div>
+    <div class="cmsec"><div class="cml">Guides</div><div class="cmw" id="cmgd"><button type="button" class="chip" data-v="snap">Snap to guides</button><button type="button" class="chip" data-v="grid">Show guides</button></div><div class="cmh" style="margin-top:8px">Text snaps to the center, the thirds, the margins and your other texts. Guides always appear while you drag. They are never saved into the cover.</div></div>
     <div class="cmsec"><div class="cml">Size and position</div>
       <div class="fop"><span>Size</span><input type="range" class="rng" id="cmz" min="20" max="90" aria-label="Text size"><b></b></div>
       <div class="fop"><span>Rotate</span><input type="range" class="rng" id="cmsr" min="-180" max="180" aria-label="Text rotation"><b></b></div>
@@ -8251,20 +8331,25 @@ function covMaker(o){return new Promise(res=>{
   let done=false;
   const kd=ev=>{if(ev.key==='Escape'){ev.stopPropagation();fin(null)}};
   const fin=v=>{if(done)return;done=true;document.removeEventListener('keydown',kd,true);if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);e.remove();res(v)};
-  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
+  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmga',T.ga==null?90:T.ga,'\u00b0',0,360],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
   const lay=()=>{q('#cmly').innerHTML=S.T.map((T,i)=>`<button type="button" class="chip${i===S.k?' on':''}" data-l="${i}">${esc((T.title||'').trim().slice(0,14)||'Text '+(i+1))}</button>`).join('')+'<button type="button" class="pill" data-add="1">'+ic('plus',14)+'Add text</button>';q('#cmdel').style.display=S.T.length>1?'':'none'};
   const load=()=>{const T=cur();q('#cmt').value=T.title;q('#cmu').value=T.sub};
   let raf=0;const draw=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{if(cmDraw(q('#cmv'),S))sl()})};
   const same=(a,b)=>String(a||'').toLowerCase()===String(b||'').toLowerCase();
   const sync=()=>{
-    const T=cur(),fx=T.fx||'shadow';
+    const T=cur(),fxs=Array.isArray(T.fx)?T.fx:[];
     qa('#cmtab .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===S.tab));q('#cmbg').hidden=S.tab!=='bg';q('#cmtx').hidden=S.tab!=='tx';
     qa('#cms .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===S.style));
     qa('#cmf .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===T.font));
-    qa('#cme .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===fx));
+    qa('#cme .chip').forEach(b=>b.classList.toggle('on',b.dataset.v==='none'?!fxs.length:fxs.includes(b.dataset.v)));
+    qa('#cmgd .chip').forEach(b=>b.classList.toggle('on',b.dataset.v==='snap'?S.snap!==false:!!S.grid));
+    qa('#cmfm .chip').forEach(b=>b.classList.toggle('on',(b.dataset.v==='grad')===!!T.gr));
+    q('#cmgo').hidden=!T.gr;q('#cmtc').hidden=!!T.gr;
+    {const g1=T.g1||S.c[0],g2=T.g2||S.c[1],hx2=v=>/^#/.test(v);
+     [['#cmg1',g1,'#cmg1i'],['#cmg2',g2,'#cmg2i']].forEach(([id,v,ii])=>{qa(id+' .cmsw').forEach(b=>b.classList.toggle('on',same(v,b.dataset.c)));q(ii).value=hx2(v)?v:'#ffffff';q(ii).parentNode.classList.toggle('on',![...qa(id+' .cmsw')].some(b=>same(v,b.dataset.c)))})}
     qa('#cmpl .cmpal').forEach(b=>b.classList.toggle('on',+b.dataset.i===S.pal));
     qa('.cmcol').forEach(i=>i.value=S.c[+i.dataset.k]);
-    qa('.cmsw').forEach(b=>{const c=b.dataset.sw==='w'?'#ffffff':S.c[+b.dataset.sw];b.style.background=c;b.dataset.c=c});
+    qa('.cmsw').forEach(b=>{const c=b.dataset.sw==='w'?'#ffffff':b.dataset.sw==='k'?'#111111':S.c[+b.dataset.sw];b.style.background=c;b.dataset.c=c});
     const tc=T.tc||'auto',gc=T.gc||'auto',hx=v=>/^#/.test(v);
     qa('#cmtc .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===tc));
     qa('#cmtc .cmsw').forEach(b=>b.classList.toggle('on',hx(tc)&&same(tc,b.dataset.c)));
@@ -8272,13 +8357,13 @@ function covMaker(o){return new Promise(res=>{
     qa('#cmgc .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===gc));
     qa('#cmgc .cmsw').forEach(b=>b.classList.toggle('on',hx(gc)&&same(gc,b.dataset.c)));
     q('#cmgci').value=hx(gc)?gc:'#ffffff';q('#cmgci').parentNode.classList.toggle('on',hx(gc)&&![...qa('#cmgc .cmsw')].some(b=>same(gc,b.dataset.c)));
-    const ie=S.ife||'none',ig=S.igc||'auto';
-    qa('#cmie .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===ie));
+    const ies=S.ifx||[],ig=S.igc||'auto';
+    qa('#cmie .chip').forEach(b=>b.classList.toggle('on',b.dataset.v==='none'?!ies.length:ies.includes(b.dataset.v)));
     qa('#cmic .chip').forEach(b=>b.classList.toggle('on',b.dataset.v===ig));
     qa('#cmic .cmsw').forEach(b=>b.classList.toggle('on',hx(ig)&&same(ig,b.dataset.c)));
     q('#cmici').value=hx(ig)?ig:'#ffffff';q('#cmici').parentNode.classList.toggle('on',hx(ig)&&![...qa('#cmic .cmsw')].some(b=>same(ig,b.dataset.c)));
-    q('#cmio').hidden=ie==='none';q('#cmic').hidden=q('#cmil').hidden=!(ie==='glow'||ie==='neon');
-    q('#cmfo').hidden=fx==='none';q('#cmgc').hidden=q('#cmgl').hidden=!(fx==='glow'||fx==='neon'||fx==='outline'||fx==='retro');
+    q('#cmio').hidden=!ies.length;q('#cmic').hidden=q('#cmil').hidden=!(ies.includes('glow')||ies.includes('neon'));
+    q('#cmfo').hidden=!fxs.length;q('#cmgc').hidden=q('#cmgl').hidden=!fxs.some(k=>k==='glow'||k==='neon'||k==='outline'||k==='retro');
     q('#cmph').hidden=S.style!=='photo';q('#cmdw').hidden=S.style!=='photo'||!S.img;
     q('#cmpb').textContent=S.img?'Change photo\u2026':'Choose a photo\u2026';
     lay();sl();draw();
@@ -8288,11 +8373,16 @@ function covMaker(o){return new Promise(res=>{
     const grp=b.parentNode.id,v=b.dataset.v,T=cur();
     if(grp==='cmtab'){S.tab=v;q('.cmc').scrollTop=0}
     else if(grp==='cms'){S.style=v;if(v==='photo'&&!S.img)q('#cmpf').click()}
-    else if(grp==='cmf')T.font=v;else if(grp==='cme')T.fx=v;
+    else if(grp==='cmf')T.font=v;else if(grp==='cme'){if(v==='none')T.fx=[];else{const a=(Array.isArray(T.fx)?T.fx:[]).slice(),i=a.indexOf(v);if(i>=0)a.splice(i,1);else a.push(v);T.fx=a}}
     else if(grp==='cmtc'){if(b.dataset.sw!=null)T.tc=b.dataset.c;else T.tc=v}
     else if(grp==='cmgc'){if(b.dataset.sw!=null)T.gc=b.dataset.c;else T.gc=v}
-    else if(grp==='cmie')S.ife=v;
+    else if(grp==='cmie'){if(v==='none')S.ifx=[];else{const a=(S.ifx||[]).slice(),i=a.indexOf(v);if(i>=0)a.splice(i,1);else a.push(v);S.ifx=a}}
     else if(grp==='cmic'){if(b.dataset.sw!=null)S.igc=b.dataset.c;else S.igc=v}
+    else if(grp==='cmfm')T.gr=v==='grad';
+    else if(grp==='cmg1'){if(b.dataset.sw!=null)T.g1=b.dataset.c}
+    else if(grp==='cmg2'){if(b.dataset.sw!=null)T.g2=b.dataset.c}
+    else if(grp==='cmgd'){if(v==='snap')S.snap=S.snap===false;else S.grid=!S.grid}
+    else if(b.id==='cmgsw'){const a=T.g1||S.c[0];T.g1=T.g2||S.c[1];T.g2=a}
     else if(b.dataset.p)T.pv=b.dataset.p;
     else if(b.dataset.l!=null){S.k=+b.dataset.l;load()}
     else if(b.dataset.add){if(S.T.length>=8)return toast('That is enough texts for one cover');S.T.push(cmLayer(1,'New text'));S.k=S.T.length-1;load();q('#cmt').focus();q('#cmt').select()}
@@ -8301,23 +8391,23 @@ function covMaker(o){return new Promise(res=>{
     else if(b.id==='cmsh'){S.seed=(Math.random()*1e6|0)+1;if(S.pal>=0){S.pal=Math.floor(Math.random()*CM_PAL.length);S.c=CM_PAL[S.pal].slice()}}
     else if(b.id==='cmpb')return q('#cmpf').click();
     else if(b.id==='cmx')return fin(null);
-    else if(b.id==='cmok'){cmDraw(q('#cmv'),S);return q('#cmv').toBlob(bl=>fin(bl?new File([bl],'cover.jpg',{type:'image/jpeg'}):null),'image/jpeg',.92)}
+    else if(b.id==='cmok'){cmDraw(q('#cmv'),S,true);return q('#cmv').toBlob(bl=>fin(bl?new File([bl],'cover.jpg',{type:'image/jpeg'}):null),'image/jpeg',.92)}
     else return;
     sync();
   });
   q('#cmt').oninput=ev=>{cur().title=ev.target.value;lay();draw()};q('#cmu').oninput=ev=>{cur().sub=ev.target.value;draw()};
   q('#cmsr').oninput=ev=>{cur().rot=+ev.target.value;sync()};q('#cmfa').oninput=ev=>{cur().fa=+ev.target.value;sync()};
   q('#cmz').oninput=ev=>{cur().size=+ev.target.value;sync()};q('#cmg').oninput=ev=>{S.grain=+ev.target.value;sync()};q('#cmd2').oninput=ev=>{S.dim=+ev.target.value;sync()};
-  q('#cmtci').oninput=ev=>{cur().tc=ev.target.value;sync()};q('#cmgci').oninput=ev=>{cur().gc=ev.target.value;sync()};
+  q('#cmtci').oninput=ev=>{cur().tc=ev.target.value;sync()};q('#cmg1i').oninput=ev=>{cur().g1=ev.target.value;sync()};q('#cmg2i').oninput=ev=>{cur().g2=ev.target.value;sync()};q('#cmga').oninput=ev=>{cur().ga=+ev.target.value;sync()};q('#cmgci').oninput=ev=>{cur().gc=ev.target.value;sync()};
   q('#cmia').oninput=ev=>{S.ifa=+ev.target.value;sync()};q('#cmici').oninput=ev=>{S.igc=ev.target.value;sync()};
   qa('.cmcol').forEach(i=>i.oninput=ev=>{S.c[+i.dataset.k]=ev.target.value;S.pal=-1;sync()});
-  {const cv=q('#cmv');let dr=null;
+  {const cv=q('#cmv');let dr=null,rw=[50,50];
    /* tap a text on the preview to pick it (topmost first), then drag to move it */
    const hit=ev=>{const r=cv.getBoundingClientRect(),W=1024,px=(ev.clientX-r.left)/r.width*W,py=(ev.clientY-r.top)/r.height*W;
      for(let i=S.T.length-1;i>=0;i--){const T=S.T[i];if(!T.bb||T.x==null)continue;const dx=px-T.x/100*W,dy=py-T.y/100*W,a=-(T.rot||0)*Math.PI/180,rx=dx*Math.cos(a)-dy*Math.sin(a),ry=dx*Math.sin(a)+dy*Math.cos(a);if(Math.abs(rx)<=T.bb.w/2+30&&Math.abs(ry)<=T.bb.h/2+30)return i}return -1};
-   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}const i=hit(ev);if(i>=0){if(i!==S.k){S.k=i;load()}S.tab='tx';sync()}dr=[ev.clientX,ev.clientY]};
-   cv.onpointermove=ev=>{if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();T.x=Math.max(0,Math.min(100,(T.x==null?50:T.x)+(ev.clientX-dr[0])/r.width*100));T.y=Math.max(0,Math.min(100,(T.y==null?50:T.y)+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];cmDraw(cv,S)};
-   cv.onpointerup=cv.onpointercancel=()=>{dr=null}}
+   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}const i=hit(ev);if(i>=0){if(i!==S.k){S.k=i;load()}S.tab='tx';sync()}dr=[ev.clientX,ev.clientY];{const T=cur();rw=[T.x==null?50:T.x,T.y==null?50:T.y];S.drag=true}};
+   cv.onpointermove=ev=>{if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();rw[0]=Math.max(0,Math.min(100,rw[0]+(ev.clientX-dr[0])/r.width*100));rw[1]=Math.max(0,Math.min(100,rw[1]+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];T.x=rw[0];T.y=rw[1];S.ga=cmSnap(S,T);cmDraw(cv,S)};
+   cv.onpointerup=cv.onpointercancel=()=>{const was=S.drag;dr=null;S.drag=false;S.ga=null;if(was)cmDraw(cv,S)}}
   q('#cmpf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);S.imgUrl=u;S.img=im;S.style='photo';sync()};im.onerror=()=>{URL.revokeObjectURL(u);toast('Could not read that image')};im.src=u};
   e.addEventListener('pointerdown',ev=>{if(ev.target===e)fin(null)});
   document.addEventListener('keydown',kd,true);
