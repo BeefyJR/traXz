@@ -300,7 +300,18 @@ header{display:block;padding:8px 20px 2px}
 #tb.so #flt,#tb.so #selbtn{display:none}
 html[data-layout=pc] #tb.so #flt,html[data-layout=pc] #tb.so #selbtn{display:inline-flex}
 #selbar{position:absolute;left:10px;right:10px;bottom:10px;z-index:7;display:none;align-items:center;gap:6px;padding:8px 10px;border-radius:20px;background:rgba(var(--sfc),.74);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid rgba(128,128,128,.22);box-shadow:0 6px 24px rgba(0,0,0,.28)}
-#app.selmode #selbar{display:flex}
+#app.selmode #selbar,#app.gmode #selbar{display:flex}
+#app.gmode #mini,#app.gmode #mshow{display:none!important}
+#app.gmode #main{padding-bottom:150px}
+#selbar .gb{display:none}
+#app.gmode #selbar .sg>:not(.gb){display:none}
+#app.gmode #selbar .gb{display:inline-flex}
+.gsm .alm{display:none}
+.gck{position:absolute;top:8px;left:8px;z-index:2;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;box-shadow:0 1px 6px rgba(0,0,0,.4)}
+.gck .ic{width:15px;height:15px}
+.acard.gon .gck{background:var(--acc);border-color:var(--acc)}
+.acard.gon .cov{outline:3px solid var(--acc);outline-offset:-3px}
+.gsm .acard{cursor:pointer}
 #app.selmode #mini{display:none!important}
 #app.selmode #main{padding-bottom:100px}
 #selc{flex:1;font-size:14px;font-weight:600;white-space:nowrap}
@@ -376,6 +387,70 @@ html:not([data-layout=pc]) #app:has(#qp.open) #logo{opacity:0;transition:opacity
 .grid.g1{grid-template-columns:1fr;gap:22px}
 .grid.g1 .cov{font-size:96px;border-radius:18px}
 .grid.g1 .card b{font-size:18px}
+/* custom icon layout */
+html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby){display:flex;align-items:center;gap:var(--icg,8px);flex:none;position:relative;z-index:3}
+html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby):empty{display:none}
+html[data-ic=on]:is([data-dock=left],[data-dock=right]) :is(#hbx,#hby){flex-direction:column}
+html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock{justify-content:space-between;padding:12px 0}
+html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{margin:auto 0}
+html[data-ic=on][data-dock=bottom] #dock{gap:8px}
+html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){position:static;inset:auto;width:var(--ics,44px);height:var(--ics,44px);min-width:0;margin:0!important;flex:none;align-items:center;justify-content:center}
+html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear) :is(.ic,svg){width:calc(var(--ics,44px)*.52)!important;height:calc(var(--ics,44px)*.52)!important}
+html[data-ic=on][data-icsh=circle] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:50%}
+html[data-ic=on][data-icsh=round] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:calc(var(--ics,44px)*.3)}
+html[data-ic=on][data-icsh=plain] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:12px;background:transparent;border-color:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--text)}
+html[data-ic=on][data-icb=glass] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:rgba(var(--sfc),.7);color:var(--text);border:1px solid var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html[data-ic=on][data-icb=solid] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:var(--surf2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+html[data-ic=on][data-icb=none] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:transparent;border-color:transparent;box-shadow:none;color:var(--text)}
+html[data-ic=on][data-ica=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){color:var(--acc)}
+html[data-ic=on] .icoff{display:none!important}
+/* icon layout sheet */
+.icpv{display:flex;height:176px;max-width:360px;margin:2px auto 6px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(var(--bgc),.55);flex-direction:column}
+.icpv[data-dock=left]{flex-direction:row-reverse}.icpv[data-dock=right]{flex-direction:row}.icpv[data-dock=bottom]{flex-direction:column}
+.icpv .pvm{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;padding:8px 10px;gap:6px}
+.icpv .pvh{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:var(--pvs)}
+.icpv .pvl{font-size:14px;letter-spacing:.5px;color:var(--mute)}
+.icpv .pvg{display:flex;align-items:center;gap:var(--pvg,8px);min-width:0}
+.icpv .pvt{display:flex;justify-content:center;gap:14px;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--mute)}
+.icpv .pvt b:first-child{color:var(--text)}
+.icpv .pvbody{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;overflow:hidden}
+.icpv .pvbody span{display:block;background:rgba(128,128,128,.2);border-radius:8px;min-height:0}
+.icpv .pvbar{display:flex;align-items:center;justify-content:center;gap:var(--pvg,8px);padding:6px;border:0 solid var(--line);flex:none;background:rgba(128,128,128,.08)}
+.icpv[data-dock=bottom] .pvbar{border-top-width:1px}.icpv[data-dock=left] .pvbar{border-right-width:1px}.icpv[data-dock=right] .pvbar{border-left-width:1px}
+.icpv:is([data-dock=left],[data-dock=right]) .pvbar,.icpv:is([data-dock=left],[data-dock=right]) .pvbar .pvg{flex-direction:column}
+.icpv .pvtb{color:var(--mute)}
+.icpv .pvtb span{display:flex;align-items:center;justify-content:center;width:26px;height:26px}
+.icpv .pvtb span:first-child{color:var(--text)}
+.icpv .pvi{display:flex;align-items:center;justify-content:center;width:var(--pvs);height:var(--pvs);flex:none;color:var(--text);background:rgba(128,128,128,.22);border:1px solid var(--line);border-radius:50%;cursor:pointer;transition:outline-color .15s}
+.icpv[data-sh=round] .pvi{border-radius:30%}
+.icpv[data-sh=plain] .pvi{border-radius:10px;background:transparent;border-color:transparent}
+.icpv[data-bg=none] .pvi{background:transparent;border-color:transparent}
+.icpv[data-bg=solid] .pvi{background:var(--surf2)}
+.icpv[data-bg=glass] .pvi{background:rgba(var(--sfc),.7)}
+.icpv[data-bg=auto]:not([data-sh=plain]) .pvi[data-k=plus]{background:#fff;color:#000;border-color:transparent}
+.icpv[data-acc=on] .pvi{color:var(--acc)!important}
+.icpv .pvi.sel{outline:2px solid var(--acc);outline-offset:2px}
+.icr{padding:11px 0;border-bottom:1px solid var(--line)}
+.icr:last-child{border-bottom:0}
+.icr.on .icri{color:var(--acc)}
+.icrt{display:flex;align-items:center;gap:10px}
+.icrt b{flex:1;font-size:15px}
+.icri{display:flex;width:26px;justify-content:center}
+.icrm{display:flex;gap:2px}
+.icrm .ib{width:34px;height:34px}
+.icrm .ib:disabled{opacity:.3}
+.icrc{margin-top:8px}
+#main .grid.gc{grid-template-columns:repeat(auto-fill,minmax(var(--gcw,160px),1fr));gap:clamp(8px,calc(var(--gcw,160px)/9),30px)}
+#main .grid.gc .card b{font-size:clamp(11px,calc(var(--gcw,160px)/10.5),20px);margin-top:6px}
+#main .grid.gc .card span{font-size:clamp(10px,calc(var(--gcw,160px)/13),14px)}
+#main .grid.gc .cov{border-radius:clamp(8px,calc(var(--gcw,160px)/10),18px);font-size:calc(var(--gcw,160px)/3.2)}
+.fcs .fcpv{position:relative;margin:14px 2px 6px;height:112px;overflow:hidden;contain:layout paint}
+.fcs .fcpr{display:flex;align-items:flex-start;gap:var(--g,6px)}
+.fcs .fcpr i{flex:none;width:var(--w,40px);height:var(--w,40px);box-sizing:border-box;background:var(--surf2);border:1px solid var(--line);border-radius:var(--rr,4px)}
+/* while the slider is held: no blur behind the sheet and no transitions on the grid, so the live resize stays at full frame rate */
+html.fcdrag #ov,html.fcdrag #ov .sheet{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.fcdrag #main .grid *{transition:none!important}
+.fcs .fcpn{font-size:13px;color:var(--mute);margin:6px 2px 0}
 
 /* v4 compact folder bar */
 .fh{flex-wrap:nowrap;gap:6px;margin:-6px -20px 8px;padding:4px 14px 4px 16px}
@@ -1019,6 +1094,13 @@ html[data-layout=pc] #mini.vm .m2 .mvs{flex:1 1 0;max-width:170px}
 .tmb .pill{padding:9px 14px}
 .trc .trx{margin:10px 0 2px}
 .trc .trx .pill.acc{background:var(--text);color:var(--bg)}
+/* preview of the result */
+.trc.tp{--sc:var(--ac)}
+.tmpl{display:flex;align-items:center;gap:10px;margin:10px 0 2px}
+.tmpr{flex:1;min-width:0}
+.tmpk{position:relative;height:8px;margin:0 9px}
+.tmpk i{position:absolute;top:0;width:3px;height:8px;margin-left:-1.5px;border-radius:2px;background:rgb(255,170,60)}
+.tmpt{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums}
 
 /* song details: audio actions */
 .dact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}
@@ -1164,6 +1246,25 @@ html[data-layout=pc] .scd{padding:4px 20px 14px}
 #cmk #cmok{flex:1}
 #cmk button:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 #cmk [hidden]{display:none!important}
+/* layer list */
+#cmk .cmlr{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:2px;min-height:52px;padding:4px;border-radius:12px;background:var(--surf2);margin-bottom:6px;position:relative;transition:box-shadow .15s,transform .15s}
+#cmk .cmlr.on{box-shadow:inset 0 0 0 2px var(--text)}
+#cmk .cmlr.off .cmlm,#cmk .cmlr.off .cmgrip{opacity:.45}
+#cmk .cmlr.drag{z-index:2;transform:scale(1.015);box-shadow:0 8px 24px rgba(0,0,0,.35),inset 0 0 0 2px var(--text)}
+#cmk .cmeye,#cmk .cmgrip,#cmk .cmlk{width:40px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:0;padding:0;color:var(--mute)}
+#cmk .cmeye{color:var(--text)}
+#cmk .cmlr.off .cmeye{color:var(--mute)}
+#cmk .cmgrip{cursor:grab;touch-action:none}
+#cmk .cmlr.drag .cmgrip{cursor:grabbing}
+#cmk .cmlm{display:flex;align-items:center;gap:10px;min-width:0;height:44px;text-align:left;background:none;border:0;padding:0;color:var(--text);font-size:14px;font-weight:600}
+#cmk .cmth{flex:none;width:40px;height:40px;box-sizing:border-box;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:conic-gradient(rgba(128,128,128,.35) 25%,transparent 0 50%,rgba(128,128,128,.35) 0 75%,transparent 0) 0 0/12px 12px}
+#cmk .cmth img{width:100%;height:100%;object-fit:contain;display:block}
+#cmk .cmth b{font-size:19px;font-weight:800}
+#cmk .cmln{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cmk .cmlr.bgr{grid-template-columns:40px minmax(0,1fr)}
+#cmk .pill:disabled{opacity:.4;pointer-events:none}
+#cmk #cmtp>.cmsec:first-child,#cmk #cmip>.cmsec:first-child{border-top:1px solid var(--line);padding-top:16px}
+#cmk .cmdel.r{margin-left:auto}
 @media (min-width:760px),(min-width:560px) and (max-height:520px){
   #cmk .cmd{width:min(100%,880px);height:min(100%,640px);display:grid;grid-template-columns:minmax(260px,380px) minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-areas:"t t" "p b" "p c" "p f";column-gap:4px}
   #cmk h3{grid-area:t}
@@ -1876,6 +1977,66 @@ html[data-layout=pc]:root:root #fc>.fbot .fg{gap:0}
 :root:root #fc>.fbot .fvol .mt{position:absolute;right:100%;top:50%;transform:translateY(-50%);margin:0 2px 0 0;width:30px;height:30px}
 @container (max-width:380px){:root:root #fc>.fbot .fvol .mt{display:none}}
 @container (max-width:420px){html:not([data-one=on]):root:root #fc>.fbot .fvol .mt{display:none}}/* three separate buttons leave no room for the mute button beside a centred slider */
+
+/* group drag + free placement */
+.gbadge{position:absolute;top:6px;right:6px;min-width:26px;height:26px;padding:0 7px;border-radius:13px;background:var(--acc);color:#fff;font:700 13px/26px system-ui,sans-serif;text-align:center}
+html.fpe [data-fpk]{outline:1.5px dashed var(--acc,#1db954);outline-offset:2px;cursor:grab;touch-action:none;user-select:none}
+html.fpe:not([data-np=on]) #mini{display:flex!important}
+html.fpe #app.mh #mini{transform:none}
+.fpg{position:fixed;z-index:79;background:#ff2d95;pointer-events:none;box-shadow:0 0 4px #ff2d95}
+#fpbar{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:80;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;max-width:min(360px,92vw);padding:14px 16px;border-radius:18px;background:var(--surf);color:var(--text);font-size:13px;box-shadow:0 10px 36px rgba(0,0,0,.4);border:1px solid var(--line)}
+#fpbar div{display:flex;gap:8px}
+#npb .nvg{display:flex;align-items:center;gap:2px}
+html.fpe #fb,html.fpe #fb .abar,html.fpe #tb{overflow:visible}
+html[data-fpv=on] #mini .m2>[data-act=vol]{display:none}
+html[data-fpv=on] #mini .m2{flex-wrap:wrap;justify-content:center}
+html[data-fpv=on] #mini .m2 .mvs{flex:none;width:150px;min-width:0;margin:0 4px;overflow:visible;opacity:1;visibility:visible;transform:none;transition:none}
+html.fpe .fpsel{outline:2px solid #ff2d95!important;outline-style:solid!important}
+#fpsel{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left}
+#fpsel small{text-align:center;color:var(--mute)}
+#fpbar .bgs{width:100%;flex-direction:column;align-items:stretch;gap:0}#fpbar .bgs .fop{width:100%;flex:none;margin:4px 0}
+#fpbar{max-height:82vh;overflow:auto}
+.fph{position:fixed;z-index:81;width:56px;height:14px;border-radius:7px;background:#ff2d95;cursor:ns-resize;touch-action:none;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.fph.v{width:14px;height:56px;cursor:ew-resize}
+.fph::after{content:"";position:absolute;left:50%;top:50%;width:24px;height:2px;margin:-1px 0 0 -12px;border-radius:1px;background:#fff}
+.fph.v::after{width:2px;height:24px;margin:-12px 0 0 -1px}
+#fpbar{z-index:200}
+#fpbar .fop>span{flex:none;width:46px;text-align:left}#fpbar .fop b{min-width:50px}
+#fpgrip{display:flex;align-items:center;gap:8px;width:100%;cursor:grab;touch-action:none;user-select:none;font-weight:700;font-size:14px}
+#fpgrip span{flex:1;text-align:left}
+#fpgrip .ib{width:34px;height:34px}
+.fpgi{width:18px;height:12px;border-top:2px solid;border-bottom:2px solid;background:linear-gradient(currentColor,currentColor) center/100% 2px no-repeat;opacity:.5}
+.fph{z-index:190}
+.fph{width:10px;height:10px;border-radius:1px;background:#fff;border:1.5px solid #222;box-shadow:0 0 0 1px rgba(255,255,255,.6);z-index:190}
+.fph::after{display:none}
+.fph::before{content:"";position:absolute;inset:-9px}
+.fph[data-d=n],.fph[data-d=s]{cursor:ns-resize}.fph[data-d=e],.fph[data-d=w]{cursor:ew-resize}
+.fph[data-d=ne],.fph[data-d=sw]{cursor:nesw-resize}.fph[data-d=nw],.fph[data-d=se]{cursor:nwse-resize}
+.fpr{position:fixed;z-index:189;pointer-events:none;border:1px dashed #fff;outline:1px dashed #222}
+.fprot{position:fixed;z-index:195;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #ff2d95;box-shadow:0 2px 8px rgba(0,0,0,.45);cursor:grab;touch-action:none}
+.fprot::before{content:"";position:absolute;inset:-8px}
+.fph::before{inset:-6px}
+#fpq{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+/* free placement v2 */
+html[data-fptf=off] #top>*{transform:translate(var(--fptopx,0),var(--fptopy,0))}
+html[data-fpdf=off] #dock>:not(#dkg){transform:translate(var(--fpdockx,0),var(--fpdocky,0))}
+.fph::before{inset:-15px!important}
+html[data-fptv=on] #top>#qk{transform:translate(calc(var(--fptopx,0px) + var(--fptdw,0px)),var(--fptopy,0px))}
+html:not(.fpe) .fphd{visibility:hidden!important;pointer-events:none!important}
+html.fpe .fphd{opacity:.35!important}
+html.fpd #fpbar{opacity:.18;pointer-events:none;transition:opacity .12s}
+#fpbar #fpbody{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+#fpbar.min #fpbody{display:none}
+#fpbar #fpmode{width:100%;justify-content:center}
+#fpbar #fpmode .chip{flex:1;max-width:none;text-align:center;padding:9px 12px}
+#fpbar .fpit{width:100%;align-items:center}
+#fpbar .fpit select{flex:1;min-width:0;height:40px;padding:0 10px;border-radius:12px;background:var(--surf2);color:var(--text);border:1px solid var(--line);font:inherit;font-size:14px}
+#fpbar .fpit .ib{width:38px;height:38px;flex:none}
+#fpbar button[disabled]{opacity:.3;pointer-events:none}
+#fpbar #fpsel~.srow,#fpbar #fpsel .srow{border-bottom:0;padding:8px 2px}
+#fpbar .srow{width:100%}
+#fpbar .chip:focus-visible,#fpbar .ib:focus-visible,#fpbar select:focus-visible,#fpbar .srow:focus-visible,#fpbar .pill:focus-visible{outline:2px solid var(--acc,#1db954);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){html.fpd #fpbar{transition:none}}
 </style>
 </head>
 <body>
@@ -1925,7 +2086,7 @@ html[data-layout=pc]:root:root #fc>.fbot .fg{gap:0}
 const $=s=>document.querySelector(s),au=$('#au');
 /* Performance mode: Off / Auto / On. Auto switches on for weak devices, Data Saver and low battery. It only lightens the look (no frosted glass, no animated media, lighter beat effects, shorter animations); nothing is removed. */
 /* Each feature can be lightened on its own: PF lists them. Off / Auto / On set all of them together; Custom lets you pick (checked = animated). PERF.f[key] is true when that feature runs in its light form. */
-const PF=[['glass','Frosted glass','Blurred bars, sheets and the player'],['ui','Interface animations','Sheets opening, lists fading in, button transitions'],['bg','Moving background','Drifting blobs and the animated gradient'],['media','GIF and video covers','Animated covers play instead of staying still'],['beat','Beat effects','Glow, ripple and bars that follow the music'],['trans','Song change transitions','Slide, cube, flip and the other transitions in the big player']];
+const PF=[['glass','Frosted glass','Blurred bars and sheets'],['ui','Interface animations','Sheets and list fades'],['bg','Moving background','Drifting colour blobs'],['media','GIF and video covers','Animated instead of still'],['beat','Beat effects','Glow and ripples with the music'],['trans','Song change transitions','Slide, cube and flip in the big player']];
 const PERF={m:'off',on:false,bat:false,f:{},c:{},sig:''};
 try{const v=localStorage.getItem('tracks-perf');if(v==='on'||v==='auto'||v==='off'||v==='custom')PERF.m=v}catch(e){}
 try{const c=JSON.parse(localStorage.getItem('tracks-perf-c')||'null');if(c&&typeof c==='object')PF.forEach(k=>{PERF.c[k[0]]=!!c[k[0]]});else PF.forEach(k=>{PERF.c[k[0]]=false})}catch(e){PF.forEach(k=>{PERF.c[k[0]]=false})}
@@ -1958,7 +2119,7 @@ function setPerf(m){
   PERF.m=m;try{localStorage.setItem('tracks-perf',PERF.m)}catch(e){}perfRefresh()}
 function setPerfF(key,lite){PERF.c[key]=!!lite;perfSaveC();if(PERF.m==='custom')perfRefresh()}
 try{if(navigator.getBattery)navigator.getBattery().then(b=>{const f=()=>{PERF.bat=!b.charging&&b.level<=.2;if(PERF.m==='auto')perfRefresh()};b.addEventListener('levelchange',f);b.addEventListener('chargingchange',f);f()}).catch(()=>{})}catch(e){}
-const PERF_NOTE={off:'Everything looks and animates as designed.',auto:'Turns on by itself on devices with little memory or a slow processor, when Data Saver is on, or when the battery is low.',on:'Solid bars instead of frosted glass, GIF and video covers stay still, beat effects are limited to bounce and squash, and animations are shorter. Playback and your library are not affected.',custom:'Choose for each feature below. Switched on keeps its full animation, switched off keeps it light.'};
+const PERF_NOTE={off:'Full looks and animations.',auto:'Lightens things on slow devices, Data Saver or low battery.',on:'Solid bars, still covers, simple beat effects and short animations. Playback is not affected.',custom:'Pick which features stay fancy.'};
 let lyOn=false;/* lyrics mode of the big player (declared early: the beat-effect loop reads it) */
 const ICON={cut:'M9.64 7.64c.23-.5.36-1.05.36-1.64 0-2.21-1.79-4-4-4S2 3.79 2 6s1.79 4 4 4c.59 0 1.14-.13 1.64-.36L10 12l-2.36 2.36C7.14 14.13 6.59 14 6 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4c0-.59-.13-1.14-.36-1.64L12 14l7 7h3v-1L9.64 7.64zM6 8c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm0 12c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm6-7.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM19 3l-6 6 2 2 7-7V3z',norm:'M7 3.5h10L12 9.5zM7 20.5h10L12 14.5zM3.5 11h17v2h-17z',rst:'M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6 0 2.97-2.17 5.43-5 5.91v2.02c3.95-.49 7-3.85 7-7.93 0-4.42-3.58-8-8-8zm-6 8c0-1.65.67-3.15 1.76-4.24L6.34 7.34C4.9 8.79 4 10.79 4 13c0 4.08 3.05 7.44 7 7.93v-2.02c-2.83-.48-5-2.94-5-5.91z',fxi:'M10.5 4.5a1.5 1.5 0 013 0v15a1.5 1.5 0 01-3 0zM6 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM15 8a1.5 1.5 0 013 0v8a1.5 1.5 0 01-3 0zM1.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0zM19.5 10.5a1.5 1.5 0 013 0v3a1.5 1.5 0 01-3 0z',plist:'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z',tune:'M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z',edit:'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',szs:'M3 3h5v5H3zM9.5 3h5v5h-5zM16 3h5v5h-5zM3 9.5h5v5H3zM9.5 9.5h5v5h-5zM16 9.5h5v5h-5zM3 16h5v5H3zM9.5 16h5v5h-5zM16 16h5v5h-5z',szm:'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z',szl:'M5 5h14v14H5z',play:'M8 5v14l11-7z',pause:'M6 5h4v14H6zM14 5h4v14h-4z',next:'M6 6l9 6-9 6zM17 6h2v12h-2z',prev:'M18 6l-9 6 9 6zM5 6h2v12H5z',
 more:'M12 8a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4zm0 6a2 2 0 100-4 2 2 0 000 4z',down:'M7 10l5 5 5-5z',
@@ -1980,6 +2141,16 @@ ICON.mic='M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1
 ICON.swaph='M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z';
 ICON.note='M12 3v10.55A4 4 0 1014 17V7h4V3z';
 {const R='M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2zm2 0v14h14V5z';ICON.dkt=R+'M5 5h14v3H5z';ICON.dkl=R+'M5 5h3v14H5z';ICON.dkr=R+'M16 5h3v14h-3z';ICON.dkb=R+'M5 16h14v3H5z'}
+{const B1='M5 15h3v5H5z',B2='M10.5 10h3v10h-3z',B3='M16 4h3v16h-3z',S1='M5 19h3v1H5z',S2='M10.5 19h3v1h-3z',S3='M16 19h3v1h-3z';
+ICON.lvl1=B1+S2+S3;ICON.lvl2=B1+B2+S3;ICON.lvl3=B1+B2+B3}
+ICON.wave='M3 10h2v4H3zm4-4h2v12H7zm4-3h2v18h-2zm4 6h2v6h-2zm4 2h2v2h-2z';
+ICON.power='M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0119 12c0 3.87-3.13 7-7 7A6.995 6.995 0 017.58 6.58L6.17 5.17A8.932 8.932 0 003 12a9 9 0 0018 0c0-2.74-1.23-5.18-3.17-6.83z';
+ICON.stopsq='M6 6h12v12H6z';
+ICON.up='M7 14l5-5 5 5z';
+ICON.eye='M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z';
+ICON.eyeoff='M2 4.27L3.27 3 21 20.73 19.73 22l-2.9-2.9A11.4 11.4 0 0112 19.5C7 19.5 2.73 16.39 1 12a11.7 11.7 0 013.6-4.9L2 4.27zM12 7a5 5 0 015 5c0 .65-.13 1.26-.36 1.83L14.8 12A3 3 0 0012 9l-1.1-1.1c.33-.6.7-.9 1.1-.9zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65a3 3 0 003 3c.22 0 .44-.03.65-.08l1.55 1.55A5 5 0 017.53 9.8zM12 4.5c5 0 9.27 3.11 11 7.5a11.8 11.8 0 01-2.67 3.9l-1.43-1.43A9.6 9.6 0 0020.8 12 9.8 9.8 0 0012 6.5c-.7 0-1.4.07-2.05.2L8.4 5a11.9 11.9 0 013.6-.5z';
+ICON.reset='M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z';
+ICON.move='M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2zm4 7l4 4-4 4v-3H8v-2h6v-3z';
 const _icC=new Map();
 const ic=(n,s)=>{const k=n+'|'+(s||'');let v=_icC.get(k);if(v===void 0){v=`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false" ${s?`style="width:${s}px;height:${s}px"`:''}><path d="${ICON[n]}"/></svg>`;_icC.set(k,v)}return v};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2795,9 +2966,9 @@ function nmToggle(){
 }
 async function nmMenu(){
   const t=nmTarget();
-  const items=NM_TG.map(x=>({label:x[1]+' \u00b7 '+x[2],value:'t'+x[0],sel:nm.on&&x[0]===t,noic:true}));
-  items.push({label:nm.all?'Stop analysing the library':'Analyse the whole library now',value:'all',ic:'norm',gap:1});
-  items.push({label:nm.on?'Turn normalize off':'Turn normalize on',value:'tog',ic:'norm'});
+  const items=NM_TG.map((x,i)=>({label:x[1]+' \u00b7 '+x[2],value:'t'+x[0],sel:nm.on&&x[0]===t,ic:'lvl'+(i+1)}));
+  items.push({label:nm.all?'Stop analysing the library':'Analyse the whole library now',value:'all',ic:nm.all?'stopsq':'wave',gap:1});
+  items.push({label:nm.on?'Turn normalize off':'Turn normalize on',value:'tog',ic:'power'});
   const r=await choose('Normalize volume',items);
   if(!r)return;
   if(r==='all')return nmAll();
@@ -3438,7 +3609,39 @@ function songsList(){
   return l.sort(S);
 }
 const fbar=(back,title,subt,extra)=>`<div class="abar fbr"><button class="back" data-act="back" aria-label="Back to ${back}">${ic('arrow',24)}</button><div class="ft"><h2>${esc(title)}</h2><span>${subt}</span></div><div class="abtns">${extra}</div></div>`;
-const fszBtns=()=>`<div class="fsz2" role="group" aria-label="Cover size">${[['s','szs','Small'],['m','szm','Medium'],['l','szl','Large']].map(z=>`<button data-act="fsize" data-s="${z[0]}" class="${fsz===z[0]?'on':''}" aria-label="${z[2]} covers" title="${z[2]}">${ic(z[1],18)}</button>`).join('')}</div>`;
+const fszBtns=()=>`<div class="fsz2" role="group" aria-label="Cover size">${[['s','szs','Small'],['m','szm','Medium'],['l','szl','Large']].map(z=>`<button data-act="fsize" data-s="${z[0]}" class="${fsz===z[0]?'on':''}" aria-label="${z[2]} covers" title="${z[2]}">${ic(z[1],18)}</button>`).join('')}<button data-act="fcustom" class="${fsz==='c'?'on':''}" aria-label="Custom size" title="Custom size">${ic('tune',18)}</button></div>`;
+const FC={mn:64,mx:420,v:Math.min(420,Math.max(64,+LS('tracks-fcw')||160))};
+const gridOpen=()=>`<div class="grid ${({s:'g3',l:'g1',c:'gc'}[fsz]||'')}${gMode?' gsm':''}"${fsz==='c'?` style="--gcw:${FC.v}px"`:''}>`;
+function fcApply(){const g=document.querySelector('#main .grid');if(!g)return;g.classList.remove('g3','g1');g.classList.add('gc');g.style.setProperty('--gcw',FC.v+'px')}
+function fcSheet(){
+  openOv(`<h3>Custom size</h3><div class="fcs"><div class="bgs"><div class="fop"><span>Size</span><input type="range" class="rng" id="fcr" min="${FC.mn}" max="${FC.mx}" step="1" aria-label="Cover size"><b></b></div></div><div class="fcpv" id="fcpv"><div class="fcpr" id="fcpr"></div></div><p class="fcpn" id="fcpn"></p><div class="bt"><button type="button" class="pill" id="fcrs">Reset</button><button type="button" class="pill acc" id="fcok">Done</button></div></div>`);
+  const r=$('#fcr'),ov=$('#ov'),row=$('#fcpr'),lab=$('#fcpn'),val=r.parentNode.querySelector('b'),H=document.documentElement;
+  let tgt=FC.v,raf=0,n0=0,pvW=0;
+  const clamp=v=>Math.min(FC.mx,Math.max(FC.mn,Math.round(v)));
+  const save=()=>{LS('tracks-fsize','c');LS('tracks-fcw',String(tgt))};
+  /* everything visual happens once per animation frame: one CSS variable on the grid, a few on the preview, no HTML rebuilt while sliding */
+  const frame=()=>{
+    raf=0;FC.v=tgt;fsz='c';fcApply();
+    if(+r.value!==FC.v)r.value=FC.v;
+    r.style.setProperty('--p',((FC.v-FC.mn)/(FC.mx-FC.mn)*100)+'%');val.textContent=FC.v+'px';
+    if(!pvW)pvW=row.parentNode.clientWidth||290;
+    const mw=Math.max(120,$('#main').clientWidth-40),gap=Math.min(30,Math.max(8,FC.v/9)),n=Math.max(1,Math.floor((mw+gap)/(FC.v+gap))),k=pvW/mw;
+    row.style.setProperty('--w',Math.min(100,((mw-(n-1)*gap)/n)*k).toFixed(2)+'px');
+    row.style.setProperty('--g',(gap*k).toFixed(2)+'px');
+    row.style.setProperty('--rr',(Math.min(18,Math.max(8,FC.v/10))*k).toFixed(2)+'px');
+    if(n!==n0){n0=n;row.innerHTML='<i></i>'.repeat(Math.min(n,48));lab.textContent=n+(n===1?' cover':' covers')+' per row'}
+  };
+  const flush=()=>{if(raf)cancelAnimationFrame(raf);frame()};
+  const set=v=>{tgt=clamp(v);if(!raf)raf=requestAnimationFrame(frame)};
+  const off=()=>{H.classList.remove('fcdrag');save()};
+  r.addEventListener('pointerdown',()=>{H.classList.add('fcdrag');addEventListener('pointerup',off,{once:true});addEventListener('pointercancel',off,{once:true})});
+  r.addEventListener('input',()=>set(+r.value));
+  r.addEventListener('change',save);
+  $('#fcrs').onclick=()=>{tgt=160;flush();save()};
+  const end=e=>{if(e.target.id==='ov'||e.target.closest('#fcok')){ov.removeEventListener('click',end);if(raf){cancelAnimationFrame(raf);frame()}off();setTimeout(()=>{if(e.target.closest&&e.target.closest('#fcok'))closeOv();render()},0)}};
+  ov.addEventListener('click',end);
+  frame();
+}
 let _rsTok=0,_rsPend=null,sqT=0;
 /* finish a chunked song list right now (drag-select needs every row in the page) */
 function flushRows(){if(_rsPend){const f=_rsPend;_rsPend=null;f()}}
@@ -3456,7 +3659,7 @@ function renderSongs(m){
   const step=()=>{if(tok!==_rsTok)return;const j=Math.min(N,i+160);m.insertAdjacentHTML('beforeend',l.slice(i,j).map((s,k)=>mk(s,i+k)).join(''));i=j;if(i<N)tm=setTimeout(step,12);else _rsPend=null};
   _rsPend=done;tm=setTimeout(step,0);
 }
-const szBar=(n)=>`<div class="abar fbr szr">${n>1?`<button class="ab" data-act="reorder" aria-label="Reorder" title="Reorder">${ic('reorder',21)}</button>`:''}${fszBtns()}</div>`;
+const szBar=(n)=>`<div class="abar fbr szr">${gBtn(n)}${n>1?`<button class="ab" data-act="reorder" aria-label="Reorder" title="Reorder">${ic('reorder',21)}</button>`:''}${fszBtns()}</div>`;
 var fsz='m';try{fsz=localStorage.getItem('tracks-fsize')||'m'}catch(e){}
 function renderAlbums(m){
   const inF=view.folder?folders.find(f=>f.id===view.folder):null;
@@ -3465,9 +3668,9 @@ function renderAlbums(m){
   const cnt=new Map();for(const x of songs)if(x.album)cnt.set(x.album,(cnt.get(x.album)||0)+1);
   let h='';
   if(!inF)$('#fb').innerHTML=szBar(list.length);
-  if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+`<button class="ab" data-act="reorder" aria-label="Reorder albums" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="folderedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
-  h+=`<div class="grid ${({s:'g3',l:'g1'}[fsz]||'')}">`+(inF?'':folders.map(foldCard).join(''))+
-    list.map(a=>{const n=cnt.get(a.id)||0;return `<div class="acard"><button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${(a.artist||albFeat(a).length)?esc((a.artist||'')+(albFeat(a).length?(a.artist?' ':'')+'feat. '+albFeat(a).join(', '):''))+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
+  if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+gBtn(list.length)+`<button class="ab" data-act="reorder" aria-label="Reorder albums" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="folderedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
+  h+=gridOpen()+(inF?'':folders.map(foldCard).join(''))+
+    list.map(a=>{const n=cnt.get(a.id)||0;return `<div class="acard${gMode&&gSet.has(a.id)?' gon':''}" data-gid="${a.id}">${gMode?`<span class="gck">${gSet.has(a.id)?ic('check',15):''}</span>`:''}<button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${(a.artist||albFeat(a).length)?esc((a.artist||'')+(albFeat(a).length?(a.artist?' ':'')+'feat. '+albFeat(a).join(', '):''))+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
   if(!list.length&&(inF||!folders.length))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create an album here.':'No albums yet.<br>Tap + to create an album or a folder.'}</div>`;
   m.innerHTML=h;
 }
@@ -3494,7 +3697,7 @@ function render(){
   if(view.pf&&!pfolders.find(f=>f.id===view.pf))view.pf=null;
   const PT=view.tab==='playlists',depth=PT?(view.pl?2:view.pf?1:0):(view.album?2:(view.folder||view.artist)?1:0),key=view.tab+':'+(PT?(view.pl||view.pf||''):(view.album||view.folder||view.artist||'')),navd=key!==lastKey;
   let dir=depth>lastDepth?1:depth<lastDepth?-1:0;if(view.tab!==lastTab)dir=TABS.indexOf(view.tab)>TABS.indexOf(lastTab)?1:-1;else if(dir===0)dir=view.tab==='songs'?1:-1;
-  if(navd&&selMode){selMode=false;selSet.clear()}$('#t1').classList.toggle('on',view.tab==='albums');$('#t2').classList.toggle('on',view.tab==='songs');$('#t3').classList.toggle('on',PT);
+  if(navd&&selMode){selMode=false;selSet.clear()}if(gMode&&(navd||!gOk()))gOff();$('#app').classList.toggle('gmode',gMode);$('#t1').classList.toggle('on',view.tab==='albums');$('#t2').classList.toggle('on',view.tab==='songs');$('#t3').classList.toggle('on',PT);
   $('#tb').classList.toggle('show',view.tab==='songs');
   $('#app').classList.toggle('selmode',selMode&&canSel());{const rm=$('#selrm');if(rm)rm.style.display=(view.tab==='albums'&&view.album)||(view.tab==='playlists'&&view.pl)?'':'none'}$('#selbtn').classList.toggle('on',selMode);
   $('#app').classList.toggle('inalb',!!(view.album&&view.tab==='albums'));
@@ -3557,6 +3760,7 @@ function renderFull(){
   syncCtl();updateBg(s);lyInit(s,fresh);
   if(changed)coverChange(ghost,trDir);
   fxKick();
+  try{fpApply()}catch(_){}/* free placement: the full player is rebuilt per song */
 }
 function syncFull(){
   const s=songById(cur);if(!s)return;
@@ -5451,9 +5655,9 @@ function renderPlaylists(m){
   const inF=view.pf?pfolders.find(f=>f.id===view.pf):null;
   const list=playlists.filter(p=>(p.folderId||null)===(inF?inF.id:null)).sort(byOrd);
   if(!inF)$('#fb').innerHTML=szBar(list.length);
-  if(inF)$('#fb').innerHTML=fbar('Playlists',inF.name,`${list.length} ${list.length===1?'playlist':'playlists'}`,fszBtns()+`<button class="ab" data-act="reorder" aria-label="Reorder playlists" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="pfedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
-  let h=`<div class="grid ${({s:'g3',l:'g1'}[fsz]||'')}">`+(inF||!LIKE.on?'':likedCard())+(inF||!rotOn?'':rotCard())+(inF?'':pfolders.map(pfoldCard).join(''))+
-    list.map(p=>{const n=plSongs(p.id).length;return `<div class="acard"><button class="card" data-act="openpl" data-id="${p.id}">${plCover(p)}<b>${esc(p.name)}</b><span>${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="plcard" data-id="${p.id}" aria-label="Playlist options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
+  if(inF)$('#fb').innerHTML=fbar('Playlists',inF.name,`${list.length} ${list.length===1?'playlist':'playlists'}`,fszBtns()+gBtn(list.length)+`<button class="ab" data-act="reorder" aria-label="Reorder playlists" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="pfedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
+  let h=gridOpen()+(inF||!LIKE.on?'':likedCard())+(inF||!rotOn?'':rotCard())+(inF?'':pfolders.map(pfoldCard).join(''))+
+    list.map(p=>{const n=plSongs(p.id).length;return `<div class="acard${gMode&&gSet.has(p.id)?' gon':''}" data-gid="${p.id}">${gMode?`<span class="gck">${gSet.has(p.id)?ic('check',15):''}</span>`:''}<button class="card" data-act="openpl" data-id="${p.id}">${plCover(p)}<b>${esc(p.name)}</b><span>${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="plcard" data-id="${p.id}" aria-label="Playlist options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
   if(!list.length&&(inF||!pfolders.length)&&!((rotOn||LIKE.on)&&!inF))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create a playlist here.':'No playlists yet.<br>Tap + to create a playlist or a folder.<br>Songs you add stay in their albums.'}</div>`;
   m.innerHTML=h;
 }
@@ -5749,11 +5953,11 @@ function amove(){
 function aplace(d){
   if(Date.now()-d.last<220)return;
   const t=document.elementFromPoint(d.x,d.y),w=t&&t.closest?t.closest('.acard'):null;
-  if(!w||w===d.wrap||w.parentNode!==d.wrap.parentNode)return;
+  const ws=d.ws||[d.wrap];if(!w||ws.includes(w)||w.parentNode!==d.wrap.parentNode)return;
   const par=d.wrap.parentNode,kids=[...par.children],i=kids.indexOf(d.wrap),j=kids.indexOf(w);
   const before=kids.map(k=>k.getBoundingClientRect());
-  par.insertBefore(d.wrap,j>i?w.nextSibling:w);
-  kids.forEach((k,n)=>{if(k===d.wrap)return;const r=k.getBoundingClientRect(),dx=before[n].left-r.left,dy=before[n].top-r.top;if(dx||dy)an(k,[{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{duration:240,easing:EASE})});
+  let ref=j>i?w.nextSibling:w;while(ref&&ws.includes(ref))ref=ref.nextSibling;ws.forEach(x=>par.insertBefore(x,ref));
+  kids.forEach((k,n)=>{if(ws.includes(k))return;const r=k.getBoundingClientRect(),dx=before[n].left-r.left,dy=before[n].top-r.top;if(dx||dy)an(k,[{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{duration:240,easing:EASE})});
   d.moved=true;d.last=Date.now();
 }
 function astart(){
@@ -5761,7 +5965,7 @@ function astart(){
   const el=ah.el,cv=el.querySelector('.cov'),r=cv.getBoundingClientRect();
   const g=document.createElement('div');g.className='ghost';g.style.width=r.width+'px';g.style.height=r.height+'px';g.innerHTML=cv.outerHTML;
   document.body.appendChild(g);
-  ad={el,g,id:el.dataset.id,w:r.width,h:r.height,x:ah.x,y:ah.y,ox:ah.x-r.left,oy:ah.y-r.top,hot:null,wrap:el.closest('.acard'),moved:false,last:0};ah=null;
+  ad={el,g,id:el.dataset.id,w:r.width,h:r.height,x:ah.x,y:ah.y,ox:ah.x-r.left,oy:ah.y-r.top,hot:null,wrap:el.closest('.acard'),moved:false,last:0};ah=null;agroup(ad);
   el.style.opacity='.3';
   if(navigator.vibrate)try{navigator.vibrate(30)}catch(e){}
   amove();
@@ -5770,7 +5974,7 @@ function astart(){
 function aend(){
   acancel();if(!ad)return;
   const d=ad;ad=null;clearInterval(d.iv);noClick=Date.now()+500;
-  d.el.style.opacity='';if(d.hot)d.hot.classList.remove('hot');
+  d.el.style.opacity='';(d.ws||[]).forEach(w=>w.style.opacity='');if(d.hot)d.hot.classList.remove('hot');
   const PP=view.tab==='playlists',a=(PP?playlists:albums).find(x=>x.id===d.id);
   if(!d.hot&&d.moved&&d.wrap.parentNode){
     const items=PP?playlists:albums;
@@ -5781,7 +5985,7 @@ function aend(){
     const fid=d.hot.classList.contains('fcard')?d.hot.dataset.fid:null,tr=d.hot.getBoundingClientRect();
     const k=an(d.g,[{transform:d.g.style.transform,opacity:.95},{transform:`translate3d(${tr.left+tr.width/2-d.w/2}px,${tr.top+tr.height/2-d.h/2}px,0) scale(.2)`,opacity:0}],{duration:260,easing:EASE,fill:'forwards'});
     setTimeout(()=>d.g.remove(),k?270:0);
-    a.folderId=fid;put(PP?'playlists':'albums',a);
+    for(const id of d.ids||[d.id]){const o=(PP?playlists:albums).find(x=>x.id===id);if(o&&!o.sys){o.folderId=fid;put(PP?'playlists':'albums',o)}}if(gMode&&d.ids&&d.ids.length>1)gOff();
     toast(fid?'Moved to '+(PP?pfolders:folders).find(f=>f.id===fid).name:'Moved out of the folder');
     render();
     if(fid)an(document.querySelector('.fcard[data-fid="'+fid+'"]'),[{transform:'scale(1.07)'},{transform:'none'}],{duration:340,easing:'cubic-bezier(.2,.9,.3,1.35)'});
@@ -5798,7 +6002,7 @@ async function delFolder(f){
 $('#main').addEventListener('pointerdown',e=>{
   if(!((view.tab==='albums'&&!view.album)||(view.tab==='playlists'&&!view.pl)))return;
   const el=e.target.closest('.card[data-act="open"],.card[data-act="openpl"]');if(!el||el.dataset.id===ROTID||el.dataset.id===LIKEID)return;
-  acancel();ah={el,x:e.clientX,y:e.clientY,t:setTimeout(astart,750)};
+  acancel();ah={el,x:e.clientX,y:e.clientY,t:setTimeout(astart,gMode?420:750)};
 });
 $('#main').addEventListener('contextmenu',e=>{if(e.target.closest('.card'))e.preventDefault()});
 window.addEventListener('pointermove',e=>{
@@ -5807,6 +6011,517 @@ window.addEventListener('pointermove',e=>{
 });
 window.addEventListener('pointerup',aend);
 window.addEventListener('pointercancel',aend);
+
+
+/* several selected albums / playlists: hold one to drag them all (onto a folder, Back, or between other items) */
+function agroup(d){
+  const ids=gMode&&gSet.has(d.id)?[...gSet]:[d.id];
+  d.ws=[...document.querySelectorAll('#main .acard[data-gid]')].filter(w=>ids.includes(w.dataset.gid));
+  if(!d.ws.includes(d.wrap))d.ws=[d.wrap];
+  d.ids=d.ws.map(w=>w.dataset.gid);d.ws.forEach(w=>w.style.opacity='.3');
+  if(d.ws.length>1){const b=document.createElement('b');b.className='gbadge';b.textContent=d.ws.length;d.g.appendChild(b)}
+}
+/* position of the selection: start, end, or one by one */
+async function gPos(){
+  const P=view.tab==='playlists',items=P?playlists:albums,st=P?'playlists':'albums',fid=(P?view.pf:view.folder)||null;
+  const ids=[...gSet].filter(id=>items.some(y=>y.id===id&&!y.sys));if(!ids.length)return false;
+  const r=await choose('Position of '+ids.length+(ids.length===1?' item':' items'),[{label:'Move to start',value:'s',ic:'up'},{label:'Move to end',value:'e',ic:'down'},{label:'Reorder one by one',value:'r',ic:'reorder'}]);
+  if(!r)return false;
+  if(r==='r'){gOff();reorderSheet(P);return false}
+  const list=items.filter(x=>(x.folderId||null)===fid&&!x.sys).sort(byOrd),mv=list.filter(x=>ids.includes(x.id)),rest=list.filter(x=>!ids.includes(x.id)),out=r==='s'?mv.concat(rest):rest.concat(mv);
+  for(let i=0;i<out.length;i++){out[i].ord=i;await put(st,out[i])}
+  toast('Order saved');return true;
+}
+
+/* ===== free placement v2: drag, resize, rotate, hide and layer icons, tabs and player controls anywhere (main screen, mini player, side player, full player).
+   Guides snap to edges and centres (Alt = no snap). Undo / redo, arrow-key nudging, an item list and a collapsible panel make it easy to use.
+   Safe by design: saved data is validated on load, keys of the full player are stable, essential buttons can never be hidden or lost off screen,
+   and nothing runs while no placement exists. Escape hatch: open the app with ?fp=reset to clear every placement. ===== */
+ICON.undo='M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z';
+ICON.redo='M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z';
+const FP={on:false,p:{},b:{},sn:true};
+const FP_LIM={x:[-4000,4000],y:[-4000,4000],s:[20,400],r:[-360,360],w:[20,100],h:[20,100],z:[-10,30]};
+/* anything read from storage, a preset or an undo step goes through here: wrong types, NaN and absurd values are dropped or clamped */
+function fpSanitize(j){
+  const o={on:false,p:{},b:{},sn:true};
+  if(!j||typeof j!=='object')return o;
+  o.on=!!j.on;o.sn=j.sn!==false;
+  if(j.p&&typeof j.p==='object'){
+    for(const k of Object.keys(j.p).slice(0,500)){
+      const q=j.p[k];if(!q||typeof q!=='object'||k.length>120)continue;
+      const c={};
+      for(const f of ['x','y','s','r','w','h','z']){if(q[f]===undefined||q[f]===null)continue;const v=+q[f];if(isFinite(v))c[f]=Math.round(Math.max(FP_LIM[f][0],Math.min(FP_LIM[f][1],v)))}
+      if(q.ng)c.ng=true;if(q.hd)c.hd=true;
+      o.p[k]=c;
+    }
+  }
+  if(j.b&&typeof j.b==='object'){
+    const B=j.b,n=(v,a,b)=>{v=+v;return isFinite(v)&&v?Math.round(Math.max(a,Math.min(b,v))):null};
+    const tw=n(B.tw,30,100),th=n(B.th,40,400),dw=n(B.dw,54,200),dh=n(B.dh,50,150);
+    if(tw!==null)o.b.tw=tw;if(th!==null)o.b.th=th;if(dw!==null)o.b.dw=dw;if(dh!==null)o.b.dh=dh;
+    if(B.ta==='r'||B.ta==='l')o.b.ta=B.ta;
+    const vw=n(B.vw,40,900),vh=n(B.vh,40,2400);if(vw!==null)o.b.vw=vw;if(vh!==null)o.b.vh=vh;
+    const tvw=n(B.tvw,60,4000),tvh=n(B.tvh,30,1200);if(tvw!==null)o.b.tvw=tvw;if(tvh!==null)o.b.tvh=tvh;/* top bar free size in px *//* navigation bar free size in px */
+    if(B.tf===0||B.tf===false)o.b.tf=0;if(B.df===0||B.df===false)o.b.df=0;/* 0 = icons stay put when the bar is moved */
+  }
+  return o;
+}
+if(/[?&]fp=reset\b/.test(location.search)){LS('tracks-fp',null);LS('tracks-fpbar',null)}
+try{Object.assign(FP,fpSanitize(JSON.parse(LS('tracks-fp')||'null')))}catch(e){}
+/* saving is debounced (sliders fire many events) and always flushed when the page is hidden or closed */
+let fpSv=0;
+const fpSaveNow=()=>{if(fpSv){clearTimeout(fpSv);fpSv=0}LS('tracks-fp',JSON.stringify(FP))};
+const fpSave=()=>{if(fpOn()){fpCounter();fpHQ()}/* resize handles follow the bars after every change */if(!fpSv)fpSv=setTimeout(fpSaveNow,180)};
+addEventListener('pagehide',()=>{if(fpSv)fpSaveNow()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&fpSv)fpSaveNow()});
+
+const FPS={hdr:'#plus,#cb,#qk,#gear,#top .tab,#dock .tab,#tb>*,#fb .ab,#fb .back,#fb .fsz2,#fb .fsz2 button,#mini,#main,#np,#npb,#top,#dock,#logo',mini:'#mini :is(.m1,.m2)>:is(.ib,.mcv,.t),#mini .m2,#mini .m3,#mini .mvs,#mini #mvl',np:'#npb :is(.npa,.nctl,.nr)>.ib,#npb .nc,#npb .nt,#npb .nctl,#npb .nsk,#npb .nvg,#npb #nbvl',pan:'#np .nph,#np #npc,#np .npi,#np .npn,#np .npl,#np .npi>.ib',
+  full:'#fc .ftop,#fc .ftop>.ib,#fc .tbm,#fc .fcv,#fc .fti,#fc .fsk,#fc .ctl,#fc .ctl>.ib,#fc .fbot,#fc .fg,#fc .fg>.ib,#fc .fvol,#fc .fr,#fc .fr>.ib'};
+const FPG={hdr:'Screen and bars',mini:'Mini player',np:'Player bar',pan:'Side panel',full:'Full player'};
+const fpBox=s=>s==='hdr'?$('#app'):$(s==='mini'?'#mini':s==='pan'?'#np':s==='full'?'#fc':'#npb');
+const fpOn=()=>document.documentElement.classList.contains('fpe');
+let FPM='main';/* what the editor is working on: the main screen or the full player */
+const fpFull=()=>FPM==='full';
+/* buttons that must always stay reachable: they cannot be hidden, and if they end up off screen their placement is reset */
+const FPK_ESS='#gear,#fp,[data-act=toggle],[data-act=closefull]';
+const fpKeep=el=>/^(main|top|dock|np|npb|mini|logo)$/.test(el.id)||el.matches(FPK_ESS)||!!el.querySelector(FPK_ESS);
+/* keys of the older scopes are kept exactly as they were so saved layouts still match; the full player gets clean ones */
+function fpKey(s,el){
+  if(s==='full')return 'full:'+(el.id||(el.dataset.act?el.dataset.act+(el.dataset.s||''):'')||el.className.split(' ')[0]||'item');
+  return s+':'+(el.id||el.dataset.act+(el.dataset.s||'')||el.dataset.npa||el.className.split(' ')[0]);
+}
+function fpItems(){const o=[];for(const s in FPS){const seen={};document.querySelectorAll(FPS[s]).forEach(el=>{let k=fpKey(s,el),n=seen[k]=(seen[k]||0)+1;if(n>1)k+='#'+n;el.dataset.fpk=k;el.dataset.fps=s;o.push(el)})}return o}
+let FPSEL=null;
+const FPD={x:0,y:0,s:100,r:0,w:100,h:100};/* slider defaults: what each reset button returns to */
+/* how far the selected item may move so it stays inside its panel; measured fresh, so it follows size and rotation */
+function fpRange(el,p){
+  const bx=fpBox(el.dataset.fps),rr=el.getBoundingClientRect(),cx=p.x||0,cy=p.y||0;let a=[-400,400,-400,400];
+  if(bx){const q=bx.getBoundingClientRect();if(q.width)a=[q.left-(rr.left-cx),q.right-(rr.right-cx),q.top-(rr.top-cy),q.bottom-(rr.bottom-cy)].map(Math.round)}
+  let mnx=Math.min(a[0],cx),mxx=Math.max(a[1],cx),mny=Math.min(a[2],cy),mxy=Math.max(a[3],cy);
+  if(mxx-mnx<80){mnx=Math.min(mnx,cx-40);mxx=Math.max(mxx,cx+40)}/* a bar that fills its panel still gets a usable slider */
+  if(mxy-mny<80){mny=Math.min(mny,cy-40);mxy=Math.max(mxy,cy+40)}
+  return {x:[mnx,mxx],y:[mny,mxy]};
+}
+/* refresh every slider in the editor from the stored values (ranges, thumbs, labels, reset buttons) */
+function fpSync(skip){
+  const el=FPSEL,b=$('#fpbar');if(!el||!b)return;
+  const p=FP.p[el.dataset.fpk]||{},R=fpRange(el,p);
+  b.querySelectorAll('[data-fpf]').forEach(i=>{
+    const f=i.dataset.fpf;if(f===skip)return;
+    if(R[f]){i.min=R[f][0];i.max=R[f][1]}
+    const v=p[f]||FPD[f],mn=+i.min,mx=+i.max;i.value=v;
+    i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');
+    const lb=i.parentNode.querySelector('b');if(lb)lb.textContent=v+(i.dataset.u||'%');
+    i.parentNode.classList.toggle('dflt',v===FPD[f]);
+  });
+}
+/* drop an item's saved entry once nothing differs from the default */
+function fpClean(k){const p=FP.p[k];if(p&&!p.x&&!p.y&&!p.r&&(!p.s||p.s===100)&&(!p.w||p.w===100)&&(!p.h||p.h===100)&&!p.z&&!p.ng&&!p.hd)delete FP.p[k]}
+const fpMk=k=>FP.p[k]=Object.assign({x:0,y:0},FP.p[k]);/* the entry of an item, created when needed */
+
+/* ---- undo / redo: a step is the whole placement before a change; only real changes are recorded ---- */
+const fpH={u:[],r:[]};
+const fpSnap=()=>JSON.stringify({p:FP.p,b:FP.b,sn:FP.sn});
+function fpBtn(){const b=$('#fpbar');if(!b)return;const u=b.querySelector('[data-fp=undo]'),r=b.querySelector('[data-fp=redo]');if(u)u.disabled=!fpH.u.length;if(r)r.disabled=!fpH.r.length}
+function fpCommit(pre){if(pre==null)return;if(pre===fpSnap())return;fpH.u.push(pre);if(fpH.u.length>60)fpH.u.shift();fpH.r=[];fpBtn()}
+function fpRestore(s){
+  let j=null;try{j=JSON.parse(s)}catch(e){return}
+  Object.assign(FP,fpSanitize(Object.assign({},j,{on:true})));
+  try{dockSync()}catch(_){}
+  fpApply(true);fpSave();fpHandles();
+  if(FPSEL&&FPSEL.isConnected)fpSel(FPSEL);else fpSel(null);
+  fpRot();
+}
+function fpUndo(redo){
+  const from=redo?fpH.r:fpH.u,to=redo?fpH.u:fpH.r;if(!from.length)return;
+  to.push(fpSnap());fpRestore(from.pop());fpBtn();
+}
+
+function fpOne(el,p){
+  const t=p?(p.x||0)+'px '+(p.y||0)+'px':'',sc=p&&p.s&&p.s!==100&&el.id!=='main'?String(p.s/100):'';
+  if(el.style.translate!==t)el.style.translate=t;if(el.style.scale!==sc)el.style.scale=sc;const rt=p&&p.r&&el.id!=='main'?p.r+'deg':'';if(el.style.rotate!==rt)el.style.rotate=rt;
+  if(p&&p.z){el.style.zIndex=String(p.z);if(!el.dataset.fpz&&getComputedStyle(el).position==='static'){el.style.position='relative';el.dataset.fpz='1'}}
+  else if(el.style.zIndex){el.style.zIndex='';if(el.dataset.fpz){el.style.position='';delete el.dataset.fpz}}
+  el.classList.toggle('fphd',!!(p&&p.hd&&!fpKeep(el)));/* hidden items stay faintly visible while editing so they can be brought back */
+  if(el.id==='main'){const w=p&&p.w&&p.w<100,h=p&&p.h&&p.h<100;el.style.width=w?p.w+'%':'';el.style.height=h?p.h+'%':'';el.style.flex=h?'none':'';el.style.alignSelf=w?'center':''}
+}
+function fpDock(){const R=document.documentElement,d=getDock(),B=FP.on&&FP.b||{};if((d==='left'||d==='right')&&B.dw)R.style.setProperty('--dw',B.dw+'px');else if(d==='bottom'&&B.dh)R.style.setProperty('--dbh',B.dh+'px')}
+function fpBars(){const hd=document.querySelector('#top header'),B=FP.on&&FP.b||{};if(hd&&!B.tvw){const w=B.tw&&B.tw<100?B.tw+'%':'',l=w?(B.ta==='r'?'auto':'0'):'',r=w?(B.ta==='r'?'0':'auto'):'',h=B.th?B.th+'px':'';hd.style.zoom='';if(hd.style.width!==w)hd.style.width=w;if(hd.style.height!==h){hd.style.height=h;hd.style.boxSizing=h?'border-box':'';hd.style.minHeight=h?'0':''}hd.style.marginLeft=l;hd.style.marginRight=r}fpDock();fpDockSize();fpTopSize();fpCounter()}
+/* The top bar is sized freely too (tvw / tvh): everything inside keeps its natural width, and the queue button keeps its distance from the bar's right edge */
+function fpTopSize(){
+  const tp=$('#top'),B=FP.on&&FP.b||{},R=document.documentElement;if(!tp)return;
+  const kids=[...tp.children].filter(c=>c.id!=='qk');
+  const clr=()=>{kids.forEach(c=>{if(c.dataset.fpvw){c.style.width='';c.style.flex='';c.style.boxSizing='';delete c.dataset.fpvw}})};
+  if(!B.tvw&&!B.tvh){if(tp.dataset.fpvs){tp.style.width='';tp.style.height='';tp.style.boxSizing='';clr();delete tp.dataset.fpvs}R.dataset.fptv='off';R.style.setProperty('--fptdw','0px');return}
+  tp.style.width='';tp.style.height='';clr();
+  const nw=tp.offsetWidth,nat=kids.map(c=>c.offsetWidth);
+  if(B.tvw&&nw){kids.forEach((c,i)=>{if(nat[i]){c.style.boxSizing='border-box';c.style.width=nat[i]+'px';c.style.flex='none';c.dataset.fpvw='1'}})}
+  if(B.tvw)tp.style.width=B.tvw+'px';if(B.tvh)tp.style.height=B.tvh+'px';tp.style.boxSizing='border-box';tp.dataset.fpvs='1';
+  R.dataset.fptv=B.tvw?'on':'off';R.style.setProperty('--fptdw',B.tvw&&nw?(nw-B.tvw)+'px':'0px');
+}
+/* The navigation bar can be sized freely in both directions (vw / vh). Its buttons keep their normal size: only the bar changes. */
+function fpDockSize(){
+  const dk=$('#dock'),tb=dk&&dk.querySelector(':scope>.tabs'),B=FP.on&&FP.b||{};
+  if(!dk||!tb)return;
+  if(!B.vw&&!B.vh){if(dk.dataset.fpvs){dk.style.width='';dk.style.height='';dk.style.boxSizing='';tb.style.width='';tb.style.height='';tb.style.flex='';delete dk.dataset.fpvs}return}
+  dk.style.width='';dk.style.height='';tb.style.width='';tb.style.height='';tb.style.flex='';
+  const nw=tb.offsetWidth,nh=tb.offsetHeight;
+  if(nw&&nh){tb.style.flex='none';tb.style.width=nw+'px';tb.style.height=nh+'px'}
+  if(B.vw)dk.style.width=B.vw+'px';if(B.vh)dk.style.height=B.vh+'px';dk.style.boxSizing='border-box';dk.dataset.fpvs='1';
+}
+/* Option per bar: when icons do not follow, the bar moves alone and its contents are shifted back by the same amount */
+function fpCounter(){
+  const R=document.documentElement,B=FP.on&&FP.b||{};
+  for(const [id,f] of [['top','tf'],['dock','df']]){
+    const p=FP.on&&FP.p['hdr:'+id]||{},off=B[f]===0;
+    R.dataset['fp'+f]=off?'off':'on';
+    R.style.setProperty('--fp'+id+'x',off?-(p.x||0)+'px':'0px');R.style.setProperty('--fp'+id+'y',off?-(p.y||0)+'px':'0px');
+  }
+}
+function fpCounterLive(k,x,y){const id=k==='hdr:top'?'top':'dock',f=id==='top'?'tf':'df',R=document.documentElement;if((FP.b||{})[f]===0){R.style.setProperty('--fp'+id+'x',-x+'px');R.style.setProperty('--fp'+id+'y',-y+'px')}}
+let fphQ=0;const fpHQ=()=>{if(!fphQ)fphQ=requestAnimationFrame(()=>{fphQ=0;fpHandles();fpRot()})};
+function fpHandles(){
+  document.querySelectorAll('.fph,.fpr').forEach(x=>x.remove());if(!fpOn()||fpFull())return;
+  const hd=document.querySelector('#top header'),dk=$('#dock'),d=getDock(),out=[];
+  const add=(bar,el,dirs,ox,oy)=>{
+    if(!el)return;const q=el.getBoundingClientRect();if(!q.width)return;
+    const r={left:q.left+(ox||0),top:q.top+(oy||0),width:q.width,height:q.height};r.right=r.left+r.width;r.bottom=r.top+r.height;
+    out.push(`<i class="fpr" style="left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px"></i>`);
+    const X={w:r.left,'':r.left+r.width/2,e:r.right},Y={n:r.top,'':r.top+r.height/2,s:r.bottom};
+    dirs.forEach(k=>{const y=k.includes('n')?'n':k.includes('s')?'s':'',x=k.includes('w')?'w':k.includes('e')?'e':'',px=Math.max(5,Math.min(innerWidth-5,X[x])),py=Math.max(5,Math.min(innerHeight-5,Y[y]));
+      out.push(`<i class="fph" data-h="${bar}" data-d="${k}" style="left:${Math.round(px-5)}px;top:${Math.round(py-5)}px"></i>`)});
+  };
+  add('top',$('#top'),['nw','n','ne','w','e','sw','s','se']);
+  if(dk&&d!=='top')add('dock',dk,['nw','n','ne','w','e','sw','s','se']);
+  document.body.insertAdjacentHTML('beforeend',out.join(''));
+}
+/* one gesture at a time: a second finger or a stray pointer never starts a second drag */
+let fpBusy=false;
+const fpBusyOn=()=>{fpBusy=true;document.documentElement.classList.add('fpd')};/* the panel fades while dragging so nothing is hidden behind it */
+const fpBusyOff=()=>{fpBusy=false;document.documentElement.classList.remove('fpd')};
+/* resize like an image in Paint: corner and edge handles around the bar (top bar: width and height; side/bottom bar: thickness) */
+document.addEventListener('pointerdown',e=>{
+  const h=e.target.closest&&e.target.closest('.fph');if(!h||!fpOn())return;
+  e.preventDefault();e.stopPropagation();if(fpBusy||e.button>0||e.isPrimary===false)return;
+  const bar=h.dataset.h,k=h.dataset.d,sgx=k.includes('e')?1:k.includes('w')?-1:0,sgy=k.includes('s')?1:k.includes('n')?-1:0,B=FP.b=FP.b||{},pre=fpSnap();
+  const sx=e.clientX,sy=e.clientY,top=bar==='top',el=top?$('#top'):$('#dock');if(!el)return;
+  const kx=top?'tvw':'vw',ky=top?'tvh':'vh',pk=top?'hdr:top':'hdr:dock',LM=top?[60,4000,30,1200]:[40,900,40,2400];
+  const r=el.getBoundingClientRect(),cl=(v,a,b)=>Math.max(a,Math.min(b,v)),pid=e.pointerId;
+  fpBusyOn();
+  const mv=ev=>{
+    if(ev.pointerId!==pid)return;
+    const dx=ev.clientX-sx,dy=ev.clientY-sy;
+    /* free resize in x and y: the edge opposite the handle stays where it is, the icons and buttons inside keep their size and place */
+    if(sgx)B[kx]=Math.round(cl(r.width+sgx*dx,LM[0],LM[1]));
+    if(sgy)B[ky]=Math.round(cl(r.height+sgy*dy,LM[2],LM[3]));
+    if(!B[kx])B[kx]=Math.round(r.width);if(!B[ky])B[ky]=Math.round(r.height);
+    fpBars();
+    const q=el.getBoundingClientRect(),P=fpMk(pk);
+    if(sgx>0)P.x=Math.round((P.x||0)+r.left-q.left);else if(sgx<0)P.x=Math.round((P.x||0)+r.right-q.right);
+    if(sgy>0)P.y=Math.round((P.y||0)+r.top-q.top);else if(sgy<0)P.y=Math.round((P.y||0)+r.bottom-q.bottom);
+    fpOne(el,P);fpCounter();
+    fpApply(true);fpHQ();
+  };
+  const up=ev=>{if(ev&&ev.pointerId!==pid)return;removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);fpBusyOff();FP.on=true;fpCommit(pre);fpSave();fpHandles()};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up);
+},true);
+
+/* ---- applying: does nothing at all while there is no placement and the editor is closed ---- */
+let fpDirty=false;
+const fpHas=()=>FP.on&&(Object.keys(FP.p).length>0||Object.keys(FP.b||{}).length>0);
+function fpApply(force){
+  const has=fpHas(),ed=fpOn();
+  if(!has&&!ed&&!fpDirty&&!force)return;
+  fpBars();
+  const items=fpItems();
+  for(const el of items)fpOne(el,FP.on&&FP.p[el.dataset.fpk]);
+  fpDirty=has||ed;
+  document.documentElement.dataset.fpv=(ed||(FP.on&&Object.keys(FP.p).some(k=>k.startsWith('mini:'))))?'on':'off';
+  /* the full player is rebuilt on every song change: keep the selection on the same item */
+  if(FPSEL&&!FPSEL.isConnected){const k=FPSEL.dataset.fpk,n=items.find(x=>x.dataset.fpk===k);if(n){FPSEL=n;n.classList.add('fpsel');fpRot()}else fpSel(null)}
+}
+const fpName=el=>{
+  if(el.id==='logo')return 'Logo';if(el.id==='top')return 'Top bar';if(el.id==='dock')return 'Navigation bar';if(el.id==='main')return 'Content area';if(el.id==='np')return 'Side panel';if(el.id==='npb')return 'Player bar';if(el.id==='mini')return 'Mini player';
+  if(el.classList.contains('mvs'))return 'Volume';
+  if(el.dataset.fps==='full'){const c=el.classList;if(c.contains('ftop'))return 'Top row';if(c.contains('tbm'))return 'Options menu';if(c.contains('fcv'))return 'Cover';if(c.contains('fti'))return 'Title and artist';if(c.contains('fsk'))return 'Seek bar';if(c.contains('ctl'))return 'Controls row';if(c.contains('fbot'))return 'Bottom row';if(c.contains('fg'))return 'Like and add buttons';if(c.contains('fvol'))return 'Volume';if(c.contains('fr'))return 'Queue and edit buttons'}
+  return el.getAttribute('aria-label')||el.title||el.id||el.className.split(' ')[0]||'Item';
+};
+function fpSel(el){
+  setTimeout(fpRot,0);FPSEL=el;document.querySelectorAll('.fpsel').forEach(x=>x.classList.remove('fpsel'));const b=$('#fpsel');if(!b)return;
+  const it=$('#fpit');if(it)it.value=el?el.dataset.fpk:'';
+  if(!el){b.innerHTML='<small>Tap an item on the screen, or pick one from the list.</small>';return}
+  el.classList.add('fpsel');
+  const p=FP.p[el.dataset.fpk]||{},main=el.id==='main',keep=fpKeep(el),sl=(f,l,v,mn,mx,u='%')=>`<div class="fop${v===FPD[f]?' dflt':''}"><span>${l}</span><input type="range" class="rng" data-fpf="${f}" data-u="${u}" min="${mn}" max="${mx}" value="${v}" style="--p:${(v-mn)/(mx-mn)*100}%" aria-label="${l}"><b>${v}${u}</b><button type="button" class="rsb" data-fpr="${f}" aria-label="Reset ${l}" title="Reset ${l}">${ic('rst',16)}</button></div>`;
+  const pos=()=>{const R=fpRange(el,p);return sl('x','X',p.x||0,R.x[0],R.x[1],'px')+sl('y','Y',p.y||0,R.y[0],R.y[1],'px')};
+  b.innerHTML=`<b>${esc(fpName(el))}</b><div class="bgs">${pos()}${main?sl('w','Width',p.w||100,40,100)+sl('h','Height',p.h||100,40,100):sl('s','Size',p.s||100,20,300)+sl('r','Rotate',p.r||0,-180,180,'\u00b0')}</div>`+`<div class="icrt"><b>Layer ${p.z||0}</b><span class="icrm"><button type="button" class="ib" data-fpz="-1" aria-label="Send back one layer" title="Send back (behind panels)">${ic('down',20)}</button><button type="button" class="ib" data-fpz="1" aria-label="Bring forward one layer" title="Bring forward (above panels)">${ic('up',20)}</button></span></div>`+(main?'':`<button type="button" class="srow" data-fpg="1" role="switch" aria-checked="${!p.ng}"><span class="st"><b>Alignment guides</b></span><span class="stog"></span></button>`)+(keep?'':`<button type="button" class="srow" data-fph="1" role="switch" aria-checked="${!!p.hd}"><span class="st"><b>Hide this item</b></span><span class="stog"></span></button>`)+(el.id==='top'||el.id==='dock'?`<button type="button" class="srow" data-fpb="${el.id==='top'?'tf':'df'}" role="switch" aria-checked="${(FP.b||{})[el.id==='top'?'tf':'df']!==0}"><span class="st"><b>Move icons with the bar</b></span><span class="stog"></span></button>`:'')+'<button type="button" class="pill" data-fp="item">Reset this item</button>';
+}
+/* sliders: one undo step per drag of a slider */
+let fpSlPre=null;
+document.addEventListener('input',e=>{
+  const i=e.target;if(!FPSEL||!i.dataset||!i.dataset.fpf||!i.closest('#fpbar'))return;
+  if(fpSlPre===null)fpSlPre=fpSnap();
+  const k=FPSEL.dataset.fpk,p=fpMk(k),v=+i.value,mn=+i.min,mx=+i.max;p[i.dataset.fpf]=v;
+  i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=v+(i.dataset.u||'%');i.parentNode.classList.toggle('dflt',v===FPD[i.dataset.fpf]);fpOne(FPSEL,p);fpSave();fpSync(i.dataset.fpf);fpRot();
+});
+document.addEventListener('change',e=>{const i=e.target;if(i&&i.dataset&&i.dataset.fpf&&i.closest&&i.closest('#fpbar')){const k=FPSEL&&FPSEL.dataset.fpk;if(k)fpClean(k);fpCommit(fpSlPre);fpSlPre=null;fpSave()}});
+function fpGuides(x,y,b){
+  let gx=$('#fpgx'),gy=$('#fpgy');
+  if(!b){if(gx)gx.remove();if(gy)gy.remove();return}
+  if(!gx){document.body.insertAdjacentHTML('beforeend','<i id="fpgx" class="fpg"></i><i id="fpgy" class="fpg"></i>');gx=$('#fpgx');gy=$('#fpgy')}
+  gx.style.cssText=x==null?'display:none':`left:${x}px;top:${b.top}px;height:${b.height}px;width:1px`;
+  gy.style.cssText=y==null?'display:none':`top:${y}px;left:${b.left}px;width:${b.width}px;height:1px`;
+}
+/* the item list: every visible item of the current screen, grouped, so tiny or overlapping items are always reachable */
+function fpList(){
+  const sel=$('#fpit');if(!sel)return;
+  const G={},cnt={};
+  for(const el of fpItems()){
+    if((el.dataset.fps==='full')!==fpFull())continue;
+    const r=el.getBoundingClientRect();if(!r.width||!r.height)continue;
+    let n=fpName(el);cnt[n]=(cnt[n]||0)+1;if(cnt[n]>1)n+=' '+cnt[n];
+    (G[el.dataset.fps]=G[el.dataset.fps]||[]).push([el.dataset.fpk,n]);
+  }
+  const html='<option value="">Choose an item\u2026</option>'+Object.keys(G).map(s=>`<optgroup label="${esc(FPG[s]||s)}">${G[s].map(a=>`<option value="${esc(a[0])}">${esc(a[1])}</option>`).join('')}</optgroup>`).join('');
+  if(sel.dataset.sig!==html){sel.dataset.sig=html;sel.innerHTML=html}
+  sel.value=FPSEL?FPSEL.dataset.fpk:'';
+}
+function fpPick(k){const el=fpItems().find(x=>x.dataset.fpk===k&&(x.dataset.fps==='full')===fpFull());if(el&&el.getBoundingClientRect().width)fpSel(el);else fpSel(null)}
+function fpStep(d){
+  const o=[...$('#fpit').options].map(x=>x.value).filter(Boolean);if(!o.length)return;
+  const i=FPSEL?o.indexOf(FPSEL.dataset.fpk):-1;fpPick(o[((i<0?(d>0?-1:0):i)+d+o.length)%o.length]);
+}
+/* quick buttons: the things that are awkward to tap */
+function fpModeUi(){
+  const b=$('#fpbar');if(!b)return;
+  b.querySelectorAll('[data-fpm]').forEach(c=>{const on=c.dataset.fpm===FPM;c.classList.toggle('on',on);c.setAttribute('aria-pressed',String(on))});
+  const q=$('#fpq');if(q)q.innerHTML=fpFull()?[['#fc .ftop','Top row'],['#fc .fcv','Cover'],['#fc .fti','Title'],['#fc .fsk','Seek bar'],['#fc .ctl','Controls'],['#fc .fbot','Bottom row']].map(a=>`<button type="button" class="chip" data-fpq="${a[0]}">${a[1]}</button>`).join(''):[['#logo','Logo'],['#top','Top bar'],['#dock','Nav bar'],['#main','Content']].map(a=>`<button type="button" class="chip" data-fpq="${a[0]}">${a[1]}</button>`).join('');
+  const t=b.querySelector('.fpt');if(t)t.innerHTML=fpFull()?'Arrange the full player: cover, title, seek bar and buttons.<br>Drag, or use the arrow keys (Shift = 10 px).':`Editing the ${npOn()?'Spotify bar':'mini player'}, tabs and icons.<br>Drag, or use the arrow keys (Shift = 10 px).`;
+}
+let fpFullBy=false;/* true when the editor opened the full player itself, so Done closes it again */
+function fpMode(m){
+  if(!fpOn()||m===FPM)return;
+  if(m==='full'){
+    if(!songById(cur)){toast('Play a song first to arrange the full player');return}
+    if(!$('#full').classList.contains('open')){try{openFull();fpFullBy=true}catch(e){return}}
+  }else if($('#full').classList.contains('open')){try{closeFull()}catch(e){}fpFullBy=false}
+  FPM=m;fpSel(null);fpModeUi();fpGuides(0,0,null);
+  document.querySelectorAll('.fph,.fpr').forEach(x=>x.remove());
+  setTimeout(()=>{if(!fpOn()||FPM!==m)return;fpItems();fpApply();fpHandles();fpList()},m==='full'?480:380);
+}
+function fpEdit(on){
+  const R=document.documentElement;
+  R.classList.toggle('fpe',on);const old=$('#fpbar');if(old)old.remove();
+  if(!on){
+    fpGuides(0,0,null);fpSel(null);document.querySelectorAll('.fph,.fpr,.fprot').forEach(x=>x.remove());R.classList.remove('fpd');fpBusy=false;
+    fpApply(true);fpSaveNow();
+    if(fpFullBy){fpFullBy=false;try{closeFull()}catch(_){}}
+    FPM='main';setTimeout(fpRescue,450);return;
+  }
+  FP.on=true;fpSaveNow();fpItems();FPM=$('#full').classList.contains('open')?'full':'main';fpH.u=[];fpH.r=[];fpFullBy=false;
+  fpApply(true);fpHandles();
+  const min=LS('tracks-fpmin')==='1';
+  document.body.insertAdjacentHTML('beforeend',`<div id="fpbar" role="toolbar" aria-label="Free placement editor" class="${min?'min':''}"><div id="fpgrip" title="Drag to move this panel"><i class="fpgi"></i><span>Free placement</span><button type="button" class="ib" data-fp="undo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled>${ic('undo',20)}</button><button type="button" class="ib" data-fp="redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled>${ic('redo',20)}</button><button type="button" class="ib" data-fp="min" aria-expanded="${!min}" aria-label="${min?'Expand panel':'Collapse panel'}" title="${min?'Expand panel':'Collapse panel to see the screen'}">${ic(min?'up':'down',20)}</button><button type="button" class="ib" data-fp="reset" aria-label="Reset all placement" title="Reset all placement">${ic('rst',20)}</button></div><div id="fpbody"><div id="fpmode" role="group" aria-label="What to arrange"><button type="button" class="chip" data-fpm="main">Main screen</button><button type="button" class="chip" data-fpm="full">Full player</button></div><div id="fpq"></div><div class="fpit"><select id="fpit" aria-label="Choose an item to edit"></select><button type="button" class="ib" data-fpn="-1" aria-label="Previous item" title="Previous item">${ic('up',20)}</button><button type="button" class="ib" data-fpn="1" aria-label="Next item" title="Next item">${ic('down',20)}</button></div><span class="fpt"></span><div id="fpsel"></div><button type="button" class="srow" data-fpsn="1" role="switch" aria-checked="${FP.sn!==false}"><span class="st"><b>Snap to guides</b></span><span class="stog"></span></button><div><button type="button" class="pill acc" data-fp="done">Done</button></div></div></div>`);
+  fpModeUi();fpSel(null);fpList();fpPlaceBar();
+}
+/* ---- picking and dragging items ---- */
+document.addEventListener('pointerdown',e=>{
+  if(!fpOn()||e.target.closest('#fpbar,.fprot,.fph'))return;
+  const L=[];for(const n of document.elementsFromPoint(e.clientX,e.clientY)){const it=n.closest&&n.closest('[data-fpk]');if(it&&(it.dataset.fps==='full')===fpFull()&&!L.includes(it))L.push(it)}
+  const was=FPSEL,el=L.includes(was)?was:L[0];if(!el)return;
+  e.preventDefault();e.stopPropagation();if(fpBusy||e.button>0||e.isPrimary===false)return;
+  const s=el.dataset.fps,k=el.dataset.fpk,c=Object.assign({x:0,y:0},FP.p[k]),r0=el.getBoundingClientRect(),boxEl=fpBox(s);if(!boxEl)return;
+  const bx=boxEl.getBoundingClientRect(),sx=e.clientX,sy=e.clientY,pre=fpSnap(),pid=e.pointerId,snapOn=FP.sn!==false&&!c.ng;
+  const xs=[bx.left,bx.left+bx.width/2,bx.right],ys=[bx.top,bx.top+bx.height/2,bx.bottom];
+  fpItems().forEach(o=>{if(o===el||o.dataset.fps!==s)return;const r=o.getBoundingClientRect();if(!r.width)return;xs.push(r.left,r.left+r.width/2,r.right);ys.push(r.top,r.top+r.height/2,r.bottom)});
+  let dx=0,dy=0,mvd=false;
+  const snap=(L,len,arr)=>{let best=7,off=0,g=null;for(const t of arr)for(const v of [L,L+len/2,L+len]){const d=t-v;if(Math.abs(d)<best){best=Math.abs(d);off=d;g=t}}return [off,g]};
+  const mv=ev=>{
+    if(ev.pointerId!==pid)return;
+    if(!mvd&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>4){mvd=true;fpBusyOn()}
+    if(!mvd)return;
+    dx=Math.min(bx.right-r0.right,Math.max(bx.left-r0.left,ev.clientX-sx));dy=Math.min(bx.bottom-r0.bottom,Math.max(bx.top-r0.top,ev.clientY-sy));
+    let gx=null,gy=null;
+    if(!ev.altKey&&snapOn){const a=snap(r0.left+dx,r0.width,xs),b=snap(r0.top+dy,r0.height,ys);if(a[1]!=null){dx+=a[0];gx=a[1]}if(b[1]!=null){dy+=b[0];gy=b[1]}}
+    el.style.translate=(c.x+dx)+'px '+(c.y+dy)+'px';fpGuides(gx,gy,bx);
+    if(s==='hdr'){if(k==='hdr:top'||k==='hdr:dock')fpCounterLive(k,c.x+dx,c.y+dy);fpHQ()}/* handles move with the bar while dragging */
+  };
+  const up=ev=>{
+    if(ev&&ev.pointerId!==pid)return;
+    removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);fpGuides(0,0,null);fpBusyOff();
+    if(mvd&&ev&&ev.type!=='pointercancel'){const p=fpMk(k);p.x=Math.round(c.x+dx);p.y=Math.round(c.y+dy);fpClean(k);fpOne(el,FP.p[k]);fpCommit(pre);fpSave()}else fpOne(el,FP.on&&FP.p[k]);
+    fpSel(!mvd&&was===el&&L.length>1?L[(L.indexOf(el)+1)%L.length]:el);
+  };
+  addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up);
+},true);
+/* ---- buttons of the editor ---- */
+function fpResetAll(){const pre=fpSnap();FP.p={};FP.b={};try{dockSync()}catch(_){}fpApply(true);fpCommit(pre);fpSave();fpSel(null);fpHandles();fpList();toast('Placement reset. Undo brings it back')}
+document.addEventListener('click',e=>{
+  if(!fpOn())return;const t=e.target;
+  if(!t.closest('#fpbar')){e.stopPropagation();e.preventDefault();return}/* nothing outside the editor can be triggered while arranging */
+  let b;
+  if(b=t.closest('[data-fp]')){
+    const a=b.dataset.fp;
+    if(a==='reset')fpResetAll();
+    else if(a==='undo')fpUndo(false);
+    else if(a==='redo')fpUndo(true);
+    else if(a==='item'){if(FPSEL){const pre=fpSnap();delete FP.p[FPSEL.dataset.fpk];if(FPSEL.id==='dock'){delete FP.b.vw;delete FP.b.vh;delete FP.b.df}if(FPSEL.id==='top'){delete FP.b.tw;delete FP.b.th;delete FP.b.ta;delete FP.b.tf;delete FP.b.tvw;delete FP.b.tvh}fpApply(true);fpCommit(pre);fpSave();fpSel(FPSEL)}}
+    else if(a==='min'){const bar=$('#fpbar'),m=!bar.classList.contains('min');bar.classList.toggle('min',m);LS('tracks-fpmin',m?'1':'0');b.setAttribute('aria-expanded',String(!m));b.setAttribute('aria-label',m?'Expand panel':'Collapse panel');b.title=m?'Expand panel':'Collapse panel to see the screen';b.innerHTML=ic(m?'up':'down',20);fpClampBar()}
+    else fpEdit(false);
+    return;
+  }
+  if(b=t.closest('[data-fpm]')){fpMode(b.dataset.fpm);return}
+  if(b=t.closest('[data-fpn]')){fpStep(+b.dataset.fpn);return}
+  if(b=t.closest('[data-fpr]')){
+    if(!FPSEL)return;const f=b.dataset.fpr,k=FPSEL.dataset.fpk,pre=fpSnap();fpMk(k)[f]=FPD[f];fpClean(k);
+    fpOne(FPSEL,FP.p[k]);fpCommit(pre);fpSave();fpSync();fpRot();return;
+  }
+  if(b=t.closest('[data-fpz]')){
+    if(!FPSEL)return;const k=FPSEL.dataset.fpk,pre=fpSnap(),p=fpMk(k);p.z=Math.max(-10,Math.min(30,(p.z||0)+ +b.dataset.fpz));fpClean(k);fpOne(FPSEL,FP.p[k]||null);fpCommit(pre);fpSave();fpSel(FPSEL);return;
+  }
+  if(b=t.closest('[data-fpg]')){
+    if(!FPSEL)return;const k=FPSEL.dataset.fpk,pre=fpSnap(),p=fpMk(k);p.ng=!p.ng;if(!p.ng)delete p.ng;fpClean(k);fpCommit(pre);fpSave();b.setAttribute('aria-checked',String(!p.ng));return;
+  }
+  if(b=t.closest('[data-fph]')){
+    if(!FPSEL||fpKeep(FPSEL))return;const k=FPSEL.dataset.fpk,pre=fpSnap(),p=fpMk(k);p.hd=!p.hd;if(!p.hd)delete p.hd;fpClean(k);fpOne(FPSEL,FP.p[k]||null);fpCommit(pre);fpSave();fpSel(FPSEL);return;
+  }
+  if(b=t.closest('[data-fpb]')){const f=b.dataset.fpb,pre=fpSnap();FP.b=FP.b||{};if(FP.b[f]===0)delete FP.b[f];else FP.b[f]=0;fpApply(true);fpHQ();fpCommit(pre);fpSave();b.setAttribute('aria-checked',String(FP.b[f]!==0));return}
+  if(b=t.closest('[data-fpsn]')){const pre=fpSnap();FP.sn=FP.sn===false;fpCommit(pre);fpSave();b.setAttribute('aria-checked',String(FP.sn!==false));return}
+  if(b=t.closest('[data-fpq]')){
+    const el=document.querySelector(b.dataset.fpq);
+    if(el&&el.dataset.fpk&&el.getBoundingClientRect().width)fpSel(el);else toast('Not visible right now');
+  }
+},true);
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='fpit'&&fpOn())fpPick(e.target.value)});
+/* keyboard: Esc = done, Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y = undo / redo, arrows nudge the selected item (Shift = 10 px), Delete resets it */
+let fpNdPre=null,fpNdT=0;
+function fpNudge(dx,dy){
+  const el=FPSEL;if(!el||!el.isConnected)return;
+  if(fpNdPre===null)fpNdPre=fpSnap();
+  const k=el.dataset.fpk,p=fpMk(k),R=fpRange(el,p);
+  p.x=Math.round(Math.max(R.x[0],Math.min(R.x[1],(p.x||0)+dx)));p.y=Math.round(Math.max(R.y[0],Math.min(R.y[1],(p.y||0)+dy)));
+  fpOne(el,p);fpSave();fpSync();fpRot();
+  clearTimeout(fpNdT);fpNdT=setTimeout(()=>{fpClean(k);fpCommit(fpNdPre);fpNdPre=null},500);
+}
+addEventListener('keydown',e=>{
+  if(!fpOn())return;
+  if(e.key==='Escape'){e.preventDefault();fpEdit(false);return}
+  const t=e.target,typing=t&&(t.isContentEditable||/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==='INPUT'&&t.type!=='range'));
+  if(typing)return;
+  const k=e.key.toLowerCase(),mod=e.ctrlKey||e.metaKey;
+  if(mod&&k==='z'){e.preventDefault();fpUndo(e.shiftKey);return}
+  if(mod&&k==='y'){e.preventDefault();fpUndo(true);return}
+  if(mod||e.altKey)return;
+  if(t&&t.tagName==='INPUT'&&t.type==='range')return;/* arrows belong to the focused slider */
+  const st=e.shiftKey?10:1;
+  if(k==='arrowleft'||k==='arrowright'||k==='arrowup'||k==='arrowdown'){if(!FPSEL)return;e.preventDefault();fpNudge(k==='arrowleft'?-st:k==='arrowright'?st:0,k==='arrowup'?-st:k==='arrowdown'?st:0);return}
+  if((k==='delete'||k==='backspace')&&FPSEL&&!(t&&t.tagName==='BUTTON')){e.preventDefault();const pre=fpSnap();delete FP.p[FPSEL.dataset.fpk];if(FPSEL.id==='dock'){delete FP.b.vw;delete FP.b.vh;delete FP.b.df}if(FPSEL.id==='top'){delete FP.b.tw;delete FP.b.th;delete FP.b.ta;delete FP.b.tf;delete FP.b.tvw;delete FP.b.tvh}fpApply(true);fpCommit(pre);fpSave();fpSel(FPSEL)}
+});
+/* safety net: an essential button (settings, play, close) that ends up off screen, for example after rotating the phone, gets its placement reset */
+let fpRq=0;
+function fpRescue(){
+  fpRq=0;if(fpOn()||!fpHas())return;
+  const f=$('#full');let ch=false;
+  document.querySelectorAll(FPK_ESS).forEach(el=>{
+    const k=el.dataset.fpk,p=k&&FP.p[k];if(!p)return;
+    if(f&&el.closest('#full')&&(!f.classList.contains('open')||f.getAnimations().length))return;
+    const r=el.getBoundingClientRect();if(!r.width||!r.height)return;
+    if(r.right<4||r.bottom<4||r.left>innerWidth-4||r.top>innerHeight-4){delete FP.p[k];ch=true}
+  });
+  if(ch){fpSave();fpApply(true);toast('A button was off screen, so its placement was reset')}
+}
+addEventListener('resize',()=>{if(fpOn())fpHQ();else if(fpHas()&&!fpRq)fpRq=setTimeout(fpRescue,250)});
+addEventListener('orientationchange',()=>{if(!fpOn()&&fpHas()&&!fpRq)fpRq=setTimeout(fpRescue,500)});
+
+/* layout presets: built-in and your own; a preset holds the whole layout (bar, icons, free placement, side player) */
+const PRE_KEY='tracks-presets',PRE_LOAD=()=>{try{const a=JSON.parse(LS(PRE_KEY)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}};
+const PRE_FP={on:false,p:{}},PRE_NP=on=>({on,ly:true,w:360}),PRE_POS=(a,b,c,d)=>({plus:a,cloud:b,qk:c,gear:d});
+const PRE_BUILT=[
+ {id:'std',name:'Standard',d:{dock:'top',dkc:false,dkw:'',dkh:'',hbm:'auto',icp:{on:false},fp:PRE_FP,np:PRE_NP(false)}},
+ {id:'spot',name:'Spotify style',d:{dock:'left',dkc:false,dkw:'58',dkh:'',hbm:'off',icp:{on:false},fp:PRE_FP,np:{on:true,ly:true,w:380}}},
+ {id:'bot',name:'Bottom bar',d:{dock:'bottom',dkc:false,dkw:'',dkh:'',hbm:'off',icp:{on:false},fp:PRE_FP,np:PRE_NP(false)}},
+ {id:'rail',name:'Compact rail',d:{dock:'right',dkc:false,dkw:'58',dkh:'',hbm:'on',icp:{on:true,size:38,gap:4,sh:'plain',bg:'none',pos:PRE_POS('nl','nl','nr','nr')},fp:PRE_FP,np:PRE_NP(false)}}
+];
+function preSnap(){return JSON.parse(JSON.stringify({dock:getDock(),dkc:DKC.on,dkw:LS('tracks-dockw')||'',dkh:LS('tracks-dockh')||'',hbm:HBM.m,icp:ICP,fp:FP,np:{on:NP.on,ly:NP.ly,w:NP.w}}))}
+function preApply(d){
+  const x=JSON.parse(JSON.stringify(d));
+  Object.assign(ICP,icDef(),x.icp||{});if(ICP.pos.gear==='off')ICP.pos.gear='hr';icSave();
+  Object.assign(FP,fpSanitize(x.fp));fpSave();
+  if(x.np){NP.on=!!x.np.on;NP.ly=x.np.ly!==false;if(x.np.w)NP.w=x.np.w;LS('tracks-np',NP.on?'1':'0');LS('tracks-npl',NP.ly?'1':'0');LS('tracks-npw',String(NP.w))}
+  DKC.on=!!x.dkc;LS('tracks-dockc',x.dkc?'1':'0');LS('tracks-dockw',x.dkw||'');LS('tracks-dockh',x.dkh||'');
+  if(x.hbm)setHbm(x.hbm);
+  setDock(DOCKS.includes(x.dock)?x.dock:'top');
+  try{hbPlace()}catch(e){}try{npApply()}catch(e){}fpApply();
+}
+function preClick(t,paint){
+  let b;
+  if(b=t.closest('[data-preset]')){const x=PRE_BUILT.concat(PRE_LOAD()).find(q=>q.id===b.dataset.preset);if(x){preApply(x.d);toast('Layout: '+x.name);paint()}return true}
+  if(t.closest('[data-presave]')){ask('Name this preset','','Save').then(n=>{if(n){const a=PRE_LOAD();a.push({id:'u'+Date.now(),name:n,d:preSnap()});LS(PRE_KEY,JSON.stringify(a));toast('Preset saved')}setTimeout(icSheet,300)});return true}
+  if(b=t.closest('[data-prepl]')){const a=PRE_LOAD(),x=a.find(q=>q.id===b.dataset.prepl);if(x){x.d=preSnap();LS(PRE_KEY,JSON.stringify(a));toast('Preset updated with the current layout')}return true}
+  if(b=t.closest('[data-predel]')){LS(PRE_KEY,JSON.stringify(PRE_LOAD().filter(q=>q.id!==b.dataset.predel)));paint();return true}
+  if(b=t.closest('[data-fpgo]')){const full=b.dataset.fpgo==='full';closeOv();setTimeout(()=>{fpEdit(true);if(full)fpMode('full')},380);return true}
+  if(t.closest('[data-fpclr]')){FP.p={};FP.b={};fpSaveNow();try{dockSync()}catch(_){}fpApply(true);paint();return true}
+  return false;
+}
+const preHtml=()=>{const my=PRE_LOAD();return `<div class="scd"><h4>Presets</h4><div class="bgst icrc">${PRE_BUILT.concat(my).map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)}</button>`).join('')}</div>${my.length?`<div class="icr"><div class="icrt"><b>My presets</b></div>${my.map(p=>`<div class="icrt"><b>${esc(p.name)}</b><span class="icrm"><button type="button" class="pill" data-prepl="${p.id}" title="Replace with the current layout">Update</button><button type="button" class="ib" data-predel="${p.id}" aria-label="Delete ${esc(p.name)}">${ic('trash',20)}</button></span></div>`).join('')}</div>`:''}<div class="bt" style="margin-top:6px"><button type="button" class="pill" data-presave="1">Save current layout as preset</button></div><p class="dupn" style="margin:6px 6px 2px">A preset keeps the navigation bar, icon layout, free placement and side player.</p></div>
+<div class="scd"><h4>Free placement</h4><p class="dupn" style="margin:2px 6px 8px">Drag icons, tabs, toolbars, the side panel and the controls of the mini player, side player and full player anywhere. Resize, rotate, layer or hide them, with undo and redo. Guides snap to edges and centres.</p><div class="bt"><button type="button" class="pill acc" data-fpgo="1">Place freely</button><button type="button" class="pill" data-fpgo="full">Arrange full player</button>${Object.keys(FP.p).length||Object.keys(FP.b||{}).length?'<button type="button" class="pill" data-fpclr="1">Clear placement</button>':''}</div></div>`};
+
+/* the editor panel: drag it by its header, it always stays on screen and above everything else; it can be collapsed to a single bar */
+function fpClampBar(){const b=$('#fpbar');if(!b)return;const r=b.getBoundingClientRect();b.style.left=Math.max(8,Math.min(innerWidth-r.width-8,r.left))+'px';b.style.top=Math.max(8,Math.min(innerHeight-r.height-8,r.top))+'px'}
+let fpRo=null;
+function fpPlaceBar(){
+  const b=$('#fpbar');if(!b)return;let p=null;try{p=JSON.parse(LS('tracks-fpbar')||'null')}catch(e){}
+  const r=b.getBoundingClientRect();b.style.transform='none';
+  const wide=innerWidth>=700;/* wide screens: out of the way on the right; phones: centred */
+  b.style.left=(p&&isFinite(p.x)?p.x:wide?innerWidth-r.width-16:(innerWidth-r.width)/2)+'px';b.style.top=(p&&isFinite(p.y)?p.y:wide?Math.max(70,(innerHeight-r.height)/3):(innerHeight-r.height)/2)+'px';
+  fpClampBar();
+  try{if(fpRo)fpRo.disconnect();fpRo=new ResizeObserver(fpClampBar);fpRo.observe(b)}catch(e){}
+}
+document.addEventListener('pointerdown',e=>{
+  const g=e.target.closest&&e.target.closest('#fpgrip');if(!g||e.target.closest('button')||!fpOn()||e.button>0)return;
+  const b=$('#fpbar'),r=b.getBoundingClientRect(),ox=e.clientX-r.left,oy=e.clientY-r.top;e.preventDefault();
+  try{g.setPointerCapture(e.pointerId)}catch(_){}
+  const mv=ev=>{b.style.left=Math.max(8,Math.min(innerWidth-r.width-8,ev.clientX-ox))+'px';b.style.top=Math.max(8,Math.min(innerHeight-b.offsetHeight-8,ev.clientY-oy))+'px'};
+  const up=()=>{g.removeEventListener('pointermove',mv);g.removeEventListener('pointerup',up);g.removeEventListener('pointercancel',up);LS('tracks-fpbar',JSON.stringify({x:parseFloat(b.style.left),y:parseFloat(b.style.top)}))};
+  g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up);
+});
+addEventListener('resize',fpClampBar);
+
+/* rotate the selected item: drag the round handle above it (snaps every 15 degrees, hold Alt for free rotation) */
+function fpRot(){
+  document.querySelectorAll('.fprot').forEach(x=>x.remove());
+  const el=FPSEL;if(!fpOn()||!el||el.id==='main'||!el.isConnected)return;
+  const r=el.getBoundingClientRect();if(!r.width)return;
+  const p=FP.p[el.dataset.fpk]||{},a=(p.r||0)*Math.PI/180,cx=r.left+r.width/2,cy=r.top+r.height/2,hh=el.offsetHeight?el.offsetHeight*(p.s||100)/200:r.height/2,R=hh+26;
+  const x=Math.max(12,Math.min(innerWidth-12,cx+Math.sin(a)*R)),y=Math.max(12,Math.min(innerHeight-12,cy-Math.cos(a)*R));
+  document.body.insertAdjacentHTML('beforeend',`<i class="fprot" style="left:${Math.round(x-9)}px;top:${Math.round(y-9)}px" title="Drag to rotate" aria-label="Rotate"></i>`);
+}
+document.addEventListener('pointerdown',e=>{
+  const h=e.target.closest&&e.target.closest('.fprot');if(!h||!fpOn()||!FPSEL)return;
+  e.preventDefault();e.stopPropagation();if(fpBusy||e.button>0||e.isPrimary===false)return;
+  const el=FPSEL,k=el.dataset.fpk,r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,pre=fpSnap(),pid=e.pointerId;
+  fpBusyOn();
+  const mv=ev=>{
+    if(ev.pointerId!==pid)return;
+    let a=Math.atan2(ev.clientY-cy,ev.clientX-cx)*180/Math.PI+90;a=((a+540)%360)-180;
+    if(!ev.altKey){const n=Math.round(a/15)*15;if(Math.abs(a-n)<4)a=n}
+    const p=fpMk(k);p.r=Math.round(a);fpOne(el,p);fpRot();
+    fpSync();
+  };
+  const up=ev=>{if(ev&&ev.pointerId!==pid)return;removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);fpBusyOff();fpClean(k);fpCommit(pre);fpSave();fpSync();fpRot()};
+  addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up);
+},true);
+/* watches the parts of the interface that get rebuilt (mini player, side player, bars, full player) and puts the placement back.
+   Only real element changes count, not the time text that ticks every second, so this costs nothing during playback. */
+function fpInit(){
+  let q=0;
+  const go=()=>{q=0;fpApply();if(fpOn())fpList()};
+  const mo=new MutationObserver(recs=>{
+    if(q)return;
+    for(const r of recs){for(const n of r.addedNodes){if(n.nodeType===1){q=requestAnimationFrame(go);return}}}
+  });
+  ['#mini','#npb','#np','#dock','#top','#fc'].forEach(x=>{const n=$(x);if(n)mo.observe(n,{childList:true,subtree:true})});
+  fpApply();setTimeout(fpRescue,1200);
+}
 
 /* click routing */
 /* big player top bar menu: one button opens a pill (background, cover transition, beat effects) centred on the bar */
@@ -5834,6 +6549,13 @@ document.addEventListener('click',async e=>{
   if($('#mini.vm')&&!e.target.closest('#mini .m2,#mini .mvs'))miniVol(false);
   const b=e.target.closest('[data-act]');if(!b)return;
   const act=b.dataset.act,id=b.dataset.id;
+  if(gMode&&(act==='open'||act==='openpl')&&b.closest('.acard[data-gid]')){e.stopPropagation();if(gSet.has(id))gSet.delete(id);else gSet.add(id);return gPaint()}
+  if(act==='gselect'){if(gMode)gOff();else{gMode=true;gSet.clear()}render();gPaint();if(gMode)an($('#selbar'),[{opacity:0,transform:'translateY(100%)'},{opacity:1,transform:'none'}],{duration:340,easing:EASE_OUT});return}
+  if(gMode&&act==='selexit'){gOff();return render()}
+  if(gMode&&act==='selall'){const c=[...document.querySelectorAll('#main .acard[data-gid]')].map(el=>el.dataset.gid);if(c.every(x=>gSet.has(x)))gSet.clear();else c.forEach(x=>gSet.add(x));return gPaint()}
+  if(gMode&&act==='gpos'){if(!gSet.size)return toast('Select something first');if(await gPos())gOff();return render()}
+  if(gMode&&act==='gmove'){if(!gSet.size)return toast('Select something first');if(await gMove())gOff();return render()}
+  if(gMode&&act==='gdel'){if(!gSet.size)return toast('Select something first');if(await gDelete())gOff();return render()}
   if(act==='tbmenu'){const w=b.closest('.tbm');if(w)tbmSet(!w.classList.contains('open'));return}
   if(act==='one'){e.stopPropagation();return oneOpen(b)}
   if(act==='like'){e.stopPropagation();return toggleLike(id||cur)}
@@ -5873,6 +6595,7 @@ document.addEventListener('click',async e=>{
   if(act==='back'){if(view.tab==='playlists'){if(view.pl){const p=playlists.find(x=>x.id===view.pl);view.pl=null;view.pf=p?p.folderId||null:null}else view.pf=null;return render()}if(view.tab==='songs'&&view.artist){view.artist=null;return render()}if(view.album){const a=albums.find(x=>x.id===view.album);view.album=null;view.folder=a?a.folderId||null:null}else view.folder=null;return render()}
   if(act==='folderedit'){const f=await folderForm(folders.find(x=>x.id===id));render();return}
   if(act==='reorder'){return reorderSheet(view.tab==='playlists')}
+  if(act==='fcustom')return fcSheet();
   if(act==='fsize'){fsz=b.dataset.s;try{localStorage.setItem('tracks-fsize',fsz)}catch(e){}return render()}
   if(act==='addsongs')return pickSongs(id);
   if(act==='almenu'){
@@ -6038,6 +6761,36 @@ function closeQ(){
 
 /* select mode and bulk actions */
 let selMode=false;const selSet=new Set();
+let gMode=false;const gSet=new Set();/* several albums or playlists selected at once */
+const gOk=()=>(view.tab==='albums'&&!view.album)||(view.tab==='playlists'&&!view.pl);
+const gOff=()=>{gMode=false;gSet.clear()};
+const gBtn=n=>n>0?`<button class="ab${gMode?' acc':''}" data-act="gselect" aria-label="Select ${view.tab==='playlists'?'playlists':'albums'}" title="Select">${ic('sel',21)}</button>`:'';
+function gPaint(){
+  const c=$('#selc');if(c)c.textContent=gSet.size+' selected';
+  const cards=[...document.querySelectorAll('#main .acard[data-gid]')];
+  cards.forEach(el=>{const on=gSet.has(el.dataset.gid);el.classList.toggle('gon',on);const k=el.querySelector('.gck');if(k)k.innerHTML=on?ic('check',15):''});
+  const b=document.querySelector('[data-act=selall]');if(b)b.textContent=cards.length&&cards.every(el=>gSet.has(el.dataset.gid))?'Deselect all':'Select all';
+}
+async function gMove(){
+  const P=view.tab==='playlists',arr0=P?playlists:albums,ids=[...gSet].filter(id=>arr0.some(y=>y.id===id&&!y.sys));if(!ids.length)return false;
+  const arr=P?playlists:albums,st=P?'playlists':'albums',fl=P?pfolders:folders;
+  const opts=[{label:'No folder',value:'__none'}].concat(fl.map(f=>({label:f.name,value:f.id})));opts.push({label:'New folder',value:'__new'});
+  const r=await choose('Move '+ids.length+(P?(ids.length===1?' playlist':' playlists'):(ids.length===1?' album':' albums')),opts);
+  if(r==null)return false;
+  let fid=null;
+  if(r==='__new'){const f=await folderForm(null,P);if(!f)return false;fid=f.id}else if(r!=='__none')fid=r;
+  for(const id of ids){const x=arr.find(y=>y.id===id);if(x){x.folderId=fid;await put(st,x)}}
+  toast('Moved '+ids.length+(ids.length===1?' item':' items'));return true;
+}
+async function gDelete(){
+  const P=view.tab==='playlists',arr0=P?playlists:albums,ids=[...gSet].filter(id=>arr0.some(y=>y.id===id&&!y.sys)),n=ids.length;if(!n)return false;
+  const r=await choose('Delete '+n+(P?(n===1?' playlist?':' playlists?'):(n===1?' album?':' albums?')),[{label:P?'Delete, keep songs':'Delete, keep songs',value:1,danger:true}]);
+  if(!r)return false;
+  const set=new Set(ids);
+  if(P){playlists=playlists.filter(x=>!set.has(x.id));for(const id of ids)await del('playlists',id)}
+  else{albums=albums.filter(x=>!set.has(x.id));for(const id of ids)await del('albums',id);for(const x of songs)if(set.has(x.album)){x.album=null;await put('songs',x)}}
+  toast('Deleted '+n+(n===1?' item':' items'));return true;
+}
 const canSel=()=>view.tab==='songs'||(view.tab==='albums'&&!!view.album)||(view.tab==='playlists'&&!!view.pl);
 const curList=()=>view.tab==='playlists'&&view.pl?plSongs(view.pl):view.tab==='albums'&&view.album?albumSongs(view.album):songsList();
 function updateBar(){const c=$('#selc');if(c)c.textContent=selSet.size+' selected';const b=document.querySelector('[data-act=selall]');if(b){const l=curList();b.textContent=l.length&&l.every(x=>selSet.has(x.id))?'Deselect all':'Select all'}}
@@ -6185,12 +6938,115 @@ function dockSync(){
   else if(d==='bottom'){let h=+LS('tracks-dockh')||0;if(h&&h<dkMax()){h=Math.max(54,h);R.style.setProperty('--dbh',h+'px');icons=h<60}}
   else icons=DKC.on;
   R.dataset.dockc=icons?'on':'off';
+  try{fpDock()}catch(e){}
   try{hbPlace()}catch(e){}
 }
 /* small windows: Add, Cloud sync, Queue and Settings move onto the navigation bar (works for top, left, right and bottom bars). The same buttons move, so every handler keeps working */
 const HBM={m:(()=>{const v=LS('tracks-hbm');return v==='on'||v==='off'?v:'auto'})()};/* auto = small windows only, on = always, off = never */
 function setHbm(m){if(m!=='auto'&&m!=='on'&&m!=='off')return;HBM.m=m;LS('tracks-hbm',m);try{hbPlace()}catch(e){}if(typeof npApply==='function')try{npApply()}catch(e){}}
+/* custom icon layout: Add, Cloud sync, Queue and Settings can sit in the header (left or right), on a side or bottom bar, or be hidden. The same buttons move, so every handler keeps working */
+const IC_KEYS=['plus','cloud','qk','gear'];
+const IC_NAME={plus:'Add',cloud:'Cloud sync',qk:'Queue',gear:'Settings'};
+const IC_ICON={plus:'plus',cloud:'cloud',qk:'qm',gear:'gear'};
+const IC_POS=[['hl','Top left'],['hr','Top right'],['nl','Bar start'],['nr','Bar end'],['off','Hide']];
+const IC_TAB={t1:['album','Albums'],t2:['note','Songs'],t3:['plist','Playlists']};
+const icDef=()=>({on:false,pos:{plus:'hl',cloud:'hl',qk:'hr',gear:'hr'},ord:IC_KEYS.slice(),tabs:['t1','t2','t3'],size:44,gap:8,sh:'circle',bg:'auto',acc:false});
+const ICP=icDef();
+try{const j=JSON.parse(LS('tracks-icp')||'null');if(j&&typeof j==='object'){
+  ICP.on=!!j.on;
+  IC_KEYS.forEach(k=>{if(j.pos&&IC_POS.some(p=>p[0]===j.pos[k]))ICP.pos[k]=j.pos[k]});
+  if(Array.isArray(j.ord)&&j.ord.length===4&&IC_KEYS.every(k=>j.ord.includes(k)))ICP.ord=j.ord.slice();
+  if(Array.isArray(j.tabs)&&j.tabs.length===3&&['t1','t2','t3'].every(k=>j.tabs.includes(k)))ICP.tabs=j.tabs.slice();
+  if(isFinite(j.size))ICP.size=Math.min(60,Math.max(32,+j.size));
+  if(isFinite(j.gap))ICP.gap=Math.min(24,Math.max(0,+j.gap));
+  if(['circle','round','plain'].includes(j.sh))ICP.sh=j.sh;
+  if(['auto','glass','solid','none'].includes(j.bg))ICP.bg=j.bg;
+  ICP.acc=!!j.acc}}catch(e){}
+if(ICP.pos.gear==='off')ICP.pos.gear='hr';/* Settings can never be hidden, or there would be no way back */
+const icSave=()=>LS('tracks-icp',JSON.stringify(ICP));
+/* the bar placements need a left, right or bottom bar: with the bar on top those buttons stay in the header */
+const icEff=k=>{let p=ICP.pos[k];if(k==='gear'&&p==='off')p='hr';if((p==='nl'||p==='nr')&&getDock()==='top')p=p==='nl'?'hl':'hr';return p};
+function icApply(){
+  const R=document.documentElement,top=$('#top'),hrow=top&&top.querySelector('.hr'),tabs=document.querySelector('.tabs');
+  if(!top||!hrow||!tabs)return;
+  if(R.dataset.hb==='dock')delete R.dataset.hb;
+  const mk=id=>$('#'+id)||Object.assign(document.createElement('div'),{id});
+  const G={hl:mk('ihl'),hr:mk('ihr'),nl:mk('hbx'),nr:mk('hby')},host=tabs.parentNode;
+  if(G.hl.parentNode!==hrow||hrow.firstChild!==G.hl)hrow.insertBefore(G.hl,hrow.firstChild);
+  if(G.hr.parentNode!==hrow||hrow.lastChild!==G.hr)hrow.appendChild(G.hr);
+  if(G.nl.parentNode!==host||G.nl.nextSibling!==tabs)host.insertBefore(G.nl,tabs);
+  if(G.nr.parentNode!==host||G.nr.previousSibling!==tabs)host.insertBefore(G.nr,tabs.nextSibling);
+  const B={plus:$('#plus'),cloud:$('#cb'),qk:$('#qk'),gear:$('#gear')},want={hl:[],hr:[],nl:[],nr:[]};
+  ICP.ord.forEach(k=>{const b=B[k];if(!b)return;const p=icEff(k);b.classList.toggle('icoff',p==='off');if(p!=='off')want[p].push(b)});
+  Object.keys(G).forEach(g=>{const cur=[...G[g].children].filter(x=>!x.classList.contains('icoff'));if(cur.length!==want[g].length||cur.some((x,i)=>x!==want[g][i]))want[g].forEach(b=>G[g].appendChild(b))});
+  R.dataset.ic='on';R.dataset.icsh=ICP.sh;R.dataset.icb=ICP.bg;R.dataset.ica=ICP.acc?'on':'off';
+  R.style.setProperty('--ics',ICP.size+'px');R.style.setProperty('--icg',ICP.gap+'px');
+  ICP.tabs.forEach((t,i)=>{const e=$('#'+t);if(e)e.style.order=String(i)});
+}
+function icRestore(){
+  const R=document.documentElement,top=$('#top'),hrow=top&&top.querySelector('.hr'),plus=$('#plus'),gear=$('#gear'),cb=$('#cb'),qk=$('#qk');
+  ['ic','icsh','icb','ica'].forEach(a=>R.removeAttribute('data-'+a));
+  R.style.removeProperty('--ics');R.style.removeProperty('--icg');
+  [plus,cb,qk,gear].forEach(b=>b&&b.classList.remove('icoff'));
+  ['t1','t2','t3'].forEach(t=>{const e=$('#'+t);if(e)e.style.order=''});
+  if(hrow&&plus&&gear){hrow.insertBefore(plus,hrow.firstChild);if(cb)plus.after(cb);hrow.appendChild(gear);if(qk&&top)top.insertBefore(qk,$('#tb'))}
+  ['ihl','ihr','hbx','hby'].forEach(id=>{const g=$('#'+id);if(g)g.remove()});
+}
+function icPvHtml(sel){
+  const d=getDock(),pvs=Math.round(ICP.size*.62),gl=Math.round(pvs*.52);
+  const g=p=>ICP.ord.filter(k=>icEff(k)===p).map(k=>`<span class="pvi${sel===k?' sel':''}" data-pk="${k}" data-k="${k}" role="button" tabindex="0" aria-label="${IC_NAME[k]}" title="${IC_NAME[k]}">${ic(IC_ICON[k],gl)}</span>`).join('');
+  const lab=ICP.tabs.map(t=>`<b>${IC_TAB[t][1].toUpperCase()}</b>`).join(''),tic=ICP.tabs.map(t=>`<span>${ic(IC_TAB[t][0],20)}</span>`).join('');
+  return `<div class="icpv" data-dock="${d}" data-sh="${ICP.sh}" data-bg="${ICP.bg}" data-acc="${ICP.acc?'on':'off'}" style="--pvs:${pvs}px;--pvg:${Math.round(ICP.gap*.7)}px"><div class="pvm"><div class="pvh"><div class="pvg">${g('hl')}</div>${d==='top'?'':'<span class="pvl">traX</span>'}<div class="pvg">${g('hr')}</div></div>${d==='top'?`<div class="pvt">${lab}</div>`:''}<div class="pvbody"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>${d==='top'?'':`<div class="pvbar"><div class="pvg">${g('nl')}</div><div class="pvg pvtb">${tic}</div><div class="pvg">${g('nr')}</div></div>`}</div>`;
+}
+function icSheet(){
+  let sel='plus';
+  openOv(`<h3>Layout &amp; placement</h3><div id="icpv"></div><p class="dupn" id="icnote" style="margin:0 6px 12px"></p><div id="icb"></div>`);
+  const sh=$('#ov .sheet'),chip=(on,a,t)=>`<button type="button" class="chip${on?' on':''}" ${a}>${t}</button>`;
+  const body=()=>{
+    const row=k=>{const g=ICP.ord.filter(x=>icEff(x)===icEff(k)),i=g.indexOf(k);
+      return `<div class="icr${sel===k?' on':''}" data-rk="${k}"><div class="icrt"><span class="icri">${ic(IC_ICON[k],22)}</span><b>${IC_NAME[k]}</b><span class="icrm"><button type="button" class="ib" data-mv="${k}" data-d="-1" aria-label="Move ${IC_NAME[k]} earlier"${i<1?' disabled':''}>${ic('up',20)}</button><button type="button" class="ib" data-mv="${k}" data-d="1" aria-label="Move ${IC_NAME[k]} later"${i>=g.length-1?' disabled':''}>${ic('down',20)}</button></span></div><div class="bgst icrc">${IC_POS.filter(p=>!(k==='gear'&&p[0]==='off')).map(p=>chip(ICP.pos[k]===p[0],`data-pos="${p[0]}" data-k="${k}"`,p[1])).join('')}</div></div>`};
+    const trow=(t,i)=>`<div class="icr"><div class="icrt"><span class="icri">${ic(IC_TAB[t][0],22)}</span><b>${IC_TAB[t][1]}</b><span class="icrm"><button type="button" class="ib" data-tmv="${t}" data-d="-1" aria-label="Move ${IC_TAB[t][1]} earlier"${i<1?' disabled':''}>${ic('up',20)}</button><button type="button" class="ib" data-tmv="${t}" data-d="1" aria-label="Move ${IC_TAB[t][1]} later"${i>=2?' disabled':''}>${ic('down',20)}</button></span></div></div>`;
+    const sl=(id,l,v,mn,mx)=>`<div class="fop"><span>${l}</span><input type="range" class="rng" id="${id}" min="${mn}" max="${mx}" value="${v}" style="--p:${(v-mn)/(mx-mn)*100}%" aria-label="${l}"><b>${v}px</b></div>`;
+    return preHtml()+`<div class="scd"><button type="button" class="srow" data-icon="1" role="switch" aria-checked="${ICP.on}"><span class="st"><b>Use my layout</b><small>Off keeps the standard layout.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Buttons</h4>${ICP.ord.map(row).join('')}</div>
+    <div class="scd"><h4>Tabs</h4>${ICP.tabs.map(trow).join('')}</div>
+    <div class="scd"><h4>Look</h4><div class="bgs">${sl('icsz','Icon size',ICP.size,32,60)}${sl('icgp','Spacing',ICP.gap,0,24)}</div>
+    <div class="icr"><div class="icrt"><b>Shape</b></div><div class="bgst icrc">${[['circle','Circle'],['round','Rounded'],['plain','Plain']].map(p=>chip(ICP.sh===p[0],`data-sh="${p[0]}"`,p[1])).join('')}</div></div>
+    <div class="icr"><div class="icrt"><b>Background</b></div><div class="bgst icrc">${[['auto','Default'],['glass','Glass'],['solid','Solid'],['none','None']].map(p=>chip(ICP.bg===p[0],`data-bgm="${p[0]}"`,p[1])).join('')}</div></div>
+    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent colour icons</b></span><span class="stog"></span></button></div>
+    <div class="bt"><button type="button" class="pill mr" data-icreset="1">Reset</button><button type="button" class="pill acc" data-icdone="1">Done</button></div>`;
+  };
+  const pv=()=>{$('#icpv').innerHTML=icPvHtml(sel);
+    const bar=ICP.ord.some(k=>(ICP.pos[k]==='nl'||ICP.pos[k]==='nr')&&getDock()==='top');
+    $('#icnote').textContent=bar?'Bar start and Bar end need the navigation bar on the left, right or bottom (Settings, Layout). Until then they stay at the top.':'Tap an icon to select it.'};
+  const paint=()=>{pv();$('#icb').innerHTML=body()};
+  const apply=()=>{ICP.on=true;icSave();try{hbPlace()}catch(_){}if(typeof npApply==='function')try{npApply()}catch(_){}};
+  const swap=(arr,k,d)=>{const i=arr.indexOf(k),j=i+d;if(i<0||j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]]};
+  sh.onclick=e=>{
+    const t=e.target;
+    if(t.closest('[data-icdone]')){closeOv();return}
+    if(preClick(t,paint))return;
+    const p=t.closest('.pvi');if(p){sel=p.dataset.pk;paint();const r=sh.querySelector(`[data-rk="${sel}"]`);if(r)r.scrollIntoView({block:'nearest',behavior:'smooth'});return}
+    const rw=t.closest('[data-rk]');if(rw&&!t.closest('.chip,.ib')){sel=rw.dataset.rk;paint();return}
+    if(t.closest('[data-icon]')){ICP.on=!ICP.on;icSave();try{hbPlace()}catch(_){}if(typeof npApply==='function')try{npApply()}catch(_){}paint();return}
+    if(t.closest('[data-icreset]')){const d=icDef();Object.assign(ICP,d,{on:false});icSave();try{hbPlace()}catch(_){}if(typeof npApply==='function')try{npApply()}catch(_){}sel='plus';paint();toast('Standard layout restored');return}
+    const c=t.closest('[data-pos]');if(c){ICP.pos[c.dataset.k]=c.dataset.pos;sel=c.dataset.k;apply();paint();return}
+    const m=t.closest('[data-mv]');if(m&&!m.disabled){const k=m.dataset.mv,d=+m.dataset.d,g=ICP.ord.filter(x=>icEff(x)===icEff(k)),i=g.indexOf(k),o=g[i+d];if(o){swap(ICP.ord,k,0);const a=ICP.ord.indexOf(k),b=ICP.ord.indexOf(o);ICP.ord[a]=o;ICP.ord[b]=k}sel=k;apply();paint();return}
+    const tm=t.closest('[data-tmv]');if(tm&&!tm.disabled){swap(ICP.tabs,tm.dataset.tmv,+tm.dataset.d);apply();paint();return}
+    const sp=t.closest('[data-sh]');if(sp){ICP.sh=sp.dataset.sh;apply();paint();return}
+    const bm=t.closest('[data-bgm]');if(bm){ICP.bg=bm.dataset.bgm;apply();paint();return}
+    if(t.closest('[data-acc]')){ICP.acc=!ICP.acc;apply();paint();return}
+  };
+  sh.oninput=e=>{const i=e.target;if(i.id!=='icsz'&&i.id!=='icgp')return;
+    const v=+i.value,mn=+i.min,mx=+i.max;if(i.id==='icsz')ICP.size=v;else ICP.gap=v;
+    i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=v+'px';apply();pv()};
+  sh.onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('pvi')){e.preventDefault();e.target.click()}};
+  {const hd=sh.querySelector('.sthd');if(hd){const a=$('#icpv'),n=$('#icnote');a.style.margin='6px auto 4px';n.style.margin='0 6px';hd.appendChild(a);hd.appendChild(n)}}
+  paint();
+}
 function hbPlace(){
+  if(ICP.on){icApply();return}
+  if(document.documentElement.dataset.ic)icRestore();
   const R=document.documentElement,top=$('#top'),hr=top&&top.querySelector('.hr'),plus=$('#plus'),gear=$('#gear'),tabs=document.querySelector('.tabs');
   if(!top||!hr||!plus||!gear||!tabs)return;
   const d=getDock(),w=top.clientWidth,cb=$('#cb'),qk=$('#qk');
@@ -6267,7 +7123,7 @@ function openSettings(){
   const chev='<svg class="sch" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const row=(x,t,d,v)=>`<button type="button" class="srow" data-x="${x}"><span class="st"><b>${t}</b>${d?`<small>${d}</small>`:''}</span>${v?`<span class="sv">${v}</span>`:''}${chev}</button>`;
   const TABS=[['app','Look'],['lay','Layout'],['play','Playback'],['lib','Library'],['data','Backup']];
-  const appCard=`<div class="scd"><h4>App</h4>${row('swu',SWU.w?'Update available':'Check for updates',SWU.w?'Tap to restart and use the newest version':'See if a newer version of the app is ready',SWU.w?'Install':'')}</div>`;
+  const appCard=`<div class="scd"><h4>App</h4>${row('swu',SWU.w?'Update available':'Check for updates',SWU.w?'Tap to restart and update':'See if a new version is ready',SWU.w?'Install':'')}</div>`;
   openOv(`<div class="sthd"><div class="sth"><h3>Settings</h3><button type="button" class="pill acc" id="st-done">Done</button></div>
   <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}${t[0]==='data'&&SWU.w?'<i class="tdot"></i>':''}</button>`).join('')}</div></div>
   <section class="stp" data-p="app">
@@ -6277,28 +7133,29 @@ function openSettings(){
     <div class="scd"><h4>Background</h4><div class="tgs"><label>Image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
-    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Videos only play while visible. Turn this off to save battery.</p></div>
-    <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Messages like \u201cNo playlists yet\u201d, \u201cNo albums yet\u201d or \u201cThis album is empty\u201d.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
+    <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Tips on empty pages.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lay">
     <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
-    <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where Albums, Songs and Playlists sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only, no labels. Works for every position.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud sync, Queue and Settings. PC layout only: keep them at the top of the page or move them onto the navigation bar.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows only</button><button type="button" class="chip" data-hbm="on">Always on the bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
-    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC layout only. Cover and lyrics on the right, with the player bar along the bottom.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
+    <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
+    <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
   <section class="stp" data-p="play">
-    <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade, gapless, fade curve and more',esc(xfSummary()))}</div>
-    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Adds a heart to songs and the player, and a Liked Songs playlist. Turning it off hides them but keeps your likes.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Shows the songs you play most lately in Playlists. It updates itself over time.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Player buttons</h4><button type="button" class="srow" data-onebtn="1" role="switch" aria-checked="false"><span class="st"><b>Combine like, album and playlist into one button</b><small>Shows a single + button in the players. It opens a menu with Like, Add to album and Add to playlist. Works with the keyboard and screen readers.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade and gapless',esc(xfSummary()))}</div>
+    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favourites, updated automatically.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Player buttons</h4><button type="button" class="srow" data-onebtn="1" role="switch" aria-checked="false"><span class="st"><b>One add button</b><small>A single + in the players for Like, Album and Playlist.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lib">
-    <div class="scd"><h4>Manage library</h4>${row('stats','Listening stats','Your most played songs and time listened')}${row('dups','Find duplicate songs','Same song twice? Review and remove extra copies')}${row('miss','Missing info finder','Songs with no artist, album, cover or lyrics, with online lookup')}${row('rfbulk','Replace audio in bulk','Match many files to songs by name and artist')}</div>
-    <div class="scd"><h4>Lyrics</h4><button type="button" class="srow" data-lrl="1" role="switch" aria-checked="true"><span class="st"><b>Find lyrics online (LRCLIB)</b><small>When a song has no synced lyrics, look it up on lrclib.net as you view lyrics. Sends the song title, artist, album and length.</small></span><span class="stog"></span></button>${row('lyfind','Find lyrics online now','Search LRCLIB for every song without synced lyrics')}${row('lyscan','Scan lyrics','Look for lyrics inside your song files')}${row('lymass','Add lyric files','Pick several .lrc files at once')}</div>
+    <div class="scd"><h4>Manage library</h4>${row('stats','Listening stats','Most played and time listened')}${row('dups','Find duplicate songs','Review and remove extra copies')}${row('miss','Missing info finder','Songs missing artist, album, cover or lyrics')}${row('rfbulk','Replace audio in bulk','Swap many files at once')}</div>
+    <div class="scd"><h4>Lyrics</h4><button type="button" class="srow" data-lrl="1" role="switch" aria-checked="true"><span class="st"><b>Find lyrics online (LRCLIB)</b><small>Looks up lyrics on lrclib.net when a song has none. Sends title, artist, album and length.</small></span><span class="stog"></span></button>${row('lyfind','Find lyrics online now','For every song without synced lyrics')}${row('lyscan','Scan lyrics','Look inside your song files')}${row('lymass','Add lyric files','Pick several .lrc files')}</div>
   </section>
   <section class="stp" data-p="data">
     ${SWU.w?appCard:''}
-    <div class="scd"><h4>Sync</h4>${row('cloud','Google Drive sync','Back up and sync your library across devices')}</div>
-    <div class="scd"><h4>Backup file</h4>${row('bkfull','Save full backup','Songs, covers, playlists, lyrics and settings in one file')}${row('bksmall','Save small backup','Playlists and details only, no songs')}${row('imp','Restore from backup','Pick a backup file saved by this app')}</div>
+    <div class="scd"><h4>Sync</h4>${row('cloud','Google Drive sync','Back up and sync devices')}</div>
+    <div class="scd"><h4>Backup file</h4>${row('bkfull','Save full backup','Everything in one file')}${row('bksmall','Save small backup','Playlists and details, no songs')}${row('imp','Restore from backup','Pick a backup file')}</div>
     <div class="scd"><h4>Protection</h4><button type="button" class="srow" data-x="persist"><span class="st"><b>Keep library on this device</b><small id="stos">Checking\u2026</small></span><span class="sv" id="stov"></span>${chev}</button></div>
     ${SWU.w?'':appCard}
   </section>`);
@@ -6322,15 +7179,15 @@ function openSettings(){
     const a=sh.querySelector('[data-npset=main]'),l=sh.querySelector('[data-npset=ly]'),m=$('#npmore'),n=$('#npn'),w=$('#npwr'),pc=document.documentElement.dataset.layout==='pc';
     if(a)a.setAttribute('aria-checked',!!NP.on);if(l)l.setAttribute('aria-checked',!!NP.ly);if(m)m.hidden=!NP.on;
     if(w){const mx=npMax();w.max=mx;const v=Math.min(NP.w,mx);w.value=v;w.style.setProperty('--p',(mx>280?Math.min(100,(v-280)/(mx-280)*100):100)+'%');w.parentNode.querySelector('b').textContent=v+'px'}
-    if(n)n.textContent=NP.on&&!pc?'Not showing right now: switch Layout to PC, or use a wider window.':'';
+    if(n)n.textContent=NP.on&&!pc?'Needs the PC layout or a wider window.':'';
   };
   const pfPaint=()=>{sh.querySelectorAll('#pfst .chip').forEach(c=>c.classList.toggle('on',c.dataset.pf===PERF.m));const pl_=$('#pfl');if(pl_){pl_.hidden=PERF.m!=='custom';pl_.querySelectorAll('.pfr').forEach(b=>{const an=!PERF.c[b.dataset.pfk];b.classList.toggle('on',an);b.setAttribute('aria-checked',an?'true':'false')})}const n=$('#pfn');if(n)n.textContent=PERF_NOTE[PERF.m]+(PERF.m==='auto'?(PERF.on?' Active right now.':' Not needed right now.'):'')};
   const paint=()=>{
     paintTheme();
     sh.querySelectorAll('.setg[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===LAY.m));
     const cu=curTheme()==='custom';$('#cset').hidden=!cu;
-    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));$('#cbk').value=CT.hex;$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted slightly to '+h+' so all text stays readable.':'Text colours are chosen automatically for best contrast.'}
-    const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'':(LAY.m==='pc'?'PC mode: full-screen layout for computers.':'Phone mode: compact touch layout.');
+    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));$('#cbk').value=CT.hex;$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted to '+h+' for readable text.':'Text colour adjusts automatically.'}
+    const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'':(LAY.m==='pc'?'Wide layout for computers.':'Compact touch layout.');
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
     const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);const one_=sh.querySelector('[data-onebtn]');if(one_)one_.setAttribute('aria-checked',!!ONE.on);
@@ -6371,6 +7228,7 @@ function openSettings(){
       else if(k==='lyfind')lyFindAll();
       else if(k==='lymass'){closeOv();setTimeout(lyMassPick,60)}
       else if(k==='xfopen'){closeOv();setTimeout(xfSheet,380)}
+      else if(k==='icl'){closeOv();setTimeout(icSheet,380)}else if(k==='fpe'){closeOv();setTimeout(()=>fpEdit(true),380)}
       else if(k==='rfbulk'){closeOv();rfBulkPick()}
       return}
     const b=e.target.closest('.setg');if(!b)return;
@@ -6454,7 +7312,7 @@ function sleepStop(){slT=null;slV='0';if(au.paused)return;const v0=au.volume,t0=
   slI=setInterval(()=>{const k=Math.min(1,(Date.now()-t0)/6000);au.volume=v0*(1-k);if(k>=1){clearInterval(slI);au.pause();au.volume=v0;renderMini()}},200)}
 async function sleepMenu(){
   const o=[['0','Off'],['15','15 minutes'],['30','30 minutes'],['60','60 minutes'],['end','End of current song']];
-  const r=await choose('Sleep timer',o.map(([v,l])=>({label:l,value:v,sel:v===slV,noic:true})));
+  const r=await choose('Sleep timer',o.map(([v,l])=>({label:l,value:v,sel:v===slV,ic:v==='0'?'close':'clock'})));
   if(r)sleepSet(r)}
 const _step=step;step=function(d,auto){if(auto&&slEnd){slEnd=false;slV='0';au.pause();renderMini();return}return _step(d,auto)};
 /* ===== Transitions: how one song moves into the next =====
@@ -7050,7 +7908,7 @@ async function bakeLoop(blob,tr,lp,parts){
   const sr=ab.sampleRate,nc=Math.min(2,ab.numberOfChannels),len=ab.length,src=[];
   for(let c=0;c<nc;c++)src.push(ab.getChannelData(c));
   const cl=v=>Math.max(0,Math.min(len,Math.round(v*sr)));
-  let X,plan=[];
+  let X,plan=[],seams=[];
   if(parts){   /* several parts, in list order, each joined to the next with a crossfade */
     const P=parts.map(q=>[cl(q.a),cl(q.b)]);
     X=Math.max(1,Math.round(Math.min(lp.x,Math.min(...P.map(q=>(q[1]-q[0])/sr))/3)*sr));
@@ -7067,7 +7925,7 @@ async function bakeLoop(blob,tr,lp,parts){
   let w=0;
   for(const q of plan){
     if(q[0]==='p'){const m=Math.max(0,q[2]-q[1]);for(let c=0;c<nc;c++)out[c].set(src[c].subarray(q[1],q[1]+m),w);w+=m}
-    else{for(let c=0;c<nc;c++){const o=out[c],s=src[c];for(let i=0;i<X;i++){const k=(i+.5)/X*Math.PI/2;o[w+i]=s[q[1]+i]*Math.cos(k)+s[q[2]+i]*Math.sin(k)}}w+=X}
+    else{seams.push((w+X/2)/sr);for(let c=0;c<nc;c++){const o=out[c],s=src[c];for(let i=0;i<X;i++){const k=(i+.5)/X*Math.PI/2;o[w+i]=s[q[1]+i]*Math.cos(k)+s[q[2]+i]*Math.sin(k)}}w+=X}
   }
   /* 16-bit PCM WAV */
   const bytes=total*nc*2,hd=new DataView(new ArrayBuffer(44)),ws=(o,t)=>{for(let i=0;i<t.length;i++)hd.setUint8(o+i,t.charCodeAt(i))};
@@ -7080,7 +7938,7 @@ async function bakeLoop(blob,tr,lp,parts){
     chunks.push(pc.buffer);
     if((a/CH)%8===7)await new Promise(r=>setTimeout(r));   /* let the page breathe on long songs */
   }
-  return {blob:new Blob(chunks,{type:'audio/wav'}),dur:total/sr};
+  return {blob:new Blob(chunks,{type:'audio/wav'}),dur:total/sr,seams};
 }
 /* Undo: the audio file from before the first loop / join comes back */
 async function undoBake(s,quiet){
@@ -7151,6 +8009,13 @@ function trimSheet(s){
       <div class="trx"><button type="button" class="pill tmp" id="tm-lt">${ic('play',14)}Test loop</button></div>
       <div class="trs" id="tm-ls"></div>
     </div>
+  </div>
+  <div class="trc tp" id="tm-cp"><div class="trh"><span>${ic('play',18)}<b>Preview result</b></span><output class="trsm" id="tm-pst"></output></div>
+    <p class="trs" id="tm-pn">Hear the whole song the way Save will make it, before anything is changed.</p>
+    <div class="tmpl"><button type="button" class="trp sm" id="tm-rp" aria-label="Play preview">${ic('play',22)}</button>
+      <div class="tmpr"><input type="range" class="rng" id="tm-rs" min="0" max="1000" step="1" value="0" aria-label="Preview position"><div class="tmpk" id="tm-rk"></div><div class="tmpt"><span id="tm-rt1">0:00.0</span><span id="tm-rt2">0:00.0</span></div></div></div>
+    <div class="trx" id="tm-rj"></div>
+    <div class="trx"><button type="button" class="pill" id="tm-re">Hear the ending</button></div>
   </div>
   <div class="bt"><button class="pill mr" id="tm-r">Reset</button><button class="pill" id="tm-x">Cancel</button><button class="pill acc" id="tm-ok">Save</button></div>`);
   let wf=null,head=o.a,resume=false,pLeft=lp.n,pTail=0,raf=0,pvU=null,pvStop=Infinity;
@@ -7300,6 +8165,7 @@ function trimSheet(s){
       !bs?'No steady beat found. Type a BPM or tap the tempo, then move the playhead to a beat and press Beat 1 at playhead.':
       (G.state==='man'?'Faint lines are beats and bold lines start a bar.':G.conf<1.8?'The beat was hard to hear, so check the lines by ear. Try \u00f72 or \u00d72, or press Beat 1 at playhead on a beat.':'Faint lines are beats and bold lines start a bar. If they sit on the wrong beat, try \u00f72 or \u00d72, or press Beat 1 at playhead on a beat.');
     $('#tm-b1').disabled=!bs;
+    rpSync();
     ['h','d'].forEach(i=>{$('#tm-'+i).disabled=!bs});
     const sz=VL.map(V=>{const z=Math.round(V.z*10)/10;$('#tzl-'+V.key).textContent=z+'\u00d7';$('#to-'+V.key).style.display=V.z>1?'':'none';$('#ts-'+V.key).style.display=V.z>1?'block':'none'});
     light();
@@ -7336,12 +8202,79 @@ function trimSheet(s){
     if(!pvU){pvU=URL.createObjectURL(src.blob);pv.src=pvU}
     if(!au.paused){au.pause();resume=true}
     document.querySelectorAll('#ov .tmp').forEach(b=>b.classList.remove('acc'));
-    lpStop();pvStop=to==null?Infinity:to;head=from;pLeft=lp.n;pTail=0;
+    rpStop();lpStop();pvStop=to==null?Infinity:to;head=from;pLeft=lp.n;pTail=0;
     try{pv.currentTime=from}catch(_){}
     pv.volume=uvol;
     pv.play().then(()=>{setPlaying(true);if(btn)btn.classList.add('acc');cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}).catch(()=>toast('Could not play this file'));
   };
   pv.onended=stopPv;
+  /* ---- preview of the result: built with the same code Save uses, then played in its own player. Nothing is stored. ---- */
+  const rp=new Audio();rp.preload='auto';
+  const rpS={key:'',u:null,off:0,dur:0,seams:[],kind:'',busy:false,on:false,sd:false,raf:0};
+  const rpPlan=()=>{
+    const t=mode==='t';let a=t?o.a:0,b=t?o.b:D,P=mode==='j'?pl.map(q=>({a:q.a,b:q.b})):[];
+    if(P.length===1){a=P[0].a;b=P[0].b;P=[]}
+    const join=P.length>=2,loop=!join&&mode==='l'&&lp.on&&lp.b-lp.a>=1.5;
+    return {join,loop,a,b,P};
+  };
+  const rpKey=()=>{const p=rpPlan();return JSON.stringify([p.join?p.P.map(q=>[q.a,q.b]):0,p.loop?[lp.a,lp.b,lp.n,lp.m]:0,(p.join||p.loop)?lp.x:0,p.a,p.b])};
+  const rpIc=b=>{const e=$('#tm-rp');if(!e)return;e.classList.toggle('on',b);e.innerHTML=ic(b?'pause':'play',22);e.setAttribute('aria-label',b?'Pause preview':'Play preview')};
+  const rpStop=()=>{cancelAnimationFrame(rpS.raf);if(!rpS.on&&rp.paused)return;rp.pause();rpS.on=false;rpIc(false)};
+  const rpT=()=>Math.max(0,Math.min(rpS.dur,rp.currentTime-rpS.off));
+  const rpDraw=()=>{
+    const e=$('#tm-rs');if(!e)return;const t=rpT();
+    if(!rpS.sd)e.value=rpS.dur?Math.round(t/rpS.dur*1000):0;
+    e.style.setProperty('--p',(e.value/10)+'%');
+    $('#tm-rt1').textContent=ft(t);$('#tm-rt2').textContent=rpS.u?ft(rpS.dur):'0:00.0';
+  };
+  const rpFrame=()=>{
+    if(rp.paused)return;
+    if(rpT()>=rpS.dur-.03){rpStop();rpDraw();return}
+    rpDraw();rpS.raf=requestAnimationFrame(rpFrame);
+  };
+  const rpFresh=()=>!!rpS.u&&rpS.key===rpKey();
+  const rpSync=()=>{
+    const st=$('#tm-pst');if(!st)return;
+    const p=rpPlan(),fresh=rpFresh(),cut=p.a>=.05||p.b<D-.05;
+    const what=p.join?'Joined parts':p.loop?(lp.m==='end'?'Part added at the end':'Looped section'):cut?'Trimmed song':'Whole song, no changes';
+    st.textContent=rpS.busy?'Building\u2026':fresh?what+' \u00b7 '+fmt(rpS.dur):what;
+    $('#tm-pn').textContent=rpS.busy?'Building the preview from your edits\u2026':!rpS.u||fresh?'Hear the whole song the way Save will make it, before anything is changed.':'You changed something since this preview was built. Press play to hear the new version.';
+    $('#tm-rk').innerHTML=fresh?rpS.seams.map(t=>'<i style="left:'+(t/rpS.dur*100)+'%"></i>').join(''):'';
+    $('#tm-rj').innerHTML=fresh?rpS.seams.map((t,i)=>'<button type="button" class="chip" data-sm="'+i+'">'+(rpS.kind==='j'?'Join ':'Loop ')+(i+1)+' \u00b7 '+ft(t)+'</button>').join(''):'';
+    const b=$('#tm-rp');if(b)b.disabled=rpS.busy;
+  };
+  const rpBuild=async()=>{
+    if(rpFresh())return true;
+    const p=rpPlan(),key=rpKey();rpStop();rpS.busy=true;rpSync();
+    try{
+      let blob=src.blob,dur=p.b-p.a,off=p.a,seams=[];
+      if(p.join||p.loop){const r=await bakeLoop(src.blob,{a:p.a,b:p.b},{a:lp.a,b:lp.b,n:lp.n,x:lp.x,m:lp.m},p.join?p.P:null);blob=r.blob;dur=r.dur;off=0;seams=r.seams||[]}
+      if(!$('#tm-rp'))return false;   /* the sheet was closed while building */
+      if(rpS.u)URL.revokeObjectURL(rpS.u);
+      rpS.u=URL.createObjectURL(blob);rp.src=rpS.u;
+      Object.assign(rpS,{key,off,dur,seams,kind:p.join?'j':'l'});
+      return true;
+    }catch(e){console.warn('preview failed',e);toast('Could not build the preview. This song may be too long.');return false}
+    finally{rpS.busy=false;if($('#tm-rp')){rpSync();rpDraw()}}
+  };
+  const rpPlay=async from=>{
+    if(rpS.busy)return;
+    if(!(await rpBuild()))return;
+    if(!pv.paused)stopPv();
+    if(!au.paused){au.pause();resume=true}
+    const t=from!=null?from:(rpT()>=rpS.dur-.1?0:rpT());
+    if(rp.readyState<1)await new Promise(r=>{rp.addEventListener('loadedmetadata',r,{once:true});setTimeout(r,1500)});
+    try{rp.currentTime=rpS.off+Math.max(0,Math.min(rpS.dur-.05,t))}catch(_){}
+    rp.volume=uvol;
+    rp.play().then(()=>{rpS.on=true;rpIc(true);cancelAnimationFrame(rpS.raf);rpS.raf=requestAnimationFrame(rpFrame)}).catch(()=>toast('Could not play the preview'));
+  };
+  rp.onended=()=>{rpStop();rpDraw()};
+  $('#tm-rp').onclick=()=>{if(rpS.on)rpStop();else rpPlay()};
+  $('#tm-re').onclick=async()=>{if(rpS.busy)return;if(!(await rpBuild()))return;rpPlay(Math.max(0,rpS.dur-10))};
+  $('#tm-rj').onclick=e=>{const b=e.target.closest('[data-sm]');if(b)rpPlay(Math.max(0,rpS.seams[+b.dataset.sm]-2.5))};
+  {const e=$('#tm-rs');
+   e.oninput=()=>{if(!rpS.u){e.value=0;return}rpS.sd=true;try{rp.currentTime=rpS.off+e.value/1000*rpS.dur}catch(_){}rpDraw()};
+   e.onchange=e.onpointerup=e.onblur=()=>{rpS.sd=false}}
   const seekTo=t=>{
     head=Math.max(0,Math.min(D,t));pLeft=lp.n;pTail=0;
     if(LP.busy)lpStop();
@@ -7448,7 +8381,7 @@ function trimSheet(s){
   /* one tool at a time: Trim, Join parts or Loop. The other two are switched off (their values are kept while you stay in the sheet). */
   const setMode=m=>{
     if(m===mode)return;
-    if(!pv.paused)stopPv();
+    if(!pv.paused)stopPv();rpStop();
     if(mode==='t'){stash={a:o.a,b:o.b};}   /* leaving Trim: the whole song is used until you come back */
     if(m==='t'){if(stash){o.a=stash.a;o.b=stash.b;stash=null}lp.on=false}
     else{if(mode==='t'){o.a=0;o.b=D}
@@ -7481,14 +8414,16 @@ function trimSheet(s){
   const ros=[];
   const fin=()=>{
     clearInterval(pt);cancelAnimationFrame(raf);
+    rpStop();rp.removeAttribute('src');if(rpS.u){URL.revokeObjectURL(rpS.u);rpS.u=null}
     ros.forEach(r=>r.disconnect());
     pv.pause();lpStop();pv.removeAttribute('src');if(pvU)URL.revokeObjectURL(pvU);
     if(resume&&cur)au.play().catch(()=>{});closeOv();
   };
-  $('#tm-r').onclick=()=>{if(!pv.paused)stopPv();o.a=0;o.b=D;o.xi=null;o.xo=null;lp.on=false;pl.length=0;head=0;stash=null;mode='t';jOpen=false;paint()};
+  $('#tm-r').onclick=()=>{if(!pv.paused)stopPv();rpStop();o.a=0;o.b=D;o.xi=null;o.xo=null;lp.on=false;pl.length=0;head=0;stash=null;mode='t';jOpen=false;paint()};
   {const u=$('#tm-un');if(u)u.onclick=async()=>{if(!pv.paused)stopPv();u.disabled=true;await undoBake(s);fin()}}
   $('#tm-x').onclick=fin;$('#ov').onclick=e=>{if(e.target.id==='ov')fin()};
   $('#tm-ok').onclick=async()=>{
+    rpStop();
     delete s.xi;delete s.xo;
     if(mode!=='j')pl.length=0;if(mode!=='l')lp.on=false;if(mode!=='t'){o.a=0;o.b=D}   /* switched-off tools are not saved */
     if(pl.length===1){o.a=pl[0].a;o.b=pl[0].b;pl.length=0}
@@ -7887,7 +8822,7 @@ async function stoPaint(){
   const a=$('#stos'),b=$('#stov');if(!a||!navigator.storage||!navigator.storage.persisted){if(a)a.textContent='Not supported in this browser';return}
   try{const p=await navigator.storage.persisted(),q=navigator.storage.estimate?await navigator.storage.estimate():{};
     const u=q.quota?' ('+fmtSize(q.usage||0)+' used)':'';
-    a.textContent=p?'Protected. The browser will not clear your songs on its own.'+u:'Not protected. The browser may clear songs if space runs low. Tap to ask for protection.'+u;
+    a.textContent=p?'Protected from automatic clearing.'+u:'Not protected. Tap to protect your songs.'+u;
     b.textContent=p?'On':'Off'}catch(e){a.textContent='Could not check'}
 }
 async function stoAsk(){
@@ -8207,9 +9142,10 @@ function cmBg(S){
 }
 function cmDraw(cv,S,clean){
   const W=1024,bg=cmBg(S);cv.width=cv.height=W;const x=cv.getContext('2d');x.drawImage(bg,0,0);
-  const any=S.T.some(T=>(T.title||'').trim()||(T.sub||'').trim());if(!any)return false;
   const lum=S._lum;let moved=false;
   S.T.forEach(T=>{
+    if(T.hid){T.bb=null;return}
+    if(T.type==='img'){cmImgDraw(x,T,W);return}
     const title=(T.title||'').trim(),sub=(T.sub||'').trim();if(!title&&!sub){T.bb=null;return}
     const col0=T.tc==='white'?'#fff':T.tc==='black'?'#111':/^#/.test(T.tc||'')?T.tc:(lum>150?'#111':'#fff');
     /* gradient fill: the first stop acts as the text's base color for outlines and glows */
@@ -8258,7 +9194,41 @@ function cmSnap(S,T){
   if(by){T.y=(T.y/100*W+by.d)/W*100;A.y.push(by.g)}
   return A;
 }
+/* image layers: the picture is kept as a canvas (already shrunk to 1400px) and drawn at size% of the cover width */
+function cmImgDraw(x,T,W){
+  const im=T.im;if(!im){T.bb=null;return}
+  const w=Math.max(8,T.size/100*W),h=w*T.ar,r=Math.min(w,h)/2*((T.rad||0)/50);T.bb={w,h};
+  x.save();x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);if(T.flip)x.scale(-1,1);
+  x.globalAlpha=(T.op==null?100:T.op)/100;
+  if(r>.5){x.beginPath();x.moveTo(-w/2+r,-h/2);x.arcTo(w/2,-h/2,w/2,h/2,r);x.arcTo(w/2,h/2,-w/2,h/2,r);x.arcTo(-w/2,h/2,-w/2,-h/2,r);x.arcTo(-w/2,-h/2,w/2,-h/2,r);x.closePath();x.clip()}
+  x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(im,-w/2,-h/2,w,h);x.restore();
+}
+function cmLoadImg(f){return new Promise((ok,no)=>{
+  const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{
+    URL.revokeObjectURL(u);
+    if(!im.naturalWidth||!im.naturalHeight)return no();
+    const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight)),w=Math.max(1,Math.round(im.naturalWidth*k)),h=Math.max(1,Math.round(im.naturalHeight*k));
+    const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(im,0,0,w,h);
+    const t=document.createElement('canvas'),tk=80/Math.max(w,h);t.width=Math.max(1,Math.round(w*tk));t.height=Math.max(1,Math.round(h*tk));t.getContext('2d').drawImage(c,0,0,t.width,t.height);
+    const ar=h/w;
+    ok({type:'img',name:((f.name||'Image').replace(/\.[^.]+$/,'').slice(0,24))||'Image',im:c,thumb:t.toDataURL('image/png'),ar,x:50,y:50,size:Math.round(Math.min(60,60/ar)),rot:0,op:100,rad:0,flip:false,hid:false,bb:null});
+  };
+  im.onerror=()=>{URL.revokeObjectURL(u);no()};im.src=u;
+})}
+/* the selected layer gets a dashed frame and a round handle at its bottom right corner to resize it; neither is saved into the cover */
+function cmHandle(T){const W=1024,p=T.type==='img'?0:14,hw=T.bb.w/2+p,hh=T.bb.h/2+p,a=(T.rot||0)*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return[T.x/100*W+hw*c-hh*s,T.y/100*W+hw*s+hh*c]}
+function cmSelDraw(x,S,W){
+  const T=S.T[S.k];if(!T||!T.bb||T.x==null||S.tab!=='tx')return;
+  const p=T.type==='img'?0:14,hw=T.bb.w/2+p,hh=T.bb.h/2+p;
+  x.save();x.globalCompositeOperation='source-over';x.globalAlpha=1;
+  x.translate(T.x/100*W,T.y/100*W);x.rotate((T.rot||0)*Math.PI/180);
+  x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.95)';x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.setLineDash([16,10]);x.strokeRect(-hw,-hh,hw*2,hh*2);
+  x.setLineDash([]);x.shadowBlur=0;x.fillStyle='#fff';x.strokeStyle='#ff3d81';x.lineWidth=5;x.beginPath();x.arc(hw,hh,17,0,7);x.fill();x.stroke();
+  x.restore();
+}
 function cmGuideDraw(x,S,W){
+  cmSelDraw(x,S,W);
   const A=S.ga||{x:[],y:[]};if(!S.grid&&!A.x.length&&!A.y.length&&!S.drag)return;
   x.save();x.globalCompositeOperation='source-over';x.globalAlpha=1;x.setLineDash([14,12]);
   const line=(a,b,c,d)=>{x.beginPath();x.moveTo(a,b);x.lineTo(c,d);x.stroke()};
@@ -8272,13 +9242,13 @@ function covMaker(o){return new Promise(res=>{
   o=o||{};
   const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,ifx:[],ifa:50,igc:'auto',img:null,imgUrl:null,tab:'bg',snap:true,grid:false,ga:null,drag:false};
   if(/^#[0-9a-f]{6}$/i.test(o.color||'')){S.c=[o.color,S.c[1],S.c[2]];S.pal=-1}
-  const cur=()=>S.T[S.k];
+  const NOL=cmLayer(0,'');const cur=()=>S.T[S.k]||NOL;/* NOL: stand-in when no layer is selected, edits to it draw nothing */
   const e=document.createElement('div');e.id='cmk';e.setAttribute('role','dialog');e.setAttribute('aria-modal','true');e.setAttribute('aria-label','Make cover');
   const chips=(id,list,st)=>`<div class="cmg" id="${id}">${list.map(l=>`<button type="button" class="chip" data-v="${l[0]}"${st&&st[l[0]]?` style="${st[l[0]]}"`:''}>${l[1]}</button>`).join('')}</div>`;
   const fst={};Object.keys(CM_FONT).forEach(k=>{const F=CM_FONT[k],w=/\d+/.exec(F[0]),it=/italic/.test(F[0]);fst[k]=`font-family:${F[1]};font-weight:${w?w[0]:400};font-style:${it?'italic':'normal'}`});
   const swatches=`<button type="button" class="cmsw" data-sw="0" aria-label="Palette color 1"></button><button type="button" class="cmsw" data-sw="1" aria-label="Palette color 2"></button><button type="button" class="cmsw" data-sw="2" aria-label="Palette color 3"></button>`;
   e.innerHTML=`<div class="cmd"><h3>Make cover</h3><div class="cmp"><canvas id="cmv" width="1024" height="1024"></canvas></div>
-  <div class="cmtb"><div class="cmtabs" id="cmtab"><button type="button" class="chip" data-v="bg">Background</button><button type="button" class="chip" data-v="tx">Text</button></div></div>
+  <div class="cmtb"><div class="cmtabs" id="cmtab"><button type="button" class="chip" data-v="bg">Background</button><button type="button" class="chip" data-v="tx">Layers</button></div></div>
   <div class="cmc">
   <div id="cmbg">
     <div class="cmsec"><div class="cml">Style</div>${chips('cms',CM_STY)}
@@ -8298,9 +9268,15 @@ function covMaker(o){return new Promise(res=>{
     </div>
   </div>
   <div id="cmtx" hidden>
-    <div class="cmsec"><div class="cml">Text</div><div class="cmh">Tap a text on the preview to select it, then drag to move it.</div>
-      <div class="cmw" id="cmly"></div>
-      <div class="cmw cmtxr" style="margin-top:12px"><input type="text" id="cmt" maxlength="80" placeholder="Title" autocomplete="off"><button type="button" class="cmdel" id="cmdel" aria-label="Delete this text" title="Delete this text">${ic('trash',20)}</button></div>
+    <div class="cmsec"><div class="cml">Layers</div><div class="cmh">The top of the list is the front. Tap a layer to edit it, tap the eye to hide it, drag the handle to reorder. You can also tap a layer on the preview, drag it, or drag its round corner handle to resize.</div>
+      <div id="cmll" role="list"></div>
+      <div class="cmw" style="margin-top:10px"><button type="button" class="pill" data-add="1">${ic('plus',14)}Add text</button><button type="button" class="pill" data-addimg="1">${ic('image',16)}Add image</button></div>
+      <div class="cmw" id="cmod" style="margin-top:8px"><button type="button" class="pill" id="cmfw">${ic('up',16)}Bring forward</button><button type="button" class="pill" id="cmbk">${ic('down',16)}Send backward</button></div>
+      <input type="file" id="cmlf" accept="image/*" multiple hidden><input type="file" id="cmlr2" accept="image/*" hidden>
+    </div>
+    <div id="cmtp">
+    <div class="cmsec"><div class="cml">Text</div>
+      <div class="cmw cmtxr"><input type="text" id="cmt" maxlength="80" placeholder="Title" autocomplete="off"><button type="button" class="cmdel" id="cmdel" aria-label="Delete this text" title="Delete this text">${ic('trash',20)}</button></div>
       <input type="text" id="cmu" maxlength="80" placeholder="Subtitle (optional)" autocomplete="off">
     </div>
     <div class="cmsec"><div class="cml">Font</div>${chips('cmf',Object.keys(CM_FONT).map(k=>[k,CM_FONT[k][3]]),fst)}</div>
@@ -8318,12 +9294,27 @@ function covMaker(o){return new Promise(res=>{
         <div class="cml sub" id="cmgl">Effect color</div><div class="cmw" id="cmgc"><button type="button" class="chip" data-v="auto">Auto</button>${swatches}<button type="button" class="cmsw" data-sw="w" aria-label="White" style="background:#fff"></button><label class="cmcl" aria-label="Custom effect color"><input type="color" id="cmgci"></label></div>
       </div>
     </div>
-    <div class="cmsec"><div class="cml">Guides</div><div class="cmw" id="cmgd"><button type="button" class="chip" data-v="snap">Snap to guides</button><button type="button" class="chip" data-v="grid">Show guides</button></div><div class="cmh" style="margin-top:8px">Text snaps to the center, the thirds, the margins and your other texts. Guides always appear while you drag. They are never saved into the cover.</div></div>
     <div class="cmsec"><div class="cml">Size and position</div>
       <div class="fop"><span>Size</span><input type="range" class="rng" id="cmz" min="20" max="90" aria-label="Text size"><b></b></div>
       <div class="fop"><span>Rotate</span><input type="range" class="rng" id="cmsr" min="-180" max="180" aria-label="Text rotation"><b></b></div>
       <div class="cmg" id="cmpp"><button type="button" class="pill" data-p="t">Top</button><button type="button" class="pill" data-p="c">Middle</button><button type="button" class="pill" data-p="b">Bottom</button></div>
     </div>
+    </div>
+    <div id="cmip" hidden>
+      <div class="cmsec"><div class="cml">Image</div>
+        <div class="cmw"><button type="button" class="pill" id="cmmrp">Replace image\u2026</button><button type="button" class="pill" id="cmmfl">Flip</button><button type="button" class="cmdel r" id="cmmdel" aria-label="Delete this image" title="Delete this image">${ic('trash',20)}</button></div>
+      </div>
+      <div class="cmsec"><div class="cml">Size and position</div>
+        <div class="fop"><span>Size</span><input type="range" class="rng" id="cmmz" min="5" max="200" aria-label="Image size"><b></b></div>
+        <div class="fop"><span>X</span><input type="range" class="rng" id="cmmx" min="0" max="100" aria-label="Horizontal position"><b></b></div>
+        <div class="fop"><span>Y</span><input type="range" class="rng" id="cmmy" min="0" max="100" aria-label="Vertical position"><b></b></div>
+        <div class="fop"><span>Rotate</span><input type="range" class="rng" id="cmmr" min="-180" max="180" aria-label="Image rotation"><b></b></div>
+        <div class="fop"><span>Opacity</span><input type="range" class="rng" id="cmmo" min="0" max="100" aria-label="Image opacity"><b></b></div>
+        <div class="fop"><span>Corners</span><input type="range" class="rng" id="cmmc" min="0" max="50" aria-label="Rounded corners"><b></b></div>
+        <div class="cmw" style="margin-top:10px"><button type="button" class="pill" id="cmmct">Center</button><button type="button" class="pill" id="cmmfit">Fit</button><button type="button" class="pill" id="cmmfill">Fill cover</button></div>
+      </div>
+    </div>
+    <div class="cmsec"><div class="cml">Guides</div><div class="cmw" id="cmgd"><button type="button" class="chip" data-v="snap">Snap to guides</button><button type="button" class="chip" data-v="grid">Show guides</button></div><div class="cmh" style="margin-top:8px">Text snaps to the center, the thirds, the margins and your other texts. Guides always appear while you drag. They are never saved into the cover.</div></div>
   </div>
   </div>
   <div class="bt"><button type="button" class="pill" id="cmx">Cancel</button><button type="button" class="pill acc" id="cmok">Use cover</button></div></div>`;
@@ -8331,9 +9322,18 @@ function covMaker(o){return new Promise(res=>{
   let done=false;
   const kd=ev=>{if(ev.key==='Escape'){ev.stopPropagation();fin(null)}};
   const fin=v=>{if(done)return;done=true;document.removeEventListener('keydown',kd,true);if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);e.remove();res(v)};
-  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmga',T.ga==null?90:T.ga,'\u00b0',0,360],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
-  const lay=()=>{q('#cmly').innerHTML=S.T.map((T,i)=>`<button type="button" class="chip${i===S.k?' on':''}" data-l="${i}">${esc((T.title||'').trim().slice(0,14)||'Text '+(i+1))}</button>`).join('')+'<button type="button" class="pill" data-add="1">'+ic('plus',14)+'Add text</button>';q('#cmdel').style.display=S.T.length>1?'':'none'};
-  const load=()=>{const T=cur();q('#cmt').value=T.title;q('#cmu').value=T.sub};
+  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmga',T.ga==null?90:T.ga,'\u00b0',0,360],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].concat(T.type==='img'?[['#cmmz',T.size,'%',5,200],['#cmmx',T.x==null?50:T.x,'%',0,100],['#cmmy',T.y==null?50:T.y,'%',0,100],['#cmmr',T.rot||0,'\u00b0',-180,180],['#cmmo',T.op==null?100:T.op,'%',0,100],['#cmmc',T.rad||0,'%',0,50]]:[]).forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
+  const EYE1='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12 5C7 5 3 9.5 2 12c1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7zm0 11.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9zm0-7a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>',EYE0='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12 5C7 5 3 9.5 2 12c1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7zm0 11.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" opacity=".35"/><path d="M3.2 4.6l1.4-1.4 16.2 16.2-1.4 1.4z"/></svg>',GRIP='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M5 7h14v2H5zm0 4h14v2H5zm0 4h14v2H5z"/></svg>',LOCK='<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17 9V7a5 5 0 00-10 0v2H5v12h14V9h-2zM9 7a3 3 0 016 0v2H9V7z"/></svg>';
+  const lay=()=>{
+    const n=S.T.length;let h='';
+    for(let d=0;d<n;d++){
+      const i=n-1-d,T=S.T[i],img=T.type==='img',nm=img?T.name:((T.title||'').trim().slice(0,22)||'Text '+(i+1));
+      h+=`<div class="cmlr${i===S.k?' on':''}${T.hid?' off':''}" data-r="${i}" role="listitem"><button type="button" class="cmeye" data-eye="${i}" aria-label="${T.hid?'Show':'Hide'} ${esc(nm)}" aria-pressed="${!T.hid}">${T.hid?EYE0:EYE1}</button><button type="button" class="cmlm" data-l="${i}"><span class="cmth">${img?`<img src="${T.thumb}" alt="">`:'<b>T</b>'}</span><span class="cmln">${esc(nm)}</span></button><button type="button" class="cmgrip" data-grip="${i}" aria-label="Drag to reorder ${esc(nm)}">${GRIP}</button></div>`;
+    }
+    h+=`<div class="cmlr bgr" role="listitem"><span class="cmlk" title="Locked">${LOCK}</span><button type="button" class="cmlm" data-bgl="1"><span class="cmth" style="background:linear-gradient(135deg,${S.c[0]},${S.c[1]},${S.c[2]})"></span><span class="cmln">Background</span></button></div>`;
+    q('#cmll').innerHTML=h;
+  };
+  const load=()=>{const T=cur();q('#cmt').value=T.title||'';q('#cmu').value=T.sub||''};
   let raf=0;const draw=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{if(cmDraw(q('#cmv'),S))sl()})};
   const same=(a,b)=>String(a||'').toLowerCase()===String(b||'').toLowerCase();
   const sync=()=>{
@@ -8366,6 +9366,9 @@ function covMaker(o){return new Promise(res=>{
     q('#cmfo').hidden=!fxs.length;q('#cmgc').hidden=q('#cmgl').hidden=!fxs.some(k=>k==='glow'||k==='neon'||k==='outline'||k==='retro');
     q('#cmph').hidden=S.style!=='photo';q('#cmdw').hidden=S.style!=='photo'||!S.img;
     q('#cmpb').textContent=S.img?'Change photo\u2026':'Choose a photo\u2026';
+    {const has=!!S.T[S.k],isImg=has&&T.type==='img';
+     q('#cmtp').hidden=!has||isImg;q('#cmip').hidden=!isImg;q('#cmod').hidden=!has;
+     q('#cmfw').disabled=!has||S.k>=S.T.length-1;q('#cmbk').disabled=!has||S.k<=0}
     lay();sl();draw();
   };
   e.addEventListener('click',ev=>{
@@ -8384,9 +9387,20 @@ function covMaker(o){return new Promise(res=>{
     else if(grp==='cmgd'){if(v==='snap')S.snap=S.snap===false;else S.grid=!S.grid}
     else if(b.id==='cmgsw'){const a=T.g1||S.c[0];T.g1=T.g2||S.c[1];T.g2=a}
     else if(b.dataset.p)T.pv=b.dataset.p;
+    else if(b.dataset.eye!=null){const L=S.T[+b.dataset.eye];if(L)L.hid=!L.hid}
+    else if(b.dataset.grip!=null)return;
+    else if(b.dataset.bgl){S.tab='bg';q('.cmc').scrollTop=0}
     else if(b.dataset.l!=null){S.k=+b.dataset.l;load()}
-    else if(b.dataset.add){if(S.T.length>=8)return toast('That is enough texts for one cover');S.T.push(cmLayer(1,'New text'));S.k=S.T.length-1;load();q('#cmt').focus();q('#cmt').select()}
-    else if(b.id==='cmdel'){if(S.T.length>1){S.T.splice(S.k,1);S.k=Math.min(S.k,S.T.length-1);load()}}
+    else if(b.dataset.add){if(S.T.length>=12)return toast('That is enough layers for one cover');S.T.push(cmLayer(1,'New text'));S.k=S.T.length-1;load();S.tab='tx';sync();q('#cmt').focus();q('#cmt').select();return}
+    else if(b.dataset.addimg)return q('#cmlf').click();
+    else if(b.id==='cmdel'||b.id==='cmmdel'){if(S.k>=0){S.T.splice(S.k,1);S.k=Math.min(S.k,S.T.length-1);load()}}
+    else if(b.id==='cmfw'){if(S.k>=0&&S.k<S.T.length-1){const t=S.T[S.k];S.T[S.k]=S.T[S.k+1];S.T[S.k+1]=t;S.k++}}
+    else if(b.id==='cmbk'){if(S.k>0){const t=S.T[S.k];S.T[S.k]=S.T[S.k-1];S.T[S.k-1]=t;S.k--}}
+    else if(b.id==='cmmrp')return q('#cmlr2').click();
+    else if(b.id==='cmmfl'){if(T.type==='img')T.flip=!T.flip}
+    else if(b.id==='cmmct'){if(T.type==='img'){T.x=50;T.y=50}}
+    else if(b.id==='cmmfit'){if(T.type==='img'){T.x=50;T.y=50;T.rot=0;T.size=Math.min(100,100/T.ar)}}
+    else if(b.id==='cmmfill'){if(T.type==='img'){T.x=50;T.y=50;T.rot=0;T.size=Math.min(200,Math.max(100,100/T.ar))}}
     else if(b.classList.contains('cmpal')){S.pal=+b.dataset.i;S.c=CM_PAL[S.pal].slice()}
     else if(b.id==='cmsh'){S.seed=(Math.random()*1e6|0)+1;if(S.pal>=0){S.pal=Math.floor(Math.random()*CM_PAL.length);S.c=CM_PAL[S.pal].slice()}}
     else if(b.id==='cmpb')return q('#cmpf').click();
@@ -8399,15 +9413,57 @@ function covMaker(o){return new Promise(res=>{
   q('#cmsr').oninput=ev=>{cur().rot=+ev.target.value;sync()};q('#cmfa').oninput=ev=>{cur().fa=+ev.target.value;sync()};
   q('#cmz').oninput=ev=>{cur().size=+ev.target.value;sync()};q('#cmg').oninput=ev=>{S.grain=+ev.target.value;sync()};q('#cmd2').oninput=ev=>{S.dim=+ev.target.value;sync()};
   q('#cmtci').oninput=ev=>{cur().tc=ev.target.value;sync()};q('#cmg1i').oninput=ev=>{cur().g1=ev.target.value;sync()};q('#cmg2i').oninput=ev=>{cur().g2=ev.target.value;sync()};q('#cmga').oninput=ev=>{cur().ga=+ev.target.value;sync()};q('#cmgci').oninput=ev=>{cur().gc=ev.target.value;sync()};
-  q('#cmia').oninput=ev=>{S.ifa=+ev.target.value;sync()};q('#cmici').oninput=ev=>{S.igc=ev.target.value;sync()};
+  q('#cmia').oninput=ev=>{S.ifa=+ev.target.value;sync()};
+  /* image sliders only redraw the preview and refresh the value labels: no list rebuild per tick */
+  [['#cmmz','size'],['#cmmx','x'],['#cmmy','y'],['#cmmr','rot'],['#cmmo','op'],['#cmmc','rad']].forEach(([id,k])=>{q(id).oninput=ev=>{const T=cur();if(T.type!=='img')return;T[k]=+ev.target.value;sl();draw()}});
+  q('#cmlf').onchange=async ev=>{
+    const fs=[...ev.target.files];ev.target.value='';let bad=0;
+    for(const f of fs){
+      if(S.T.length>=12){toast('That is enough layers for one cover');break}
+      try{S.T.push(await cmLoadImg(f));S.k=S.T.length-1}catch(_){bad++}
+    }
+    if(bad)toast('Could not read that image');
+    S.tab='tx';load();sync();
+  };
+  q('#cmlr2').onchange=async ev=>{const f=ev.target.files[0];ev.target.value='';const T=cur();if(!f||T.type!=='img')return;try{const L=await cmLoadImg(f);T.im=L.im;T.thumb=L.thumb;T.ar=L.ar;T.name=L.name;sync()}catch(_){toast('Could not read that image')}};
+  /* drag a layer by its handle to reorder; the rows move live, the order is applied on release */
+  q('#cmll').addEventListener('pointerdown',ev=>{
+    const g=ev.target.closest('.cmgrip');if(!g)return;ev.preventDefault();
+    const row=g.closest('.cmlr'),list=q('#cmll');try{g.setPointerCapture(ev.pointerId)}catch(_){}
+    row.classList.add('drag');
+    const mv=e2=>{
+      for(const r of list.querySelectorAll('.cmlr:not(.bgr)')){
+        if(r===row)continue;const bx=r.getBoundingClientRect();
+        if(e2.clientY>bx.top&&e2.clientY<bx.bottom){
+          const below=!!(row.compareDocumentPosition(r)&Node.DOCUMENT_POSITION_FOLLOWING),mid=bx.top+bx.height/2;
+          if(below&&e2.clientY>mid)r.after(row);else if(!below&&e2.clientY<mid)r.before(row);
+          break}}
+    };
+    const up=()=>{
+      g.removeEventListener('pointermove',mv);g.removeEventListener('pointerup',up);g.removeEventListener('pointercancel',up);
+      row.classList.remove('drag');
+      const sel=S.T[S.k],order=[...list.querySelectorAll('.cmlr:not(.bgr)')].reverse().map(r=>S.T[+r.dataset.r]);
+      if(order.length===S.T.length&&order.every(Boolean)){S.T=order;S.k=S.T.indexOf(sel)}
+      sync();
+    };
+    g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up);
+  });q('#cmici').oninput=ev=>{S.igc=ev.target.value;sync()};
   qa('.cmcol').forEach(i=>i.oninput=ev=>{S.c[+i.dataset.k]=ev.target.value;S.pal=-1;sync()});
-  {const cv=q('#cmv');let dr=null,rw=[50,50];
-   /* tap a text on the preview to pick it (topmost first), then drag to move it */
-   const hit=ev=>{const r=cv.getBoundingClientRect(),W=1024,px=(ev.clientX-r.left)/r.width*W,py=(ev.clientY-r.top)/r.height*W;
+  {const cv=q('#cmv');let dr=null,rw=[50,50],sc=null;
+   const pt=ev=>{const r=cv.getBoundingClientRect();return[(ev.clientX-r.left)/r.width*1024,(ev.clientY-r.top)/r.height*1024]};
+   const lim=T=>T.type==='img'?[5,200]:[20,90];
+   /* tap a layer on the preview to pick it (topmost first), then drag to move it; the round corner handle resizes it */
+   const hit=ev=>{const [px,py]=pt(ev),W=1024;
      for(let i=S.T.length-1;i>=0;i--){const T=S.T[i];if(!T.bb||T.x==null)continue;const dx=px-T.x/100*W,dy=py-T.y/100*W,a=-(T.rot||0)*Math.PI/180,rx=dx*Math.cos(a)-dy*Math.sin(a),ry=dx*Math.sin(a)+dy*Math.cos(a);if(Math.abs(rx)<=T.bb.w/2+30&&Math.abs(ry)<=T.bb.h/2+30)return i}return -1};
-   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}const i=hit(ev);if(i>=0){if(i!==S.k){S.k=i;load()}S.tab='tx';sync()}dr=[ev.clientX,ev.clientY];{const T=cur();rw=[T.x==null?50:T.x,T.y==null?50:T.y];S.drag=true}};
-   cv.onpointermove=ev=>{if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();rw[0]=Math.max(0,Math.min(100,rw[0]+(ev.clientX-dr[0])/r.width*100));rw[1]=Math.max(0,Math.min(100,rw[1]+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];T.x=rw[0];T.y=rw[1];S.ga=cmSnap(S,T);cmDraw(cv,S)};
-   cv.onpointerup=cv.onpointercancel=()=>{const was=S.drag;dr=null;S.drag=false;S.ga=null;if(was)cmDraw(cv,S)}}
+   cv.onpointerdown=ev=>{try{cv.setPointerCapture(ev.pointerId)}catch(_){}
+     const T0=S.T[S.k],[px,py]=pt(ev);
+     if(S.tab==='tx'&&T0&&T0.bb&&T0.x!=null){const c=cmHandle(T0);if(Math.hypot(px-c[0],py-c[1])<=48){const d0=Math.hypot(px-T0.x/100*1024,py-T0.y/100*1024);if(d0>20){sc={T:T0,d0,s0:T0.size};dr=null;S.drag=false;return}}}
+     const i=hit(ev);if(i>=0){if(i!==S.k){S.k=i;load()}S.tab='tx';sync()}dr=[ev.clientX,ev.clientY];{const T=cur();rw=[T.x==null?50:T.x,T.y==null?50:T.y];S.drag=true}};
+   cv.onpointermove=ev=>{
+     if(sc){const [px,py]=pt(ev),T=sc.T,d=Math.hypot(px-T.x/100*1024,py-T.y/100*1024),[a,b]=lim(T);T.size=Math.max(a,Math.min(b,sc.s0*d/sc.d0));cmDraw(cv,S);return}
+     if(!dr)return;const T=cur(),r=cv.getBoundingClientRect();rw[0]=Math.max(0,Math.min(100,rw[0]+(ev.clientX-dr[0])/r.width*100));rw[1]=Math.max(0,Math.min(100,rw[1]+(ev.clientY-dr[1])/r.height*100));dr=[ev.clientX,ev.clientY];T.x=rw[0];T.y=rw[1];S.ga=cmSnap(S,T);cmDraw(cv,S)};
+   cv.onpointerup=cv.onpointercancel=()=>{const was=S.drag||sc;dr=null;sc=null;S.drag=false;S.ga=null;if(was){cmDraw(cv,S);sl()}};
+   cv.addEventListener('wheel',ev=>{const T=S.T[S.k];if(S.tab!=='tx'||!T||!T.bb)return;ev.preventDefault();const [a,b]=lim(T);T.size=Math.max(a,Math.min(b,T.size*(ev.deltaY<0?1.06:.94)));cmDraw(cv,S);sl()},{passive:false})}
   q('#cmpf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);S.imgUrl=u;S.img=im;S.style='photo';sync()};im.onerror=()=>{URL.revokeObjectURL(u);toast('Could not read that image')};im.src=u};
   e.addEventListener('pointerdown',ev=>{if(ev.target===e)fin(null)});
   document.addEventListener('keydown',kd,true);
@@ -8419,7 +9475,7 @@ function ui(){
   if(LS('tracks-mh'))$('#app').classList.add('mh');
   $('#app').insertAdjacentHTML('beforeend',`<button id="mshow" data-act="minishow" aria-label="Show player">${ic('chev',18)}</button>`);
   $('#plus').innerHTML=ic('plus',26);$('#qk').innerHTML=ic('qm',22);
-  $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button></div></div>`);
+  $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button><button class="ib gb" data-act="gmove" aria-label="Move to folder">${ic('move',22)}</button><button class="ib gb" data-act="gpos" aria-label="Change position">${ic('reorder',22)}</button><button class="ib gb" data-act="gdel" aria-label="Delete">${ic('trash',22)}</button></div></div>`);
   $('#gear').innerHTML=ic('gear',24);paintTheme();applyLayout();
   new ResizeObserver(()=>document.documentElement.style.setProperty('--tp',$('#top').offsetHeight+'px')).observe($('#top'));
   $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off"><button class="sbx" data-act="clearsearch" aria-label="Close search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
@@ -8434,7 +9490,7 @@ function ui(){
   $('#msk').onpointerdown=()=>{seeking=true};
   $('#app').insertAdjacentHTML('beforeend',`<div id="qp"><div class="qh"><h3>Queue</h3><div class="qa"><button class="ovx" data-act="qshuf" aria-label="Shuffle upcoming songs">${ic('shuffle',18)}</button><button class="pill" data-act="qclear">Clear</button><button class="ovx" data-act="qclose" aria-label="Close queue">${ic('close',16)}</button></div></div><div id="ql"></div></div>`);
   $('#mini .m1').addEventListener('click',e=>{if(e.target.closest('[data-act]'))return;openFull()});
-  $('#app').insertAdjacentHTML('beforeend',`<aside id="np" aria-label="Now playing"><div class="npg" id="npg" role="separator" aria-orientation="vertical" aria-label="Drag to resize the panel" title="Drag to resize (double-click to reset)"></div><div class="npge" id="npge"></div><div class="nph"><b>Now playing</b><span class="nphr"><button class="ib" data-npa="full" aria-label="Open full player" title="Full screen player">${ic('npx',22)}</button></span></div><div class="npc" id="npc" data-npa="full"></div><div class="npi"><div class="npn"><h2 id="npt"></h2><p id="nps"></p></div>${likeBtn()}${oneBtn()}</div><div class="npl" id="npl"></div></aside><div id="npb"><div class="nl"><div class="nc" id="nbc" data-npa="full"></div><div class="nt"><b id="nbt"></b><span id="nbs"></span></div><div class="npa">${likeBtn()}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album" title="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist" title="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib npm" data-act="npmore" aria-label="More options" title="Like, add to album or playlist, edit details">${ic('dots',22)}</button></div></div><div class="nm"><div class="nctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="nbp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div><div class="nsk"><span id="nbct">0:00</span><input type="range" class="rng" id="nbsk" min="0" max="1000" value="0" aria-label="Seek"><span id="nbdt">0:00</span></div></div><div class="nr"><button class="ib${NP.ly?' on':''}" data-npa="ly" aria-label="Show lyrics" title="Lyrics">${ic('mic',22)}</button><button class="ib nmb pnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="qopen" aria-label="Queue" title="Queue (hold for the full queue)">${ic('qm',22)}<svg class="qring" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17"/></svg></button><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="nbvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div></div>`);
+  $('#app').insertAdjacentHTML('beforeend',`<aside id="np" aria-label="Now playing"><div class="npg" id="npg" role="separator" aria-orientation="vertical" aria-label="Drag to resize the panel" title="Drag to resize (double-click to reset)"></div><div class="npge" id="npge"></div><div class="nph"><b>Now playing</b><span class="nphr"><button class="ib" data-npa="full" aria-label="Open full player" title="Full screen player">${ic('npx',22)}</button></span></div><div class="npc" id="npc" data-npa="full"></div><div class="npi"><div class="npn"><h2 id="npt"></h2><p id="nps"></p></div>${likeBtn()}${oneBtn()}</div><div class="npl" id="npl"></div></aside><div id="npb"><div class="nl"><div class="nc" id="nbc" data-npa="full"></div><div class="nt"><b id="nbt"></b><span id="nbs"></span></div><div class="npa">${likeBtn()}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album" title="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist" title="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib npm" data-act="npmore" aria-label="More options" title="Like, add to album or playlist, edit details">${ic('dots',22)}</button></div></div><div class="nm"><div class="nctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="nbp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div><div class="nsk"><span id="nbct">0:00</span><input type="range" class="rng" id="nbsk" min="0" max="1000" value="0" aria-label="Seek"><span id="nbdt">0:00</span></div></div><div class="nr"><button class="ib${NP.ly?' on':''}" data-npa="ly" aria-label="Show lyrics" title="Lyrics">${ic('mic',22)}</button><button class="ib nmb pnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="qopen" aria-label="Queue" title="Queue (hold for the full queue)">${ic('qm',22)}<svg class="qring" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17"/></svg></button><span class="nvg"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="nbvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></span></div></div>`);
   $('#np').addEventListener('click',npClick);$('#npb').addEventListener('click',npClick);$('#npb').addEventListener('wheel',npbWheel,{passive:false});nmPaint();
   $('#nbsk').oninput=e=>{if(vD())vSeek(e.target.value/1000*vD());e.target.style.setProperty('--p',(e.target.value/10)+'%');$('#nbct').textContent=fmt(vT())};
   $('#nbsk').onpointerdown=()=>{seeking=true};
@@ -8455,7 +9511,7 @@ function ui(){
   for(const o of [...songs,...albums]){
     if(o.cover&&!o.ccol){const c=await colorFromUrl(o.cover);if(c){o.ccol=c;await put(SS.has(o)?'songs':'albums',o)}}
   }
-  renderMini();lyBoot();medBootGC();shareIntake();
+  renderMini();lyBoot();medBootGC();shareIntake();fpInit();
 })();
 </script>
 </body>
