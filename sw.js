@@ -3,7 +3,7 @@
    and the app offers it in Settings > Backup; tapping Install swaps both at once. Nothing rewrites the cached
    page behind the worker's back, so the page can never be newer than the worker that serves it.
    VERSION is stamped by stamp-sw.js (a hash of the shell files): run it before every deploy. */
-const VERSION='d13a3ddc';
+const VERSION='293b91cc';
 const PFX='trax-',C=PFX+VERSION,SHARE=PFX+'share';
 const SHELL='./index.html';
 const ASSETS=['./manifest.webmanifest','./icon-192.png','./icon-512.png'];

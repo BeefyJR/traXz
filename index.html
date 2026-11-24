@@ -224,6 +224,10 @@ header{padding:14px 20px 6px;display:flex;align-items:center;justify-content:spa
 header{padding-top:46px}
 #logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:29px;overflow:visible;z-index:15;pointer-events:none;color:var(--text);fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transition:color .3s}
 #logo .x{stroke:rgb(var(--lac,var(--ac)))}
+html[data-hdac=on] :is(#plus,#cb,#qk,#gear){color:rgb(var(--lac,var(--ac)))!important;transition:color .3s}
+#gbk{position:fixed;top:50%;left:0;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:rgb(var(--ac));color:#fff;display:none;align-items:center;justify-content:center;z-index:1000;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.35);will-change:transform,opacity}
+#gbk svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+#gbk.r svg{transform:scaleX(-1)}
 #app:has(#full.open) #logo{color:#fff}
 header{display:block;padding:8px 20px 2px}
 .hr{display:flex;align-items:center;justify-content:space-between;height:46px}
@@ -3816,7 +3820,7 @@ function renderMini(){
   if(!s)return;
   if(!was)an(mini,[{transform:'translateY(130%)',opacity:0},{transform:'none',opacity:1}],{duration:460,easing:EASE_OUT});
   mini.style.setProperty('--ac',accent(s).join(','));
-  miniBg(s);$('#logo').style.setProperty('--lac',accent(s).join(','));
+  miniBg(s);{const lc=accent(s).join(',');$('#logo').style.setProperty('--lac',lc);document.documentElement.style.setProperty('--lac',lc)}
   const sig=fullKey(s);
   if(sig!==miniSig){
     miniSig=sig;setSession(s);$('#mc').innerHTML=cover(songCover(s),s.name,true);$('#mt').textContent=s.name;$('#ms').innerHTML=subHtml(s)||'No album';
@@ -7262,7 +7266,8 @@ function icSheet(){
     <div class="scd"><h4>Look</h4><div class="bgs">${sl('icsz','Icon size',ICP.size,32,60)}${sl('icgp','Spacing',ICP.gap,0,24)}</div>
     <div class="icr"><div class="icrt"><b>Shape</b></div><div class="bgst icrc">${[['circle','Circle'],['round','Rounded'],['plain','Plain']].map(p=>chip(ICP.sh===p[0],`data-sh="${p[0]}"`,p[1])).join('')}</div></div>
     <div class="icr"><div class="icrt"><b>Background</b></div><div class="bgst icrc">${[['auto','Default'],['glass','Glass'],['solid','Solid'],['none','None']].map(p=>chip(ICP.bg===p[0],`data-bgm="${p[0]}"`,p[1])).join('')}</div></div>
-    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent colour icons</b></span><span class="stog"></span></button></div>
+    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent colour icons</b></span><span class="stog"></span></button>
+    <button type="button" class="srow" data-hdac="1" role="switch" aria-checked="${HDAC.on}"><span class="st"><b>Colour from the song</b><small>Add, Cloud, Queue and Settings follow the current song's colour, like the X in the traX logo.</small></span><span class="stog"></span></button></div>
     <div class="bt"><button type="button" class="pill mr" data-icreset="1">Reset</button><button type="button" class="pill acc" data-icdone="1">Done</button></div>`;
   };
   const pv=()=>{$('#icpv').innerHTML=icPvHtml(sel);
@@ -7285,6 +7290,7 @@ function icSheet(){
     const sp=t.closest('[data-sh]');if(sp){ICP.sh=sp.dataset.sh;apply();paint();return}
     const bm=t.closest('[data-bgm]');if(bm){ICP.bg=bm.dataset.bgm;apply();paint();return}
     if(t.closest('[data-acc]')){ICP.acc=!ICP.acc;apply();paint();return}
+    if(t.closest('[data-hdac]')){HDAC.on=!HDAC.on;LS('tracks-hdac',HDAC.on?'1':'0');hdacApply();paint();return}
   };
   sh.oninput=e=>{const i=e.target;if(i.id!=='icsz'&&i.id!=='icgp')return;
     const v=+i.value,mn=+i.min,mx=+i.max;if(i.id==='icsz')ICP.size=v;else ICP.gap=v;
@@ -7365,6 +7371,10 @@ tpbApply();
 const BGP=['#000000','#1c1c1e','#0f172a','#102a1f','#2b1220','#241638','#f4ecd8','#e3f2e9','#dbeafe','#fde7ef'];
 let setTab='app';
 const HINT={on:LS('tracks-hints')!=='0'};
+const GEST={on:LS('tracks-gest')!=='0'};
+const HDAC={on:LS('tracks-hdac')!=='0'};
+const hdacApply=()=>document.documentElement.setAttribute('data-hdac',HDAC.on?'on':'off');
+hdacApply();
 const hintApply=()=>document.documentElement.setAttribute('data-hints',HINT.on?'on':'off');
 hintApply();
 function openSettings(){
@@ -7390,6 +7400,7 @@ function openSettings(){
     <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement <span class="xbadge">Experimental</span>',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
     <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
   <section class="stp" data-p="play">
@@ -7441,7 +7452,7 @@ function openSettings(){
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
     const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);const one_=sh.querySelector('[data-onebtn]');if(one_)one_.setAttribute('aria-checked',!!ONE.on);
-    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);
+    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);const gs_=sh.querySelector('[data-gest]');if(gs_)gs_.setAttribute('aria-checked',!!GEST.on);
     const lr_=sh.querySelector('[data-lrl]');if(lr_)lr_.setAttribute('aria-checked',!!LRL.on);
     tbPaint();dkPaint();tpPaint();npPaint();pfPaint();
   };
@@ -7457,6 +7468,7 @@ function openSettings(){
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
     const lrl_=e.target.closest('[data-lrl]');if(lrl_){LRL.on=!LRL.on;LS('tracks-lrclib',LRL.on?'1':'0');paint();return}
     const hn=e.target.closest('[data-hint]');if(hn){HINT.on=!HINT.on;LS('tracks-hints',HINT.on?'1':'0');hintApply();paint();return}
+    const gsb_=e.target.closest('[data-gest]');if(gsb_){GEST.on=!GEST.on;LS('tracks-gest',GEST.on?'1':'0');paint();return}
     const dkc_=e.target.closest('[data-dkc]');if(dkc_){setDockC(document.documentElement.dataset.dockc!=='on');paint();return}
     const npb_=e.target.closest('[data-npset]');
     if(npb_){if(npb_.dataset.npset==='main'){NP.on=!NP.on;LS('tracks-np',NP.on?'1':'0')}else{NP.ly=!NP.ly;LS('tracks-npl',NP.ly?'1':'0')}npApply();paint();return}
@@ -10394,6 +10406,85 @@ function ui(){
     if(o.cover&&!o.ccol){const c=await colorFromUrl(o.cover);if(c){o.ccol=c;await put(SS.has(o)?'songs':'albums',o)}}
   }
   renderMini();lyBoot();medBootGC();shareIntake();shareOpen();albumOpen();fpInit();
+})();
+/* ===== Edge swipe = back =====
+   Swipe in from the left or right screen edge: closes the top-most layer (sheet, queue, full player, search, selection)
+   or goes up one level in the library (song > album > folder). Settings > Layout > Gestures switches it off.
+   One history entry is kept in reserve so the phone's own back gesture / back button does the same instead of closing the app. */
+(()=>{
+  const ZONE=24,MIN=72,MAXW=()=>innerWidth;
+  const vis=el=>!!(el&&el.getClientRects().length);
+  function backStep(){
+    if(document.querySelector('#crop,#cmk,#fpbar'))return true;/* editors: swallow, they have their own buttons */
+    const ov=$('#ov');
+    if(ov&&ov.classList.contains('open')){ov.dispatchEvent(new MouseEvent('click',{bubbles:true}));return true}
+    if(qOpen){closeQ();return true}
+    if($('#full').classList.contains('open')){closeFull();return true}
+    if(selMode){selMode=false;selSet.clear();render();return true}
+    const sb=$('#sb');if(sb&&sb.classList.contains('open')){closeSearch();return true}
+    const b=[...document.querySelectorAll('#app [data-act="back"]')].find(vis);
+    if(b){b.click();return true}
+    return false;
+  }
+  /* finger-following back bubble in the accent colour */
+  let ind=null,st=null;
+  const mk=()=>{if(ind)return ind;ind=document.createElement('div');ind.id='gbk';ind.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';document.body.appendChild(ind);return ind};
+  const paintInd=(side,dx,y)=>{
+    const el=mk(),p=Math.min(1,dx/MIN),w=46;
+    el.classList.toggle('r',side==='r');
+    el.style.display='flex';el.style.top=Math.max(60,Math.min(innerHeight-60,y))+'px';el.style.marginTop='-23px';
+    const off=-w+p*(w+14);/* slides in from off-screen */
+    el.style.left=side==='l'?'0':'auto';el.style.right=side==='r'?'0':'auto';
+    el.style.transform='translateX('+(side==='l'?off:-off)+'px) scale('+(.7+.3*p)+')';
+    el.style.opacity=String(.35+.65*p);
+  };
+  const hideInd=(done)=>{
+    if(!ind)return;const el=ind;
+    if(done&&!RM.matches){el.animate([{opacity:1},{opacity:0}],{duration:160,fill:'forwards'});setTimeout(()=>{el.style.display='none';el.getAnimations().forEach(a=>a.cancel())},170)}
+    else{el.style.display='none'}
+  };
+  addEventListener('touchstart',e=>{
+    st=null;
+    if(!GEST.on||e.touches.length!==1)return;
+    const t=e.touches[0],x=t.clientX,w=MAXW();
+    const side=x<=ZONE?'l':x>=w-ZONE?'r':null;
+    if(!side)return;
+    st={side,sx:x,sy:t.clientY,lock:false,hit:false,dx:0};
+  },{passive:true,capture:true});
+  addEventListener('touchmove',e=>{
+    if(!st)return;
+    if(e.touches.length!==1){st=null;hideInd();return}
+    const t=e.touches[0],dx=st.side==='l'?t.clientX-st.sx:st.sx-t.clientX,dy=Math.abs(t.clientY-st.sy);
+    if(!st.lock){
+      if(dy>12&&dy>dx){st=null;return}/* it is a vertical scroll */
+      if(dx>10&&dx>dy)st.lock=true;else return;
+    }
+    st.dx=Math.max(0,dx);
+    if(e.cancelable)e.preventDefault();
+    e.stopPropagation();
+    if(!st.hit&&st.dx>=MIN){st.hit=true;try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}}
+    else if(st.hit&&st.dx<MIN)st.hit=false;
+    paintInd(st.side,st.dx,t.clientY);
+  },{passive:false,capture:true});
+  const end=ok=>{
+    if(!st)return;
+    const go=ok&&st.lock&&st.dx>=MIN;st.lock&&hideInd(go);st=null;
+    if(go)backStep();
+  };
+  addEventListener('touchend',()=>end(true),{passive:true,capture:true});
+  addEventListener('touchcancel',()=>end(false),{passive:true,capture:true});
+
+  /* the phone's own back gesture / button: keep one spare history entry and use it to step back inside the app */
+  let armed=false,tried=false;
+  const arm=()=>{try{history.pushState({trax:1},'',location.href);armed=true}catch(_){}};
+  const first=()=>{if(tried)return;tried=true;removeEventListener('pointerdown',first,true);removeEventListener('keydown',first,true);arm()};/* browsers skip entries made without a tap */
+  addEventListener('pointerdown',first,true);addEventListener('keydown',first,true);
+  addEventListener('popstate',()=>{
+    if(!armed)return;
+    armed=false;
+    if(GEST.on&&backStep()){arm();return}
+    try{history.back()}catch(_){}/* nothing left to close: let the phone leave the app as usual */
+  });
 })();
 </script>
 </body>
