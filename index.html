@@ -3065,7 +3065,7 @@ const del=(st,id)=>{const t=tomb();t[st+':'+id]=Date.now();LS('tracks-tomb',JSON
 
 /* google drive sync */
 const GCID=''; /* optional: paste your OAuth client ID here instead of in the app */
-const GKEY=''; /* needed for share links: a Google API key limited to the Drive API (see Share song > setup). It is public by design, so restrict it to your site addresses */
+const GKEY='AIzaSyCeTST7GKZuNgFZjJb3KVpBOqRS8DU5E-Y'; /* needed for share links: a Google API key limited to the Drive API (see Share song > setup). It is public by design, so restrict it to your site addresses */
 ICON.cloud='M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5z';
 const CL={tok:null,exp:0,fid:null,idx:{},busy:false,again:false,tc:null,st:'',t:null};
 const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
