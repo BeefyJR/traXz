@@ -1073,6 +1073,24 @@ html[data-layout=pc] #mini.vm .m2 .mvs{flex:1 1 0;max-width:170px}
 .trc.tj .trw,.trc.tl .trw{box-shadow:inset 0 0 0 1px rgba(var(--sc),.45)}
 .trc.tt .trw{box-shadow:inset 0 0 0 1px rgba(var(--ac),.4)}
 .trc.shut .tmbody{display:none}
+/* experimental tag */
+.xbadge{display:inline-flex;align-items:center;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:800;font-style:normal;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle;line-height:1.5;white-space:nowrap;color:var(--acct);background:rgba(var(--ac),.14);border:1px solid rgba(var(--ac),.42)}
+.xbadge.s{margin-left:6px;padding:1px 6px;font-size:9px}
+.srow small .xbadge{margin-left:6px}
+/* smooth cuts (join parts and loop) */
+.cf{margin:14px 0 2px;padding:10px 12px 12px;border-radius:14px;border:1px dashed rgba(var(--sc),.55)}
+.cf .trs{margin:6px 2px 4px}
+.cfs{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line)}
+.cfh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cfh b{font-size:14px;font-weight:700}
+.cfq{font-size:12px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cfq.g{color:#2fb86a}.cfq.m{color:#d99a1c}.cfq.r{color:#e5533d}
+.cfr{margin-top:6px}
+.cfc{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0;padding:8px 10px;border-radius:12px;background:rgba(var(--sfc),.6);border:1px solid var(--line)}
+.cfct{min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px;line-height:1.35}
+.cfct b{font-size:15px}
+.cfct small{color:var(--mute);font-size:12px}
+.trx.cfcb{margin:0;flex:none;flex-wrap:nowrap;gap:6px}
 .trc.off{opacity:.42;pointer-events:none;filter:grayscale(.6)}
 .tmmd{display:flex;gap:8px;margin:12px 0 0}
 .tmmd .chip{flex:1;text-align:center;padding:10px 6px;font-size:14px;font-weight:700;max-width:none}
@@ -2037,6 +2055,48 @@ html.fpd #fpbar{opacity:.18;pointer-events:none;transition:opacity .12s}
 #fpbar .srow{width:100%}
 #fpbar .chip:focus-visible,#fpbar .ib:focus-visible,#fpbar select:focus-visible,#fpbar .srow:focus-visible,#fpbar .pill:focus-visible{outline:2px solid var(--acc,#1db954);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){html.fpd #fpbar{transition:none}}
+/* small windows: a compact editor panel that never outgrows the screen */
+#fpbar{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);max-width:min(360px,calc(100vw - 16px));box-sizing:border-box}
+@media (max-width:480px),(max-height:620px){
+  #fpbar{gap:6px;padding:8px 10px;border-radius:14px;font-size:12px;max-width:min(320px,calc(100vw - 16px))}
+  #fpbar #fpbody{gap:6px}
+  #fpgrip{font-size:13px;gap:6px}#fpgrip .ib{width:30px;height:30px}
+  #fpbar .fpt{display:none}
+  #fpbar #fpmode .chip{padding:6px 10px}
+  #fpbar #fpq{gap:4px}#fpbar #fpq .chip{padding:5px 9px;font-size:12px}
+  #fpbar .fpit select{height:34px;font-size:13px}#fpbar .fpit .ib{width:32px;height:32px}
+  #fpbar .bgs .fop{margin:1px 0}
+  #fpbar #fpsel{gap:3px}#fpbar .srow{padding:4px 2px}
+}
+@media (max-height:420px){#fpbar{max-width:min(300px,55vw)}#fpbar #fpq{display:none}}
+/* ===== share song: play card ===== */
+#shc{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#shc .shk{position:relative;width:min(100%,460px);max-height:100%;overflow-y:auto;overscroll-behavior:contain;background:var(--surf);border:1px solid var(--line);border-radius:32px;padding:26px 22px 24px;box-shadow:0 24px 70px rgba(0,0,0,.45);display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"cv cv" "ti ti" "sk sk" "ct ct" "vl vl" "ad ex";column-gap:12px;align-items:center;justify-items:center}
+#shc .shk.bad{display:block;text-align:center;padding:38px 24px 26px}
+#shc .shk.bad h3{margin:0 0 8px;font-size:18px}
+#shc .shk.bad .dupn{margin:0 0 18px}
+#shc .shx{position:absolute;top:10px;right:10px;z-index:1;color:var(--mute)}
+#shc .shx:active{transform:scale(.88)}
+#shc .shcv{grid-area:cv;width:min(62vw,230px)}
+#shc .shcv .cov{box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#shc .sha,#shc .shb{justify-self:stretch;justify-content:center;margin-top:20px;padding:12px 8px;white-space:nowrap}
+#shc .sha{grid-area:ad}
+#shc .shb{grid-area:ex}
+#shc .pill[disabled]{pointer-events:none}
+#shc .shti{grid-area:ti;text-align:center;margin-top:18px;max-width:100%}
+#shc .shti b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:21px;font-weight:800;line-height:1.2;word-break:break-word}
+#shc .shti span{display:block;margin-top:4px;color:var(--mute);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#shc .shsk{grid-area:sk;width:100%;margin-top:14px}
+#shc .shtm{display:flex;justify-content:space-between;margin-top:-3px;font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
+#shc .shct{grid-area:ct;display:flex;align-items:center;gap:12px;margin-top:6px}
+#shc .shpl{width:66px;height:66px;background:var(--text);color:var(--bg)}
+#shc .shpl:active{transform:scale(.93)}
+#shc .shvl{grid-area:vl;display:flex;align-items:center;gap:8px;width:min(100%,220px);margin-top:2px;color:var(--mute)}
+@media (min-width:520px){
+  #shc .shk{grid-template-columns:1fr minmax(0,200px) 1fr;grid-template-areas:"ad cv ex" "ti ti ti" "sk sk sk" "ct ct ct" "vl vl vl";column-gap:16px;padding:30px 26px 26px}
+  #shc .shcv{width:100%}
+  #shc .sha,#shc .shb{margin-top:0}
+}
 </style>
 </head>
 <body>
@@ -2140,6 +2200,7 @@ ICON.album='M12 2a10 10 0 100 20 10 10 0 000-20zM12 4.4a7.6 7.6 0 110 15.2 7.6 7
 ICON.mic='M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z';
 ICON.swaph='M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z';
 ICON.note='M12 3v10.55A4 4 0 1014 17V7h4V3z';
+ICON.share='M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z';
 {const R='M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2zm2 0v14h14V5z';ICON.dkt=R+'M5 5h14v3H5z';ICON.dkl=R+'M5 5h3v14H5z';ICON.dkr=R+'M16 5h3v14h-3z';ICON.dkb=R+'M5 16h14v3H5z'}
 {const B1='M5 15h3v5H5z',B2='M10.5 10h3v10h-3z',B3='M16 4h3v16h-3z',S1='M5 19h3v1H5z',S2='M10.5 19h3v1h-3z',S3='M16 19h3v1h-3z';
 ICON.lvl1=B1+S2+S3;ICON.lvl2=B1+B2+S3;ICON.lvl3=B1+B2+B3}
@@ -3004,6 +3065,7 @@ const del=(st,id)=>{const t=tomb();t[st+':'+id]=Date.now();LS('tracks-tomb',JSON
 
 /* google drive sync */
 const GCID=''; /* optional: paste your OAuth client ID here instead of in the app */
+const GKEY=''; /* needed for share links: a Google API key limited to the Drive API (see Share song > setup). It is public by design, so restrict it to your site addresses */
 ICON.cloud='M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5z';
 const CL={tok:null,exp:0,fid:null,idx:{},busy:false,again:false,tc:null,st:'',t:null};
 const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
@@ -4579,23 +4641,40 @@ function playSong(id,list,keep){
   setSession(s);render();
 }
 function step(d,auto){trDir=d>0?1:-1;try{return step0(d,auto)}finally{trDir=0}}
+/* offline: a song that is not saved on this device cannot play, so Next / Previous / auto-advance pass over it */
+function offSkip(id){const x=songById(id);return navigator.onLine===false&&!!x&&!x.blob}
+function offNone(){au.pause();render();toast('You are offline and none of the next songs are downloaded')}
 function step0(d,auto){
   if(!queue.length)return;
-  let i=queue.indexOf(ctxCur);
-  if(auto&&repeat===2)return playSong(cur,null,true);
-  if(d>0&&upNext.length)return playSong(upNext.shift(),null,true);
+  let i=queue.indexOf(ctxCur),skipped=0;
+  const told=()=>{if(skipped)toast('Skipped '+skipped+(skipped===1?' song':' songs')+' not downloaded for offline play')};
+  if(auto&&repeat===2&&!offSkip(cur))return playSong(cur,null,true);
+  if(d>0&&upNext.length){
+    while(upNext.length&&offSkip(upNext[0])){upNext.shift();skipped++}
+    if(upNext.length){told();return playSong(upNext.shift(),null,true)}
+  }
   if(shuffle&&queue.length>1){
-    if(d<0){if(i>0)return playSong(queue[i-1]);vSeek(0);return}
-    if(i>=0&&i+1<queue.length)return playSong(queue[i+1]);
+    if(d<0){
+      for(let j=i-1;j>=0;j--){if(offSkip(queue[j])){skipped++;continue}told();return playSong(queue[j])}
+      vSeek(0);return   /* nothing playable before this song: restart it */
+    }
+    for(let j=i+1;j<queue.length;j++){if(offSkip(queue[j])){skipped++;continue}told();return playSong(queue[j])}
     if(auto&&repeat!==1){au.pause();return render()}
     /* end of the round: reshuffle everything, and never open with the song that just played */
     const nq=smartShuffle(queue.slice());if(nq.length>1&&nq[0]===queue[queue.length-1])nq.push(nq.shift());
-    shOrig=queue.slice();queue=nq;return playSong(queue[0]);
+    const k=nq.findIndex(x=>!offSkip(x));
+    if(k<0)return offNone();
+    shOrig=queue.slice();queue=nq;skipped+=k;told();return playSong(queue[k]);
   }
-  i+=d;
-  if(i>=queue.length){if(repeat===1||!auto)i=0;else return render()}
-  if(i<0)i=queue.length-1;
-  playSong(queue[i]);
+  /* in order: walk in the chosen direction, wrapping round at most once, until a playable song turns up */
+  for(let tries=0;tries<queue.length;tries++){
+    i+=d;
+    if(i>=queue.length){if(repeat===1||!auto)i=0;else return render()}
+    if(i<0)i=queue.length-1;
+    if(offSkip(queue[i])){skipped++;continue}
+    told();return playSong(queue[i]);
+  }
+  offNone();
 }
 /* system media notification (Android lock screen / notification shade) */
 function fallbackArt(s){
@@ -5527,7 +5606,7 @@ async function songMenu(id,plId){
   if(s.album)items.push({label:'Remove from album',value:'unalbum',ic:'unalb'});
   const cvT=!s.cover?null:pl0&&!pl0.sys?{o:pl0,st:'playlists',w:'playlist'}:(view.tab==='albums'&&view.album&&albums.find(x=>x.id===view.album)?{o:albums.find(x=>x.id===view.album),st:'albums',w:'album'}:null);
   if(cvT)items.push({label:'Use as '+cvT.w+' cover',value:'usecover',ic:'album',gap:1});
-  items.push({label:'Export song',value:'share',ic:'plist',gap:cvT?0:1});items.push({label:'Edit details',value:'edit',ic:'pencil',gap:0});items.push({label:'Replace audio file',value:'replacefile',ic:'swaph',gap:0});items.push({label:'Trim & loop',value:'trim',ic:'cut',gap:0});items.push({label:'Sync lyrics',value:'lyedit',ic:'mic',gap:0});
+  items.push({label:'Share song',value:'sharelink',ic:'share',gap:cvT?0:1});items.push({label:'Export song',value:'share',ic:'plist',gap:0});items.push({label:'Edit details',value:'edit',ic:'pencil',gap:0});items.push({label:'Replace audio file',value:'replacefile',ic:'swaph',gap:0});items.push({label:'Trim & loop',value:'trim',ic:'cut',gap:0});items.push({label:'Sync lyrics',value:'lyedit',ic:'mic',gap:0});
   items.push({label:pl0?'Delete from library':'Delete song',value:'delete',danger:true,ic:'trash',gap:1});
   const r=await choose(s.name,items);
   if(r==='like')await toggleLike(id);
@@ -5539,6 +5618,7 @@ async function songMenu(id,plId){
   if(r==='trim')trimSheet(s);
   if(r==='lyedit')lsOpen(id);
   if(r==='share')exportSong(s);
+  if(r==='sharelink')shareSong(s);
   if(r==='move')await moveSong(s);
   if(r==='unalbum'){s.album=null;await put('songs',s)}
   if(r==='toplaylist')await addToPlaylist([id]);
@@ -6039,6 +6119,7 @@ async function gPos(){
    and nothing runs while no placement exists. Escape hatch: open the app with ?fp=reset to clear every placement. ===== */
 ICON.undo='M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z';
 ICON.redo='M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z';
+const FPAN=['dock','np','npb','mini','top','main'];   /* panels an item can stay attached to */
 const FP={on:false,p:{},b:{},sn:true};
 const FP_LIM={x:[-4000,4000],y:[-4000,4000],s:[20,400],r:[-360,360],w:[20,100],h:[20,100],z:[-10,30]};
 /* anything read from storage, a preset or an undo step goes through here: wrong types, NaN and absurd values are dropped or clamped */
@@ -6046,12 +6127,14 @@ function fpSanitize(j){
   const o={on:false,p:{},b:{},sn:true};
   if(!j||typeof j!=='object')return o;
   o.on=!!j.on;o.sn=j.sn!==false;
+  if(+j.rw>=200&&+j.rw<=8000)o.rw=Math.round(+j.rw);if(+j.rh>=200&&+j.rh<=8000)o.rh=Math.round(+j.rh);   /* window size the layout was made at */
   if(j.p&&typeof j.p==='object'){
     for(const k of Object.keys(j.p).slice(0,500)){
       const q=j.p[k];if(!q||typeof q!=='object'||k.length>120)continue;
       const c={};
       for(const f of ['x','y','s','r','w','h','z']){if(q[f]===undefined||q[f]===null)continue;const v=+q[f];if(isFinite(v))c[f]=Math.round(Math.max(FP_LIM[f][0],Math.min(FP_LIM[f][1],v)))}
       if(q.ng)c.ng=true;if(q.hd)c.hd=true;
+      if(q.a&&typeof q.a==='object'&&FPAN.includes(q.a.i)){const a={i:q.a.i};let ok=true;for(const f of ['l','r','t','b','w','h']){const v=+q.a[f];if(!isFinite(v)||v<-9999||v>9999)ok=false;a[f]=Math.round(v)}if(ok&&a.w>0&&a.h>0)c.a=a}
       o.p[k]=c;
     }
   }
@@ -6070,7 +6153,7 @@ if(/[?&]fp=reset\b/.test(location.search)){LS('tracks-fp',null);LS('tracks-fpbar
 try{Object.assign(FP,fpSanitize(JSON.parse(LS('tracks-fp')||'null')))}catch(e){}
 /* saving is debounced (sliders fire many events) and always flushed when the page is hidden or closed */
 let fpSv=0;
-const fpSaveNow=()=>{if(fpSv){clearTimeout(fpSv);fpSv=0}LS('tracks-fp',JSON.stringify(FP))};
+const fpSaveNow=()=>{if(fpSv){clearTimeout(fpSv);fpSv=0}if(fpOn()){FP.rw=innerWidth;FP.rh=innerHeight;fpAnchor()}LS('tracks-fp',JSON.stringify(FP))};
 const fpSave=()=>{if(fpOn()){fpCounter();fpHQ()}/* resize handles follow the bars after every change */if(!fpSv)fpSv=setTimeout(fpSaveNow,180)};
 addEventListener('pagehide',()=>{if(fpSv)fpSaveNow()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&fpSv)fpSaveNow()});
@@ -6137,19 +6220,110 @@ function fpUndo(redo){
   to.push(fpSnap());fpRestore(from.pop());fpBtn();
 }
 
+/* Placement is stored in pixels, made at one window size. In a smaller window every placed item keeps its place relative to the window: the spot it had
+   (natural place + offset) is scaled with the window, so something put in a bottom corner stays in that corner. Free bar widths shrink by the amount the window shrank
+   (side panels and bars keep their own size). Nothing grows. The saved layout is never changed outside the editor; while arranging, everything is rebased to the current window. */
+function fpRef(){
+  let rw=FP.rw,rh=FP.rh;
+  if(!rw){rw=Math.max(innerWidth,(FP.b&&FP.b.tvw)||0)}   /* older layouts did not record it: the free top bar width is the best hint */
+  if(!rh)rh=innerHeight;
+  return {rw:Math.max(rw,innerWidth),rh:Math.max(rh,innerHeight)};
+}
+function fpK(){
+  if(fpOn()||!FP.on)return {x:1,y:1};
+  const r=fpRef();
+  return {x:innerWidth/r.rw,y:innerHeight/r.rh};
+}
+let FPE={sig:'',m:{}};
+const fpPanels=()=>FPAN.map(id=>{const e=document.getElementById(id),r=e&&e.getBoundingClientRect();return r&&r.width>20&&r.height>20?{id,el:e,r}:null}).filter(Boolean);
+const fpMoved=id=>{const q=FP.p['hdr:'+id];return !!(q&&(q.x||q.y))};
+/* remember, for every moved item, which panel it was put on and how far from that panel's edges, so it follows that panel when the window changes */
+function fpAnchor(){
+  const ps=fpPanels();if(!ps.length)return;
+  document.querySelectorAll('[data-fpk]').forEach(el=>{
+    const q=FP.p[el.dataset.fpk];if(!q||!(q.x||q.y))return;
+    const r=el.getBoundingClientRect();if(!r.width||!r.height)return;
+    const cx=(r.left+r.right)/2,cy=(r.top+r.bottom)/2;let best=null;
+    for(const pn of ps){
+      if(pn.el===el||el.contains(pn.el)||fpMoved(pn.id))continue;
+      if(cx<pn.r.left||cx>pn.r.right||cy<pn.r.top||cy>pn.r.bottom)continue;
+      const a=pn.r.width*pn.r.height;if(!best||a<best.a)best={pn,a};
+    }
+    if(!best){delete q.a;return}
+    const R=best.pn.r;
+    q.a={i:best.pn.id,l:Math.round(cx-R.left),r:Math.round(R.right-cx),t:Math.round(cy-R.top),b:Math.round(R.bottom-cy),w:Math.round(R.width),h:Math.round(R.height)};
+  });
+}
+const fpHasAnchor=()=>Object.values(FP.p).some(q=>q.a&&(q.x||q.y));
+/* where the layout puts each moved item in this window: [x,y] offsets, measured from its natural (unmoved) place */
+function fpAbsCalc(){
+  const W=innerWidth,H=innerHeight,r=fpRef(),out={};
+  const items=fpItems().filter(el=>{const q=FP.p[el.dataset.fpk];return q&&(q.x||q.y)});
+  if(!items.length)return out;
+  const keep=items.map(el=>el.style.translate);
+  items.forEach(el=>{el.style.translate=''});
+  const nat=items.map(el=>{const q=el.getBoundingClientRect();return q.width&&q.height?[(q.left+q.right)/2,(q.top+q.bottom)/2]:null});
+  items.forEach((el,i)=>{el.style.translate=keep[i]});
+  const ps=fpPanels();
+  items.forEach((el,i)=>{
+    const n=nat[i];if(!n)return;
+    const q=FP.p[el.dataset.fpk];
+    const pn=q.a&&!fpMoved(q.a.i)&&ps.find(x=>x.id===q.a.i&&x.el!==el&&!el.contains(x.el));
+    if(pn){   /* same spot on the same panel: the distance to the nearest edge is kept, in a wide panel the spot scales with it */
+      const a=q.a,R=pn.r,pos=(d1,d2,f,lo,len)=>d1<=d2&&d1<=160?lo+d1:d2<d1&&d2<=160?lo+len-d2:lo+f*len;
+      const dx=Math.max(8,Math.min(W-8,pos(a.l,a.r,a.l/a.w,R.left,R.width))),dy=Math.max(8,Math.min(H-8,pos(a.t,a.b,a.t/a.h,R.top,R.height)));
+      out[el.dataset.fpk]=[Math.round(dx-n[0]),Math.round(dy-n[1])];return;
+    }
+    const gx=Math.max(0,Math.min(1,n[0]/W)),gy=Math.max(0,Math.min(1,n[1]/H));
+    /* items anchored to the right or bottom of the window were further right / down in the bigger window */
+    const ox=n[0]+(r.rw-W)*gx+(q.x||0),oy=n[1]+(r.rh-H)*gy+(q.y||0);
+    out[el.dataset.fpk]=[Math.round(ox*W/r.rw-n[0]),Math.round(oy*H/r.rh-n[1])];
+  });
+  return out;
+}
+function fpAbsSync(){
+  const k=fpK();
+  if(k.x>=1&&k.y>=1&&!fpHasAnchor()){FPE.sig='';FPE.m={};return}
+  const r=fpRef(),sig=innerWidth+'x'+innerHeight+'|'+r.rw+'x'+r.rh+'|'+fpPanels().map(x=>x.id+Math.round(x.r.left)+','+Math.round(x.r.top)+','+Math.round(x.r.width)+','+Math.round(x.r.height)).join(';')+'|'+JSON.stringify(FP.p);
+  if(sig!==FPE.sig){FPE.m=fpAbsCalc();FPE.sig=sig}
+}
+const fpOff=(key,p)=>{const e=!fpOn()&&FPE.m[key];if(e)return e;const k=fpK();return [Math.round((p&&p.x||0)*k.x),Math.round((p&&p.y||0)*k.y)]};
+function fpBw(B,r){   /* free bar sizes for this window */
+  const o=Object.assign({},B),dW=r.rw-innerWidth,dH=r.rh-innerHeight,d=getDock();
+  if(o.tvw)o.tvw=Math.max(60,Math.min(innerWidth-8,o.tvw-dW));
+  if(o.vw&&(d==='top'||d==='bottom'))o.vw=Math.max(40,Math.min(innerWidth-8,o.vw-dW));
+  if(o.vh&&(d==='left'||d==='right'))o.vh=Math.max(40,Math.min(innerHeight-8,o.vh-dH));
+  return o;
+}
+function fpBs(){
+  const B=FP.on&&FP.b||{};if(fpOn())return B;
+  const r=fpRef();if(r.rw===innerWidth&&r.rh===innerHeight)return B;
+  return fpBw(B,r);
+}
+/* arranging in a window of another size than the layout was made in: bring every offset and bar size to this window first */
+function fpRebase(){
+  const r=fpRef();
+  if(r.rw>innerWidth||r.rh>innerHeight||fpHasAnchor()){
+    const m=fpAbsCalc(),k={x:innerWidth/r.rw,y:innerHeight/r.rh};
+    for(const key in FP.p){const q=FP.p[key],e=m[key];
+      if(e){q.x=e[0];q.y=e[1]}else{if(q.x)q.x=Math.round(q.x*k.x);if(q.y)q.y=Math.round(q.y*k.y)}}
+    if(FP.b)FP.b=Object.assign(FP.b,fpBw(FP.b,r));
+  }
+  FP.rw=innerWidth;FP.rh=innerHeight;
+}
 function fpOne(el,p){
-  const t=p?(p.x||0)+'px '+(p.y||0)+'px':'',sc=p&&p.s&&p.s!==100&&el.id!=='main'?String(p.s/100):'';
+  const o=p?fpOff(el.dataset.fpk,p):null,t=p?o[0]+'px '+o[1]+'px':'',sc=p&&p.s&&p.s!==100&&el.id!=='main'?String(p.s/100):'';
   if(el.style.translate!==t)el.style.translate=t;if(el.style.scale!==sc)el.style.scale=sc;const rt=p&&p.r&&el.id!=='main'?p.r+'deg':'';if(el.style.rotate!==rt)el.style.rotate=rt;
   if(p&&p.z){el.style.zIndex=String(p.z);if(!el.dataset.fpz&&getComputedStyle(el).position==='static'){el.style.position='relative';el.dataset.fpz='1'}}
   else if(el.style.zIndex){el.style.zIndex='';if(el.dataset.fpz){el.style.position='';delete el.dataset.fpz}}
   el.classList.toggle('fphd',!!(p&&p.hd&&!fpKeep(el)));/* hidden items stay faintly visible while editing so they can be brought back */
   if(el.id==='main'){const w=p&&p.w&&p.w<100,h=p&&p.h&&p.h<100;el.style.width=w?p.w+'%':'';el.style.height=h?p.h+'%':'';el.style.flex=h?'none':'';el.style.alignSelf=w?'center':''}
 }
-function fpDock(){const R=document.documentElement,d=getDock(),B=FP.on&&FP.b||{};if((d==='left'||d==='right')&&B.dw)R.style.setProperty('--dw',B.dw+'px');else if(d==='bottom'&&B.dh)R.style.setProperty('--dbh',B.dh+'px')}
-function fpBars(){const hd=document.querySelector('#top header'),B=FP.on&&FP.b||{};if(hd&&!B.tvw){const w=B.tw&&B.tw<100?B.tw+'%':'',l=w?(B.ta==='r'?'auto':'0'):'',r=w?(B.ta==='r'?'0':'auto'):'',h=B.th?B.th+'px':'';hd.style.zoom='';if(hd.style.width!==w)hd.style.width=w;if(hd.style.height!==h){hd.style.height=h;hd.style.boxSizing=h?'border-box':'';hd.style.minHeight=h?'0':''}hd.style.marginLeft=l;hd.style.marginRight=r}fpDock();fpDockSize();fpTopSize();fpCounter()}
+function fpDock(){const R=document.documentElement,d=getDock(),B=fpBs();if((d==='left'||d==='right')&&B.dw)R.style.setProperty('--dw',B.dw+'px');else if(d==='bottom'&&B.dh)R.style.setProperty('--dbh',B.dh+'px')}
+function fpBars(){const hd=document.querySelector('#top header'),B=fpBs();if(hd&&!B.tvw){const w=B.tw&&B.tw<100?B.tw+'%':'',l=w?(B.ta==='r'?'auto':'0'):'',r=w?(B.ta==='r'?'0':'auto'):'',h=B.th?B.th+'px':'';hd.style.zoom='';if(hd.style.width!==w)hd.style.width=w;if(hd.style.height!==h){hd.style.height=h;hd.style.boxSizing=h?'border-box':'';hd.style.minHeight=h?'0':''}hd.style.marginLeft=l;hd.style.marginRight=r}fpDock();fpDockSize();fpTopSize();fpCounter()}
 /* The top bar is sized freely too (tvw / tvh): everything inside keeps its natural width, and the queue button keeps its distance from the bar's right edge */
 function fpTopSize(){
-  const tp=$('#top'),B=FP.on&&FP.b||{},R=document.documentElement;if(!tp)return;
+  const tp=$('#top'),B=fpBs(),R=document.documentElement;if(!tp)return;
   const kids=[...tp.children].filter(c=>c.id!=='qk');
   const clr=()=>{kids.forEach(c=>{if(c.dataset.fpvw){c.style.width='';c.style.flex='';c.style.boxSizing='';delete c.dataset.fpvw}})};
   if(!B.tvw&&!B.tvh){if(tp.dataset.fpvs){tp.style.width='';tp.style.height='';tp.style.boxSizing='';clr();delete tp.dataset.fpvs}R.dataset.fptv='off';R.style.setProperty('--fptdw','0px');return}
@@ -6161,7 +6335,7 @@ function fpTopSize(){
 }
 /* The navigation bar can be sized freely in both directions (vw / vh). Its buttons keep their normal size: only the bar changes. */
 function fpDockSize(){
-  const dk=$('#dock'),tb=dk&&dk.querySelector(':scope>.tabs'),B=FP.on&&FP.b||{};
+  const dk=$('#dock'),tb=dk&&dk.querySelector(':scope>.tabs'),B=fpBs();
   if(!dk||!tb)return;
   if(!B.vw&&!B.vh){if(dk.dataset.fpvs){dk.style.width='';dk.style.height='';dk.style.boxSizing='';tb.style.width='';tb.style.height='';tb.style.flex='';delete dk.dataset.fpvs}return}
   dk.style.width='';dk.style.height='';tb.style.width='';tb.style.height='';tb.style.flex='';
@@ -6173,9 +6347,9 @@ function fpDockSize(){
 function fpCounter(){
   const R=document.documentElement,B=FP.on&&FP.b||{};
   for(const [id,f] of [['top','tf'],['dock','df']]){
-    const p=FP.on&&FP.p['hdr:'+id]||{},off=B[f]===0;
+    const p=FP.on&&FP.p['hdr:'+id]||{},off=B[f]===0,oo=fpOff('hdr:'+id,p);
     R.dataset['fp'+f]=off?'off':'on';
-    R.style.setProperty('--fp'+id+'x',off?-(p.x||0)+'px':'0px');R.style.setProperty('--fp'+id+'y',off?-(p.y||0)+'px':'0px');
+    R.style.setProperty('--fp'+id+'x',off?-oo[0]+'px':'0px');R.style.setProperty('--fp'+id+'y',off?-oo[1]+'px':'0px');
   }
 }
 function fpCounterLive(k,x,y){const id=k==='hdr:top'?'top':'dock',f=id==='top'?'tf':'df',R=document.documentElement;if((FP.b||{})[f]===0){R.style.setProperty('--fp'+id+'x',-x+'px');R.style.setProperty('--fp'+id+'y',-y+'px')}}
@@ -6232,6 +6406,7 @@ const fpHas=()=>FP.on&&(Object.keys(FP.p).length>0||Object.keys(FP.b||{}).length
 function fpApply(force){
   const has=fpHas(),ed=fpOn();
   if(!has&&!ed&&!fpDirty&&!force)return;
+  if(!ed)fpAbsSync();else{FPE.sig='';FPE.m={}}
   fpBars();
   const items=fpItems();
   for(const el of items)fpOne(el,FP.on&&FP.p[el.dataset.fpk]);
@@ -6313,14 +6488,14 @@ function fpEdit(on){
   R.classList.toggle('fpe',on);const old=$('#fpbar');if(old)old.remove();
   if(!on){
     fpGuides(0,0,null);fpSel(null);document.querySelectorAll('.fph,.fpr,.fprot').forEach(x=>x.remove());R.classList.remove('fpd');fpBusy=false;
-    fpApply(true);fpSaveNow();
+    fpAnchor();fpApply(true);fpSaveNow();
     if(fpFullBy){fpFullBy=false;try{closeFull()}catch(_){}}
     FPM='main';setTimeout(fpRescue,450);return;
   }
-  FP.on=true;fpSaveNow();fpItems();FPM=$('#full').classList.contains('open')?'full':'main';fpH.u=[];fpH.r=[];fpFullBy=false;
+  FP.on=true;fpRebase();fpSaveNow();fpItems();FPM=$('#full').classList.contains('open')?'full':'main';fpH.u=[];fpH.r=[];fpFullBy=false;
   fpApply(true);fpHandles();
-  const min=LS('tracks-fpmin')==='1';
-  document.body.insertAdjacentHTML('beforeend',`<div id="fpbar" role="toolbar" aria-label="Free placement editor" class="${min?'min':''}"><div id="fpgrip" title="Drag to move this panel"><i class="fpgi"></i><span>Free placement</span><button type="button" class="ib" data-fp="undo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled>${ic('undo',20)}</button><button type="button" class="ib" data-fp="redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled>${ic('redo',20)}</button><button type="button" class="ib" data-fp="min" aria-expanded="${!min}" aria-label="${min?'Expand panel':'Collapse panel'}" title="${min?'Expand panel':'Collapse panel to see the screen'}">${ic(min?'up':'down',20)}</button><button type="button" class="ib" data-fp="reset" aria-label="Reset all placement" title="Reset all placement">${ic('rst',20)}</button></div><div id="fpbody"><div id="fpmode" role="group" aria-label="What to arrange"><button type="button" class="chip" data-fpm="main">Main screen</button><button type="button" class="chip" data-fpm="full">Full player</button></div><div id="fpq"></div><div class="fpit"><select id="fpit" aria-label="Choose an item to edit"></select><button type="button" class="ib" data-fpn="-1" aria-label="Previous item" title="Previous item">${ic('up',20)}</button><button type="button" class="ib" data-fpn="1" aria-label="Next item" title="Next item">${ic('down',20)}</button></div><span class="fpt"></span><div id="fpsel"></div><button type="button" class="srow" data-fpsn="1" role="switch" aria-checked="${FP.sn!==false}"><span class="st"><b>Snap to guides</b></span><span class="stog"></span></button><div><button type="button" class="pill acc" data-fp="done">Done</button></div></div></div>`);
+  const mp=LS('tracks-fpmin'),min=mp==null?(innerHeight<480||innerWidth<340):mp==='1';   /* small window: start as a single bar so the screen stays visible */
+  document.body.insertAdjacentHTML('beforeend',`<div id="fpbar" role="toolbar" aria-label="Free placement editor" class="${min?'min':''}"><div id="fpgrip" title="Drag to move this panel"><i class="fpgi"></i><span>Free placement<i class="xbadge s">Experimental</i></span><button type="button" class="ib" data-fp="undo" aria-label="Undo" title="Undo (Ctrl+Z)" disabled>${ic('undo',20)}</button><button type="button" class="ib" data-fp="redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)" disabled>${ic('redo',20)}</button><button type="button" class="ib" data-fp="min" aria-expanded="${!min}" aria-label="${min?'Expand panel':'Collapse panel'}" title="${min?'Expand panel':'Collapse panel to see the screen'}">${ic(min?'up':'down',20)}</button><button type="button" class="ib" data-fp="reset" aria-label="Reset all placement" title="Reset all placement">${ic('rst',20)}</button></div><div id="fpbody"><div id="fpmode" role="group" aria-label="What to arrange"><button type="button" class="chip" data-fpm="main">Main screen</button><button type="button" class="chip" data-fpm="full">Full player</button></div><div id="fpq"></div><div class="fpit"><select id="fpit" aria-label="Choose an item to edit"></select><button type="button" class="ib" data-fpn="-1" aria-label="Previous item" title="Previous item">${ic('up',20)}</button><button type="button" class="ib" data-fpn="1" aria-label="Next item" title="Next item">${ic('down',20)}</button></div><span class="fpt"></span><div id="fpsel"></div><button type="button" class="srow" data-fpsn="1" role="switch" aria-checked="${FP.sn!==false}"><span class="st"><b>Snap to guides</b></span><span class="stog"></span></button><div><button type="button" class="pill acc" data-fp="done">Done</button></div></div></div>`);
   fpModeUi();fpSel(null);fpList();fpPlaceBar();
 }
 /* ---- picking and dragging items ---- */
@@ -6420,6 +6595,8 @@ addEventListener('keydown',e=>{
 let fpRq=0;
 function fpRescue(){
   fpRq=0;if(fpOn()||!fpHas())return;
+  {const k=fpK();if(k.x>=1&&k.y>=1&&Object.values(FP.p).some(q=>(q.x||q.y)&&!q.a)){FP.rw=FP.rw||innerWidth;FP.rh=FP.rh||innerHeight;fpAnchor();fpSaveNow()}}   /* older layouts: remember which panel each item sits on */
+  if(fpFit()&&Date.now()-fpToastAt>8000){fpToastAt=Date.now();toast('Placed items were moved to fit this window')}
   const f=$('#full');let ch=false;
   document.querySelectorAll(FPK_ESS).forEach(el=>{
     const k=el.dataset.fpk,p=k&&FP.p[k];if(!p)return;
@@ -6429,7 +6606,45 @@ function fpRescue(){
   });
   if(ch){fpSave();fpApply(true);toast('A button was off screen, so its placement was reset')}
 }
-addEventListener('resize',()=>{if(fpOn())fpHQ();else if(fpHas()&&!fpRq)fpRq=setTimeout(fpRescue,250)});
+/* a smaller window: pull moved items back inside it (and shrink ones that are bigger than the window) instead of losing them.
+   Items that sit off screen by nature (tabs in a scrolling bar) are left alone. While arranging, the change is kept; otherwise it only lasts until the page is reloaded,
+   so the saved layout comes back untouched when the window is large again. */
+let fpToastAt=0;
+function fpFit(){
+  if(!fpHas()&&!fpOn())return false;
+  const W=innerWidth,H=innerHeight,M=4,f=$('#full');let ch=false;
+  const live=el=>!(el.closest('#full')&&(!f||!f.classList.contains('open')||f.getAnimations().length));
+  const items=[...document.querySelectorAll('[data-fpk]')].filter(el=>!/^(main|top|dock)$/.test(el.id)&&live(el));
+  /* top and navigation bars sized by hand never need to be wider or taller than the window */
+  if(fpOn()&&FP.b){for(const [k,lim,mn] of [['tvw',W-2*M,60],['vw',W-2*M,40],['tvh',H-2*M,30],['vh',H-2*M,40]]){if(FP.b[k]>lim&&lim>=mn){FP.b[k]=Math.round(lim);ch=true}}if(ch)fpBars()}
+  /* pass 1: size */
+  for(const el of items){
+    const p=FP.p[el.dataset.fpk];if(!p||p.hd||!(p.s&&p.s>20))continue;
+    const r=el.getBoundingClientRect();if(!r.width||!r.height)continue;
+    const k=Math.min((W-2*M)/r.width,(H-2*M)/r.height);
+    if(k<1){p.s=Math.max(20,Math.floor(p.s*k));fpOne(el,p);ch=true}
+  }
+  /* pass 2: position (parents first, so a button inside a moved panel is measured after the panel) */
+  for(const el of items){
+    const p=FP.p[el.dataset.fpk];if(!p||p.hd||!(p.x||p.y))continue;
+    const r=el.getBoundingClientRect();if(!r.width||!r.height)continue;
+    const o0=fpOff(el.dataset.fpk,p),nx=(r.left+r.right)/2-o0[0],ny=(r.top+r.bottom)/2-o0[1];
+    if(nx<0||nx>W||ny<0||ny>H)continue;   /* its natural place is already off screen (scrolling bar): not ours to fix */
+    let dx=0,dy=0;
+    if(r.left<M)dx=M-r.left;else if(r.right>W-M)dx=W-M-r.right;
+    if(r.top<M)dy=M-r.top;else if(r.bottom>H-M)dy=H-M-r.bottom;
+    if(r.width>W-2*M)dx=M-r.left;if(r.height>H-2*M)dy=M-r.top;
+    if(!dx&&!dy)continue;
+    const cl=(v,a)=>Math.round(Math.max(FP_LIM[a][0],Math.min(FP_LIM[a][1],v)));
+    const kk=fpK(),e=FPE.m[el.dataset.fpk];if(e&&!fpOn()){e[0]+=Math.round(dx);e[1]+=Math.round(dy)}else{p.x=cl((p.x||0)+dx/kk.x,'x');p.y=cl((p.y||0)+dy/kk.y,'y')}fpOne(el,p);ch=true;
+  }
+  return ch;
+}
+let fpFt=0;
+addEventListener('resize',()=>{
+  if(fpOn()){fpHQ();clearTimeout(fpFt);fpFt=setTimeout(()=>{if(!fpOn())return;fpRebase();fpApply(true);fpFit();fpApply(true);fpSave();fpSync();fpHQ()},160)}
+  else if(fpHas()){clearTimeout(fpFt);fpFt=setTimeout(()=>{if(fpOn())return;fpApply(true);fpHQ()},120);if(!fpRq)fpRq=setTimeout(fpRescue,300)}
+});
 addEventListener('orientationchange',()=>{if(!fpOn()&&fpHas()&&!fpRq)fpRq=setTimeout(fpRescue,500)});
 
 /* layout presets: built-in and your own; a preset holds the whole layout (bar, icons, free placement, side player) */
@@ -6463,7 +6678,7 @@ function preClick(t,paint){
   return false;
 }
 const preHtml=()=>{const my=PRE_LOAD();return `<div class="scd"><h4>Presets</h4><div class="bgst icrc">${PRE_BUILT.concat(my).map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)}</button>`).join('')}</div>${my.length?`<div class="icr"><div class="icrt"><b>My presets</b></div>${my.map(p=>`<div class="icrt"><b>${esc(p.name)}</b><span class="icrm"><button type="button" class="pill" data-prepl="${p.id}" title="Replace with the current layout">Update</button><button type="button" class="ib" data-predel="${p.id}" aria-label="Delete ${esc(p.name)}">${ic('trash',20)}</button></span></div>`).join('')}</div>`:''}<div class="bt" style="margin-top:6px"><button type="button" class="pill" data-presave="1">Save current layout as preset</button></div><p class="dupn" style="margin:6px 6px 2px">A preset keeps the navigation bar, icon layout, free placement and side player.</p></div>
-<div class="scd"><h4>Free placement</h4><p class="dupn" style="margin:2px 6px 8px">Drag icons, tabs, toolbars, the side panel and the controls of the mini player, side player and full player anywhere. Resize, rotate, layer or hide them, with undo and redo. Guides snap to edges and centres.</p><div class="bt"><button type="button" class="pill acc" data-fpgo="1">Place freely</button><button type="button" class="pill" data-fpgo="full">Arrange full player</button>${Object.keys(FP.p).length||Object.keys(FP.b||{}).length?'<button type="button" class="pill" data-fpclr="1">Clear placement</button>':''}</div></div>`};
+<div class="scd"><h4>Free placement<span class="xbadge">Experimental</span></h4><p class="dupn" style="margin:2px 6px 8px">Drag icons, tabs, toolbars, the side panel and the controls of the mini player, side player and full player anywhere. Resize, rotate, layer or hide them, with undo and redo. Guides snap to edges and centres. This feature is still being tested and can misbehave on some screens; if something ends up out of reach, open the app with ?fp=reset.</p><div class="bt"><button type="button" class="pill acc" data-fpgo="1">Place freely</button><button type="button" class="pill" data-fpgo="full">Arrange full player</button>${Object.keys(FP.p).length||Object.keys(FP.b||{}).length?'<button type="button" class="pill" data-fpclr="1">Clear placement</button>':''}</div></div>`};
 
 /* the editor panel: drag it by its header, it always stays on screen and above everything else; it can be collapsed to a single bar */
 function fpClampBar(){const b=$('#fpbar');if(!b)return;const r=b.getBoundingClientRect();b.style.left=Math.max(8,Math.min(innerWidth-r.width-8,r.left))+'px';b.style.top=Math.max(8,Math.min(innerHeight-r.height-8,r.top))+'px'}
@@ -7139,7 +7354,7 @@ function openSettings(){
   <section class="stp" data-p="lay">
     <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
     <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
+    <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement <span class="xbadge">Experimental</span>',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
     <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
     <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
@@ -7398,8 +7613,13 @@ const xfNmGain=()=>(nm.on&&nm.db<0)?Math.pow(10,nm.db/20):1;   /* the old song i
 function xfPeek(){
   if(!cur||repeat===2)return null;
   let id=null;
-  if(upNext.length)id=upNext[0];
-  else{const i=queue.indexOf(ctxCur);if(i>=0&&i+1<queue.length)id=queue[i+1];else if(i>=0&&repeat===1&&!shuffle&&queue.length>1)id=queue[0]}
+  const un=upNext.find(x=>!offSkip(x));
+  if(upNext.length&&un)id=un;
+  else if(!upNext.length||upNext.every(offSkip)){
+    const i=queue.indexOf(ctxCur);
+    if(i>=0){for(let j=i+1;j<queue.length;j++)if(!offSkip(queue[j])){id=queue[j];break}
+      if(!id&&repeat===1&&!shuffle&&queue.length>1)for(let j=0;j<i;j++)if(!offSkip(queue[j])){id=queue[j];break}}
+  }
   return id?(songById(id)||null):null;
 }
 /* the plan for going from song a to song b: kind, fade-out and fade-in lengths, overlap window, curve */
@@ -7896,6 +8116,10 @@ async function trWave(s){
   let mx=0;for(let i=0;i<N;i++)if(pk[i]>mx)mx=pk[i];
   if(mx>0)for(let i=0;i<N;i++)pk[i]=Math.pow(pk[i]/mx,.7);
   const r={p:pk,d:ab.duration};
+  /* light mono copy (about 11 kHz) for the cut finder */
+  {const fct=Math.max(1,Math.floor(ab.sampleRate/11025)),Lm=Math.floor(L/fct),mo=new Float32Array(Lm),nch=c1?2:1;
+   for(let i=0;i<Lm;i++){let sm=0;const a=i*fct;for(let j=0;j<fct;j++){sm+=c0[a+j];if(c1)sm+=c1[a+j]}mo[i]=sm/(fct*nch)}
+   r.m=mo;r.msr=ab.sampleRate/fct}
   /* the waveform shows at once; the tempo is worked out right after, so the sheet never waits for it */
   r.bpmP=(async()=>{await new Promise(x=>setTimeout(x,30));try{return bpmDetect(ab)}catch(e){console.warn('bpm failed',e);return null}})();
   WFC.set(k,r);if(WFC.size>5)WFC.delete(WFC.keys().next().value);return r;
@@ -7914,7 +8138,7 @@ async function bakeLoop(blob,tr,lp,parts){
     X=Math.max(1,Math.round(Math.min(lp.x,Math.min(...P.map(q=>(q[1]-q[0])/sr))/3)*sr));
     P.forEach((q,k)=>{const last=k===P.length-1;plan.push(['p',k?q[0]+X:q[0],last?q[1]:q[1]-X]);if(!last)plan.push(['x',q[1]-X,P[k+1][0]])});
   }else{
-    const A=cl(tr.a),B=cl(tr.b),la=cl(lp.a),lb=cl(lp.b),n=lp.n,end=lp.m==='end';
+    const only=lp.m==='only',A=only?cl(lp.a):cl(tr.a),B=only?cl(lp.b):cl(tr.b),la=cl(lp.a),lb=cl(lp.b),n=lp.n,end=lp.m==='end';
     X=Math.max(1,Math.round(Math.min(lp.x,(lp.b-lp.a)/3)*sr));
     let E=end?B:lb;plan.push(['p',A,E-X]);
     for(let k=1;k<=n;k++){plan.push(['x',E-X,la]);E=lb;plan.push(['p',la+X,k<n?lb-X:(end?lb:B)])}
@@ -7950,16 +8174,119 @@ async function undoBake(s,quiet){
 /* remembered tempo corrections (typed, tapped or moved by hand), per song file */
 const bpmLoad=k=>{try{return (JSON.parse(localStorage.getItem('tracks-bpm')||'{}'))[k]||null}catch(_){return null}};
 const bpmKeep=(k,v)=>{try{const m=JSON.parse(localStorage.getItem('tracks-bpm')||'{}');delete m[k];m[k]=v;const ks=Object.keys(m);while(ks.length>80)delete m[ks.shift()];localStorage.setItem('tracks-bpm',JSON.stringify(m))}catch(_){}};
+/* ===== Cut finder (experimental helper for Join parts and Loop): suggests where one piece of a song should end and the next begin so the blend sounds seamless.
+   It works on a light mono copy of the song (w.m at w.msr Hz) and scores every candidate pair on what the ear notices at a crossfade:
+   where it falls in the beat, whether the harmony (chroma) and loudness and tone match, and whether the waveforms line up in phase.
+   Then the best few are nudged by a few milliseconds to the point where the waveforms agree best. ===== */
+function cutFinder(w){
+  const m=w.m,sr=w.msr,L=m.length,H=Math.max(1,Math.round(sr*.01)),nF=Math.floor(L/H);
+  const E=new Float32Array(nF),BD=new Float32Array(nF);
+  for(let f=0;f<nF;f++){let e=0,b=0,p=f*H?m[f*H-1]:0;for(let i=f*H,j=i+H;i<j;i++){const v=m[i],d=v-p;e+=v*v;b+=d*d;p=v}E[f]=e;BD[f]=b}
+  const r3=v=>Math.round(v*1000)/1000,cl=(v,a,b)=>v<a?a:v>b?b:v;
+  /* loudness (dB) and brightness (how much of the energy is high frequency) of a stretch */
+  const feat=(t0,t1)=>{
+    let a=cl(Math.round(t0*sr/H),0,nF),b=cl(Math.round(t1*sr/H),0,nF);if(b<=a){if(a>=nF)a=nF-1;b=a+1}
+    let e=0,d=0;for(let f=a;f<b;f++){e+=E[f];d+=BD[f]}
+    return {db:10*Math.log10(e/((b-a)*H)+1e-9),br:Math.log((d+1e-12)/(e+1e-12)+.01)};
+  };
+  /* harmony: 12-note chroma of a 0.28 s window that ends at t (role o) or starts at t (role i), from a Goertzel filter per note (C3 to B5) */
+  const N=Math.max(256,Math.round(.28*sr)),win=new Float32Array(N),seg=new Float32Array(N),bins=[];
+  for(let i=0;i<N;i++)win[i]=.5-.5*Math.cos(2*Math.PI*i/(N-1));
+  for(let k=48;k<84;k++){const f=440*Math.pow(2,(k-69)/12);if(f<sr*.45)bins.push([k%12,2*Math.cos(2*Math.PI*f/sr)])}
+  const CC=new Map();
+  const chroma=(t,role)=>{
+    const s=cl(Math.round(t*sr)-(role==='o'?N:0),0,Math.max(0,L-N)),key=s;let c=CC.get(key);if(c!==void 0)return c;
+    for(let i=0;i<N;i++)seg[i]=(m[s+i]||0)*win[i];
+    const v=new Float32Array(12);
+    for(const [pc,co] of bins){let s1=0,s2=0;for(let i=0;i<N;i++){const s0=seg[i]+co*s1-s2;s2=s1;s1=s0}v[pc]+=Math.sqrt(Math.max(0,s1*s1+s2*s2-co*s1*s2))}
+    let n=0;for(let i=0;i<12;i++)n+=v[i]*v[i];n=Math.sqrt(n);
+    if(n>1e-6){for(let i=0;i<12;i++)v[i]/=n;c=v}else c=null;
+    if(CC.size>4000)CC.clear();CC.set(key,c);return c;
+  };
+  /* waveform agreement over 40 ms at the middle of the blend, in samples */
+  const Wn=Math.max(32,Math.round(.04*sr));
+  const ncc=(ca,cb)=>{
+    const a=Math.round(ca-Wn/2),b=Math.round(cb-Wn/2);if(a<0||b<0||a+Wn>L||b+Wn>L)return 0;
+    let ab=0,aa=0,bb=0;for(let i=0;i<Wn;i++){const x=m[a+i],y=m[b+i];ab+=x*y;aa+=x*x;bb+=y*y}
+    return aa>1e-9&&bb>1e-9?ab/Math.sqrt(aa*bb):0;
+  };
+  const circ=(d,p)=>{d=((d%p)+p)%p;return Math.min(d,p-d)};
+  const WT={harm:.3,wave:.2,loud:.15,tone:.1,grid:.25};
+  const score=(out,inn,X,grid)=>{
+    const fo=feat(out-X,out),fi=feat(inn,inn+X),t={};
+    t.loud=Math.exp(-Math.abs(fo.db-fi.db)/4);
+    t.tone=Math.exp(-Math.abs(fo.br-fi.br)/.8);
+    const co=chroma(out,'o'),ci=chroma(inn,'i');let cs;
+    if(co&&ci){let d=0;for(let i=0;i<12;i++)d+=co[i]*ci[i];cs=cl((d-.35)/.6,0,1)}else cs=(!co&&!ci)?1:.3;
+    t.harm=cs;
+    t.wave=Math.max(0,ncc((out-X/2)*sr,(inn+X/2)*sr));
+    let keys=['harm','wave','loud','tone'];
+    if(grid&&grid.bpm>0){
+      const bs=60/grid.bpm,po=(out-grid.off)/bs,pi=(inn-grid.off)/bs;
+      const ao=Math.exp(-Math.pow(circ(po,1)/.05,2)),ai=Math.exp(-Math.pow(circ(pi,1)/.05,2));
+      const gv=.5*Math.exp(-Math.pow(circ(pi-po,1)/.05,2))+.5*Math.exp(-Math.pow(circ(pi-po,4)/.07,2));
+      t.grid=.25*(ao+ai)+.5*gv;keys=keys.concat('grid');
+    }
+    let sw=0,ss=0;for(const k of keys){sw+=WT[k];ss+=WT[k]*t[k]}
+    return {s:ss/sw,t};
+  };
+  const why=t=>{
+    const a=[];
+    if(t.grid>=.8)a.push('on the beat');
+    if(t.harm>=.8)a.push('same harmony');
+    if(t.loud>=.8)a.push('even loudness');
+    if(t.tone>=.8)a.push('similar tone');
+    if(t.wave>=.5)a.push('waveforms line up');
+    return a;
+  };
+  /* q: {out,inn,X,mv:'in'|'out'|'both',win,grid,oMin,oMax,iMin,iMax,ok(out,inn)} (times in seconds) */
+  const run=q=>{
+    const {X,mv,grid}=q,win=q.win||3;
+    const span=(c,lo,hi,fixed)=>{
+      if(fixed)return [c];
+      const a=Math.max(lo,c-win),b=Math.min(hi,c+win);
+      if(b<a)return [c];
+      const arr=[];
+      if(grid&&grid.bpm>0){const st=60/grid.bpm/2;for(let k=Math.ceil((a-grid.off)/st-1e-6);;k++){const t=grid.off+k*st;if(t>b+1e-6)break;arr.push(r3(t))}}
+      else{const st=Math.max(.04,(b-a)/110);for(let t=a;t<=b+1e-9;t+=st)arr.push(r3(t))}
+      return arr;
+    };
+    const O=span(q.out,q.oMin,q.oMax,mv==='in'),I=span(q.inn,q.iMin,q.iMax,mv==='out');
+    const now=score(q.out,q.inn,X,grid),all=[];
+    for(const a of O)for(const b of I){if(q.ok&&!q.ok(a,b))continue;const r=score(a,b,X,grid);all.push({out:a,inn:b,s:r.s,t:r.t})}
+    all.sort((p,r)=>r.s-p.s);
+    /* the best few are nudged by a few ms to where the waveforms agree best */
+    const maxd=Math.round((grid&&grid.bpm>0?.008:.015)*sr),top=all.slice(0,12);
+    for(const c of top){
+      const mvIn=mv!=='out';let best=-2,bd=0;
+      for(let d=-maxd;d<=maxd;d++){
+        const o2=mvIn?c.out:c.out+d/sr,i2=mvIn?c.inn+d/sr:c.inn;
+        const v=ncc((o2-X/2)*sr,(i2+X/2)*sr);if(v>best){best=v;bd=d}
+      }
+      if(bd){
+        const o2=mvIn?c.out:r3(c.out+bd/sr),i2=mvIn?r3(c.inn+bd/sr):c.inn;
+        if((q.ok?q.ok(o2,i2):true)&&o2>=q.oMin-1e-9&&o2<=q.oMax+1e-9&&i2>=q.iMin-1e-9&&i2<=q.iMax+1e-9){const r=score(o2,i2,X,grid);if(r.s>=c.s){c.out=o2;c.inn=i2;c.s=r.s;c.t=r.t}}
+      }
+    }
+    top.sort((p,r)=>r.s-p.s);
+    const pick=[];
+    for(const c of top){if(pick.some(p=>Math.abs(p.out-c.out)<.12&&Math.abs(p.inn-c.inn)<.12))continue;pick.push(c);if(pick.length>=3)break}
+    return {now:now.s,list:pick.map(c=>({out:c.out,inn:c.inn,s:c.s,why:why(c.t)}))};
+  };
+  return {run,score:(o,i,X,g)=>score(o,i,X,g).s};
+}
+
+const cfBox=k=>`<div class="cf" id="cf-${k}"><div class="trh"><span>${ic('search',18)}<b>Smooth the ${k==='j'?'cuts':'loop seam'}</b></span></div><p class="trs">Looks through the waveform near your cut for the spot where the two sides blend best: matching the beat, harmony, loudness and waveform. It is a guide, so always listen before saving.</p><label>What may move</label><div class="bgst" data-cfm="${k}">${(k==='j'?[['in','Start of next part'],['out','End of previous part'],['both','Both']]:[['in','Loop start'],['out','Loop end'],['both','Both']]).map(x=>`<button type="button" class="chip" data-v="${x[0]}">${x[1]}</button>`).join('')}</div><div id="cf-${k}-l"></div></div>`;
 function trimSheet(s){
   if(!s)return;
   if(!s.blob)return toast('Download this song from Drive first');
   const src=s.orig||s,T=s.orig?(s.edit||{}):s,D=src.dur||0;if(!(D>=2))return toast('This song is too short to trim');
   const o={a:Math.max(0,+(T.trim&&T.trim.a)||0),b:(T.trim&&T.trim.b!=null)?Math.min(D,+T.trim.b):D,xi:s.xi!=null?+s.xi:null,xo:s.xo!=null?+s.xo:null};
   if(o.b-o.a<1){o.a=0;o.b=D}
-  const lp={on:false,a:0,b:0,n:2,x:.25,m:'in'};
+  const lp={on:false,a:0,b:0,n:2,x:.25,m:'only'};
   const jn={a:0,b:Math.min(D,8)};   /* the part being picked for Join parts: separate from the trim handles */
   const pl=(T.parts||[]).map(q=>({a:+q.a,b:+q.b}));
-  if(T.loop){lp.a=+T.loop.a||0;lp.b=+T.loop.b||0;lp.n=Math.max(1,Math.min(8,Math.round(+T.loop.n)||2));lp.x=[.1,.25,.5,1].includes(+T.loop.x)?+T.loop.x:.25;lp.m=T.loop.m==='end'?'end':'in';lp.on=lp.b-lp.a>=1.5}
+  if(T.loop){lp.a=+T.loop.a||0;lp.b=+T.loop.b||0;lp.n=Math.max(1,Math.min(8,Math.round(+T.loop.n)||2));lp.x=[.1,.25,.5,1].includes(+T.loop.x)?+T.loop.x:.25;lp.m=T.loop.m==='end'?'end':T.loop.m==='only'?'only':'in';lp.on=lp.b-lp.a>=1.5}
   const ref=s.refDur>0?+s.refDur:0;
   const ft=t=>{t=Math.max(0,t);const m=Math.floor(t/60),x=t-m*60;return m+':'+(x<10?'0':'')+x.toFixed(1)};
   const lch=(k,arr)=>arr.map(x=>`<button type="button" class="chip" data-lk="${k}" data-v="${x[1]}">${x[0]}</button>`).join('');
@@ -7995,19 +8322,20 @@ function trimSheet(s){
       <div class="tmcols">${tcol('ja','Part start')}${tcol('jb','Part end')}</div>
       <div class="trx"><button type="button" class="pill acc" id="tm-pa">Add part</button><button type="button" class="pill tmp" id="tm-pjh">Hear part</button></div>
       <div id="tm-pl"></div>
-      <div id="tm-pb" style="display:none"><label>Blend at the join</label><div class="bgst" id="tm-px">${lch('x',[['Tight',.1],['Soft',.25],['Long',.5],['Wide',1]])}</div><div class="trs" id="tm-psum"></div></div>
+      <div id="tm-pb" style="display:none"><label>Blend at the join</label><div class="bgst" id="tm-px">${lch('x',[['Tight',.1],['Soft',.25],['Long',.5],['Wide',1]])}</div><div class="trs" id="tm-psum"></div>${cfBox('j')}</div>
     </div>
   </div>
   <div class="trc tl" id="tm-cl"><div class="trh"><span>${ic('repeat',18)}<b>Loop a section</b></span><button type="button" class="chip" id="tm-lpt">Off</button></div>
-    <p class="trs" id="tm-lh">Repeat a part of the song, or add it at the end, joined with a short crossfade.</p>
+    <p class="trs" id="tm-lh">Play only the part you pick (everything else is trimmed out), repeat it in place, or add it at the end, joined with a short crossfade.</p>
     <div class="tmbody" id="tm-lpb">
       ${wv('l','Loop waveform. Tap to move the playhead, drag the blue flags to choose the loop.')}
       <div class="tmcols">${tcol('la','From')}${tcol('lb','To')}</div>
-      <label>Where it goes</label><div class="bgst" id="tm-lm"><button type="button" class="chip" data-lk="m" data-v="in">Repeat in place</button><button type="button" class="chip" data-lk="m" data-v="end">Add at the end</button></div>
+      <label>Where it goes</label><div class="bgst" id="tm-lm"><button type="button" class="chip" data-lk="m" data-v="only">Only this part</button><button type="button" class="chip" data-lk="m" data-v="in">Repeat in place</button><button type="button" class="chip" data-lk="m" data-v="end">Add at the end</button></div>
       <label id="tm-lnl">Extra repeats</label><div class="bgst" id="tm-ln">${lch('n',[['1\u00d7',1],['2\u00d7',2],['3\u00d7',3],['4\u00d7',4],['6\u00d7',6],['8\u00d7',8]])}</div>
       <label>Blend at the join</label><div class="bgst" id="tm-lx">${lch('x',[['Tight',.1],['Soft',.25],['Long',.5],['Wide',1]])}</div>
       <div class="trx"><button type="button" class="pill tmp" id="tm-lt">${ic('play',14)}Test loop</button></div>
       <div class="trs" id="tm-ls"></div>
+      ${cfBox('l')}
     </div>
   </div>
   <div class="trc tp" id="tm-cp"><div class="trh"><span>${ic('play',18)}<b>Preview result</b></span><output class="trsm" id="tm-pst"></output></div>
@@ -8075,6 +8403,7 @@ function trimSheet(s){
     if(k==='l'){   /* a loop lives inside the trim: show what is trimmed away as dimmed */
       ctx.fillStyle='rgba(0,0,0,.38)';const ta=V.px(o.a),tb=V.px(o.b);
       if(ta>0)ctx.fillRect(0,0,Math.min(w,ta),h);if(tb<w)ctx.fillRect(Math.max(0,tb),0,w-Math.max(0,tb),h);
+      if(lp.on&&lp.m==='only'){const la=V.px(lp.a),lb=V.px(lp.b);if(la>0)ctx.fillRect(0,0,Math.min(w,la),h);if(lb<w)ctx.fillRect(Math.max(0,lb),0,w-Math.max(0,lb),h)}   /* only the picked part is kept */
     }
     /* beat lines: faint on the beat, stronger where a bar starts */
     const bs=beatSec();
@@ -8150,11 +8479,11 @@ function trimSheet(s){
     $('#tm-lpb').style.display=lp.on?'':'none';$('#tm-lh').style.display=lp.on?'none':'';
     if(lp.on){
       document.querySelectorAll('#tm-lm .chip,#tm-ln .chip,#tm-lx .chip').forEach(c=>c.classList.toggle('on',String(lp[c.dataset.lk])===c.dataset.v));
-      $('#tm-lnl').textContent=lp.m==='end'?'Times added at the end':'Extra repeats';
+      $('#tm-lnl').textContent=lp.m==='end'?'Times added at the end':lp.m==='only'?'Extra repeats of the part':'Extra repeats';
       const L=lp.b-lp.a;
-      $('#tm-ls').textContent=lp.m==='end'?`Plays the song, then adds ${ft(lp.a)} to ${ft(lp.b)} (${fmt(L)}) at the end${lp.n>1?', '+lp.n+' times':''}. That adds ${fmt(L*lp.n)} to the song.`:`Plays ${ft(lp.a)} to ${ft(lp.b)} (${fmt(L)}) ${lp.n} extra ${lp.n===1?'time':'times'}, then carries on. That adds ${fmt(L*lp.n)} to the song.`;
+      $('#tm-ls').textContent=lp.m==='only'?`Keeps only ${ft(lp.a)} to ${ft(lp.b)} (${fmt(L)}) and trims the rest of the song. The part plays ${lp.n+1} ${lp.n+1===1?'time':'times'}, about ${fmt(L*(lp.n+1))} in total.`:lp.m==='end'?`Plays the song, then adds ${ft(lp.a)} to ${ft(lp.b)} (${fmt(L)}) at the end${lp.n>1?', '+lp.n+' times':''}. That adds ${fmt(L*lp.n)} to the song.`:`Plays ${ft(lp.a)} to ${ft(lp.b)} (${fmt(L)}) ${lp.n} extra ${lp.n===1?'time':'times'}, then carries on. That adds ${fmt(L*lp.n)} to the song.`;
     }
-    plPaint();
+    plPaint();cfPaint('j');cfPaint('l');
     /* tempo card and transport */
     const bi=$('#tm-bpm');if(bi&&document.activeElement!==bi)bi.value=G.bpm?String(+G.bpm.toFixed(2)):'';
     document.querySelectorAll('#tm-sg .chip').forEach(c=>{const v=c.dataset.sv;c.classList.toggle('on',v==='off'?!G.on:(G.on&&G.snap===v));c.classList.toggle('dis',!bs)});
@@ -8202,7 +8531,7 @@ function trimSheet(s){
     if(!pvU){pvU=URL.createObjectURL(src.blob);pv.src=pvU}
     if(!au.paused){au.pause();resume=true}
     document.querySelectorAll('#ov .tmp').forEach(b=>b.classList.remove('acc'));
-    rpStop();lpStop();pvStop=to==null?Infinity:to;head=from;pLeft=lp.n;pTail=0;
+    rpStop();lpStop();cfStop();pvStop=to==null?Infinity:to;head=from;pLeft=lp.n;pTail=0;
     try{pv.currentTime=from}catch(_){}
     pv.volume=uvol;
     pv.play().then(()=>{setPlaying(true);if(btn)btn.classList.add('acc');cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}).catch(()=>toast('Could not play this file'));
@@ -8236,7 +8565,7 @@ function trimSheet(s){
   const rpSync=()=>{
     const st=$('#tm-pst');if(!st)return;
     const p=rpPlan(),fresh=rpFresh(),cut=p.a>=.05||p.b<D-.05;
-    const what=p.join?'Joined parts':p.loop?(lp.m==='end'?'Part added at the end':'Looped section'):cut?'Trimmed song':'Whole song, no changes';
+    const what=p.join?'Joined parts':p.loop?(lp.m==='end'?'Part added at the end':lp.m==='only'?'Selected part only':'Looped section'):cut?'Trimmed song':'Whole song, no changes';
     st.textContent=rpS.busy?'Building\u2026':fresh?what+' \u00b7 '+fmt(rpS.dur):what;
     $('#tm-pn').textContent=rpS.busy?'Building the preview from your edits\u2026':!rpS.u||fresh?'Hear the whole song the way Save will make it, before anything is changed.':'You changed something since this preview was built. Press play to hear the new version.';
     $('#tm-rk').innerHTML=fresh?rpS.seams.map(t=>'<i style="left:'+(t/rpS.dur*100)+'%"></i>').join(''):'';
@@ -8260,7 +8589,7 @@ function trimSheet(s){
   const rpPlay=async from=>{
     if(rpS.busy)return;
     if(!(await rpBuild()))return;
-    if(!pv.paused)stopPv();
+    if(!pv.paused)stopPv();cfStop();
     if(!au.paused){au.pause();resume=true}
     const t=from!=null?from:(rpT()>=rpS.dur-.1?0:rpT());
     if(rp.readyState<1)await new Promise(r=>{rp.addEventListener('loadedmetadata',r,{once:true});setTimeout(r,1500)});
@@ -8367,7 +8696,7 @@ function trimSheet(s){
   const hearBtn=(btn,from,to)=>{const was=btn.classList.contains('acc');stopPv();if(was)return;playPv(from,to,btn)};
   $('#tm-ps').onclick=e=>hearBtn(e.currentTarget,o.a,Math.min(o.b,o.a+5));
   $('#tm-pe').onclick=e=>hearBtn(e.currentTarget,Math.max(o.a,o.b-5),o.b);
-  $('#tm-lt').onclick=e=>{if(lp.on)hearBtn(e.currentTarget,lp.m==='end'?Math.max(0,o.b-5):Math.max(0,lp.a-3),lp.m==='end'?null:Math.min(D,lp.b+4))};
+  $('#tm-lt').onclick=e=>{if(lp.on)hearBtn(e.currentTarget,lp.m==='end'?Math.max(0,o.b-5):lp.m==='only'?lp.a:Math.max(0,lp.a-3),lp.m==='end'||lp.m==='only'?null:Math.min(D,lp.b+4))};
   const enableLoop=()=>{
     if(o.b-o.a<2.2)return false;
     lp.on=true;
@@ -8378,6 +8707,92 @@ function trimSheet(s){
     }
     clampLoop();pLeft=lp.n;VS.l.fit(lp.a,lp.b);return lp.on;
   };
+  /* ---- Smooth cuts: suggests better cut points for a join or a loop seam, from the waveform (see cutFinder) ---- */
+  const CF={mv:{j:'in',l:'both'},sig:{j:'',l:''},res:{j:{},l:{}},tm:{j:0,l:0},fnd:null,fw:null,busy:false,ad:null,u:null};
+  const cfFinder=()=>{if(!wf||!wf.m)return null;if(CF.fw!==wf){CF.fw=wf;CF.fnd=cutFinder(wf)}return CF.fnd};
+  const cfGrid=()=>G.bpm>0?{bpm:G.bpm,off:G.off}:null;
+  const cfX=k=>Math.max(.05,k==='l'?Math.min(lp.x,(lp.b-lp.a)/3):lp.x);
+  const cfSeams=k=>{
+    const S=[];
+    if(k==='j'){
+      for(let i=0;i+1<pl.length;i++){const A=pl[i],B=pl[i+1];
+        S.push({label:'Part '+(i+1)+' \u2192 '+(i+2),nout:'end of part '+(i+1),nin:'start of part '+(i+2),out:A.b,inn:B.a,oMin:A.a+1,oMax:D,iMin:0,iMax:B.b-1,ok:null,set:(a,b)=>{A.b=a;B.a=b}})}
+      if(pl.length&&jn.b-jn.a>=1){const A=pl[pl.length-1];
+        S.push({label:'Part '+pl.length+' \u2192 the part you are picking',nout:'end of part '+pl.length,nin:'part start',out:A.b,inn:jn.a,oMin:A.a+1,oMax:D,iMin:0,iMax:jn.b-1,ok:null,set:(a,b)=>{A.b=a;jn.a=b}})}
+    }else if(lp.on){
+      S.push({label:'Loop end \u2192 loop start',nout:'loop end',nin:'loop start',out:lp.b,inn:lp.a,oMin:o.a+1.5,oMax:o.b-.2,iMin:o.a,iMax:o.b-1.7,ok:(a,b)=>a-b>=1.5,set:(a,b)=>{lp.a=b;lp.b=a}})}
+    return S;
+  };
+  const cfDesc=(S,c)=>{const b=[];if(Math.abs(c.inn-S.inn)>5e-4)b.push(S.nin+' to '+ft(c.inn));if(Math.abs(c.out-S.out)>5e-4)b.push(S.nout+' to '+ft(c.out));return b.length?'Move '+b.join(' and '):'Keep both points'};
+  const cfRes=(k,i)=>{
+    const box=$('#cf-'+k+'-r'+i);if(!box)return;const h=CF.res[k][i],S=cfSeams(k)[i];
+    if(!h||!S){box.innerHTML='';return}
+    const L=h.r.list.filter(c=>c.s>h.r.now+.02);h.L=L;
+    box.innerHTML=L.length?L.map((c,n)=>`<div class="cfc"><div class="cfct"><span><b>${Math.round(c.s*100)}%</b> fit</span><span>${cfDesc(S,c)}</span>${c.why.length?'<small>'+c.why.join(', ')+'</small>':''}</div><div class="trx cfcb"><button type="button" class="pill tmp" data-cfh="${k}:${i}:${n}">Hear</button><button type="button" class="pill acc" data-cfu="${k}:${i}:${n}">Use</button></div></div>`).join(''):'<p class="trs">Nothing better nearby. This cut already fits about as well as this part of the song allows.</p>';
+  };
+  const cfPaint=k=>{
+    const host=$('#cf-'+k);if(!host)return;
+    const S=cfSeams(k),ready=!!(wf&&wf.m),sig=S.map(x=>x.label).join('|')+'|'+(ready?1:0);
+    if(sig!==CF.sig[k]){
+      CF.sig[k]=sig;CF.res[k]={};
+      $('#cf-'+k+'-l').innerHTML=S.length?S.map((x,i)=>`<div class="cfs"><div class="cfh"><b>${x.label}</b><span class="cfq" id="cf-${k}-q${i}"></span></div><div class="trx"><button type="button" class="pill acc" data-cfs="${k}:${i}">Find a better cut</button><button type="button" class="pill tmp" data-cfh="${k}:${i}:now">Hear this cut</button></div><div class="cfr" id="cf-${k}-r${i}"></div></div>`).join(''):'<p class="trs">'+(k==='j'?'Add a part first. The cut between two parts is what gets smoothed.':'Turn the loop on to smooth its seam.')+'</p>';
+    }
+    host.querySelectorAll('[data-cfm] .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===CF.mv[k]));
+    S.forEach((x,i)=>{const h=CF.res[k][i];if(h&&(Math.abs(h.from[0]-x.out)>5e-4||Math.abs(h.from[1]-x.inn)>5e-4)){delete CF.res[k][i];cfRes(k,i)}});   /* the points moved: old suggestions no longer apply */
+    clearTimeout(CF.tm[k]);
+    if(!ready||mode!==k)return;
+    CF.tm[k]=setTimeout(()=>{
+      const F=cfFinder(),g=cfGrid();if(!F)return;
+      cfSeams(k).forEach((x,i)=>{const e=$('#cf-'+k+'-q'+i);if(!e)return;const p=Math.round(F.score(x.out,x.inn,cfX(k),g)*100);e.textContent=p+'% fit now';e.className='cfq '+(p>=80?'g':p>=55?'m':'r')});
+    },160);
+  };
+  const cfStop=()=>{const a=CF.ad;if(a&&!a.paused)a.pause();document.querySelectorAll('#ov [data-cfh]').forEach(b=>b.classList.remove('acc'))};
+  const cfDone=()=>{cfStop();if(CF.ad)CF.ad.removeAttribute('src');if(CF.u){URL.revokeObjectURL(CF.u);CF.u=null}};
+  /* hear one cut: three seconds before it, the blend, three seconds after. Built with the same code Save uses. */
+  const cfHear=async(out,inn,btn)=>{
+    if(CF.busy)return;
+    if(btn.classList.contains('acc')){cfStop();return}
+    CF.busy=true;const old=btn.textContent;btn.textContent='Building\u2026';
+    try{
+      const r=await bakeLoop(src.blob,{a:0,b:D},{a:0,b:0,n:0,x:lp.x,m:'in'},[{a:Math.max(0,out-3),b:out},{a:inn,b:Math.min(D,inn+3)}]);
+      if(!$('#tm-pa'))return;   /* the sheet was closed while building */
+      if(!pv.paused)stopPv();rpStop();if(!au.paused){au.pause();resume=true}
+      cfStop();if(CF.u)URL.revokeObjectURL(CF.u);CF.u=URL.createObjectURL(r.blob);
+      const a=CF.ad||(CF.ad=new Audio());a.src=CF.u;a.volume=uvol;a.onended=cfStop;
+      await a.play();btn.classList.add('acc');
+    }catch(e){console.warn('cut preview failed',e);toast('Could not play this cut')}
+    finally{CF.busy=false;btn.textContent=old}
+  };
+  const cfSuggest=async(k,i)=>{
+    const F=cfFinder();
+    if(!F)return toast(wf?'Waveform data is not available for this song':'Still reading the waveform\u2026');
+    const S=cfSeams(k)[i];if(!S||CF.busy)return;
+    CF.busy=true;const box=$('#cf-'+k+'-r'+i);box.innerHTML='<p class="trs">Listening to the waveform\u2026</p>';
+    await new Promise(r=>setTimeout(r,40));
+    try{
+      const mv=CF.mv[k];
+      const r=F.run({out:S.out,inn:S.inn,X:cfX(k),mv,win:mv==='both'?2:3.5,grid:cfGrid(),oMin:S.oMin,oMax:S.oMax,iMin:S.iMin,iMax:S.iMax,ok:S.ok});
+      CF.res[k][i]={from:[S.out,S.inn],r};cfRes(k,i);
+    }catch(e){console.warn('cut search failed',e);box.innerHTML='<p class="trs">Could not analyse this song.</p>'}
+    finally{CF.busy=false}
+  };
+  const cfApply=(k,i,c)=>{
+    const S=cfSeams(k)[i];if(!S)return;
+    cfStop();S.set(c.out,c.inn);if(k==='l')clampLoop();
+    delete CF.res[k][i];cfRes(k,i);paint();toast('Cut moved. Tap Hear this cut to check it');
+  };
+  const cfClick=e=>{
+    const t=e.target.closest('button');if(!t)return;
+    const m=t.closest('[data-cfm]');
+    if(m&&t.dataset.v){const k=m.dataset.cfm;CF.mv[k]=t.dataset.v;CF.res[k]={};CF.sig[k]='';paint();return}
+    if(t.dataset.cfs){const [k,i]=t.dataset.cfs.split(':');cfSuggest(k,+i);return}
+    if(t.dataset.cfu){const [k,i,n]=t.dataset.cfu.split(':'),h=CF.res[k][+i],c=h&&h.L&&h.L[+n];if(c)cfApply(k,+i,c);return}
+    if(t.dataset.cfh){
+      const [k,i,n]=t.dataset.cfh.split(':'),S=cfSeams(k)[+i];if(!S)return;
+      if(n==='now')cfHear(S.out,S.inn,t);else{const h=CF.res[k][+i],c=h&&h.L&&h.L[+n];if(c)cfHear(c.out,c.inn,t)}
+    }
+  };
+  $('#cf-j').onclick=cfClick;$('#cf-l').onclick=cfClick;
   /* one tool at a time: Trim, Join parts or Loop. The other two are switched off (their values are kept while you stay in the sheet). */
   const setMode=m=>{
     if(m===mode)return;
@@ -8394,6 +8809,7 @@ function trimSheet(s){
   /* while previewing, the loop runs the same way as in the player */
   const pt=setInterval(()=>{
     if(!lp.on||pv.paused)return;
+    if(lp.m==='only'&&pLeft<=0&&!LP.busy&&pv.currentTime>=lp.b-.03){stopPv();return}   /* the rest of the song is trimmed away */
     if(lp.m==='end'){   /* hear how the end sounds with the part added */
       if(LP.busy)return;
       const t=pv.currentTime,X=Math.min(lp.x,(lp.b-lp.a)/3),jump=()=>{pLeft--;pTail=1;pvStop=pLeft>0?Infinity:lp.b;lpJump(pv,k=>{pv.volume=xfCl(uvol*k)},()=>1,X,lp.a)};
@@ -8415,7 +8831,7 @@ function trimSheet(s){
   const fin=()=>{
     clearInterval(pt);cancelAnimationFrame(raf);
     rpStop();rp.removeAttribute('src');if(rpS.u){URL.revokeObjectURL(rpS.u);rpS.u=null}
-    ros.forEach(r=>r.disconnect());
+    ros.forEach(r=>r.disconnect());cfDone();
     pv.pause();lpStop();pv.removeAttribute('src');if(pvU)URL.revokeObjectURL(pvU);
     if(resume&&cur)au.play().catch(()=>{});closeOv();
   };
@@ -8438,7 +8854,7 @@ function trimSheet(s){
         const rec={trim:cut?{a:o.a,b:o.b}:null,loop:loop?{a:lp.a,b:lp.b,n:lp.n,x:lp.x,m:lp.m}:null,parts:join?pl.map(q=>({a:q.a,b:q.b})):null};
         await rfApply(s,f,r.dur,{quiet:true,bake:true});
         s.orig=keep;s.edit=rec;await put('songs',s);
-        toast(join?'Parts joined and saved into the audio ('+fmt(r.dur)+')':lp.m==='end'?'Part added at the end and saved into the audio':'Loop saved into the audio ('+fmt(r.dur)+')');fin();render();
+        toast(join?'Parts joined and saved into the audio ('+fmt(r.dur)+')':lp.m==='end'?'Part added at the end and saved into the audio':lp.m==='only'?'Only the selected part is kept, saved into the audio ('+fmt(r.dur)+')':'Loop saved into the audio ('+fmt(r.dur)+')');fin();render();
       }catch(e){console.warn('bake failed',e);btn.disabled=false;btn.textContent='Save';toast('Could not build the audio. This song may be too long.')}
       return;
     }
@@ -8455,7 +8871,7 @@ function trimSheet(s){
     toast(loop?(lp.m==='end'?'Part will be added at the end':cut?'Trimmed, loop on':'Loop on'):cut?'Trimmed to '+fmt(o.b-o.a):'Trim removed');fin();render();
   };
   trWave({id:s.id+(s.orig?'o':''),blob:src.blob}).then(w=>{
-    wf=w;document.querySelectorAll('#ov .trl').forEach(l=>l.remove());light();
+    wf=w;document.querySelectorAll('#ov .trl').forEach(l=>l.remove());light();cfPaint('j');cfPaint('l');
     w.bpmP.then(res=>{
       if(!$('#tm-bpm'))return;   /* the sheet was closed meanwhile */
       if(G.state==='wait'){
@@ -8879,6 +9295,177 @@ async function shareIntake(){
     for(const k of await c.keys()){const r=await c.match(k),b=await r.blob();fs.push(new File([b],decodeURIComponent(r.headers.get('X-Name')||'shared.mp3'),{type:r.headers.get('Content-Type')||b.type||'audio/mpeg'}));await c.delete(k)}
     if(fs.length)await addFiles(fs);
   }catch(e){toast('Could not import the shared songs')}
+}
+/* ===== share a song as a link =====
+   Sender: the audio (and a small cover) go to the sender's Drive as "anyone with the link can view". The link is
+   <app>/?play=<audioId>[.<coverId>]&t=<title>&a=<artist>&f=<feat|feat>.
+   Receiver: the app opens on a play card that streams the file straight from Drive (nothing is saved or downloaded),
+   with Add song / Export song / decline (X). Reading a public Drive file needs GKEY, a Google API key limited to the Drive API. */
+const SH_API='https://www.googleapis.com/drive/v3/files/',SH_KEY='tracks-shared';
+const shMap=()=>{try{return JSON.parse(LS(SH_KEY)||'{}')||{}}catch(e){return{}}};
+const shSave=m=>LS(SH_KEY,JSON.stringify(m));
+const shSafe=n=>String(n||'song').replace(/[\\/:*?"<>|]+/g,'_').trim().slice(0,100)||'song';
+const shAuthErr=e=>/reconnect|Session expired|Token expired/.test((e&&e.message)||'');
+const shBase=()=>/^https?:$/.test(location.protocol)&&!/^(localhost|127\.|192\.168\.|10\.)/.test(location.hostname)?redir():SP_REDIRECTS[SP_REDIRECTS.length-1];
+const shLink=r=>shBase()+'?play='+r.a+(r.c?'.'+r.c:'')+'&t='+encodeURIComponent(r.t||'')+(r.r?'&a='+encodeURIComponent(r.r):'')+((r.f||[]).length?'&f='+encodeURIComponent(r.f.join('|')):'');
+
+/* ---- sender ---- */
+async function shFolder(){
+  let f=LS('tracks-shfid');
+  if(f){try{const j=await (await gapi(DV+'/'+f+'?fields=trashed')).json();if(!j.trashed)return f}catch(e){if(shAuthErr(e))throw e}}
+  const q=encodeURIComponent("name='Tracks shared' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const j=await (await gapi(DV+'?q='+q+'&fields=files(id)')).json();
+  f=j.files[0]?j.files[0].id:(await (await gapi(DV,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Tracks shared',mimeType:'application/vnd.google-apps.folder'})})).json()).id;
+  LS('tracks-shfid',f);return f;
+}
+function shPut(url,blob,type,on){return new Promise((res,rej)=>{
+  const x=new XMLHttpRequest();x.open('PUT',url);x.setRequestHeader('Content-Type',type);
+  x.upload.onprogress=e=>{if(on&&e.lengthComputable)on(e.loaded/e.total)};
+  x.onload=()=>{if(x.status>=200&&x.status<300){try{res(JSON.parse(x.responseText).id)}catch(e){rej(new Error('Upload failed'))}}else rej(new Error('Upload '+x.status))};
+  x.onerror=()=>rej(new Error('Upload failed. Check your connection'));x.send(blob)})}
+async function shUp(name,blob,type,parent,on){
+  type=type||'application/octet-stream';
+  const r=await gapi(DU+'?uploadType=resumable&fields=id',{method:'POST',headers:{'Content-Type':'application/json','X-Upload-Content-Type':type},body:JSON.stringify({name,parents:[parent]})});
+  return shPut(r.headers.get('Location'),blob,type,on);
+}
+const shPub=id=>gapi(DV+'/'+id+'/permissions?fields=id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({role:'reader',type:'anyone',allowFileDiscovery:false})});
+function shCoverBlob(src){return new Promise(res=>{
+  if(!src)return res(null);
+  const i=new Image();
+  i.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=360;const m=Math.min(i.width,i.height);c.getContext('2d').drawImage(i,(i.width-m)/2,(i.height-m)/2,m,m,0,0,360,360);c.toBlob(b=>res(b),'image/jpeg',.85)}catch(e){res(null)}};
+  i.onerror=()=>res(null);i.src=src})}
+
+function shSetup(){
+  openOv(`<h3>Share links need one setup step</h3><p class="dupn">People who open your link are not signed in to your Google account, so the app reads the shared song with a Google API key.</p><p class="dupn">1. In Google Cloud Console, open the project that has your OAuth client ID and make sure the Google Drive API is enabled.<br>2. Credentials, Create credentials, API key. Under API restrictions pick Google Drive API, and under Website restrictions add your app address.<br>3. Paste the key into index.html at <b>const GKEY=''</b> and deploy again.</p><div class="bt"><button type="button" class="pill acc" id="shx">Close</button></div>`);
+  $('#shx').onclick=closeOv;
+}
+async function shareSong(s){
+  if(!s.blob)return toast('Download this song from Drive first');
+  if(!GKEY)return shSetup();
+  if(!LS('tracks-cloud')){toast('Connect Google Drive first');return cloudSheet()}
+  const r=shMap()[s.id];
+  if(r&&r.sz===s.blob.size)return shareSheet(s,r);
+  openOv(`<h3>Share song</h3><p class="dupn">This uploads <b>${esc(s.name)}</b> to your Google Drive and lets anyone with the link play it in traXz. They can add it to their library or export it. You can stop sharing at any time.</p><div class="bt"><button type="button" class="pill" id="shn">Cancel</button><button type="button" class="pill acc" id="shg">Create link</button></div>`);
+  $('#shn').onclick=closeOv;$('#shg').onclick=()=>shMake(s);
+}
+async function shMake(s){
+  openOv(`<h3>Creating link</h3><p class="dupn" id="shp">Getting ready\u2026</p>`);
+  const say=t=>{const e=$('#shp');if(e)e.textContent=t},ids=[];
+  try{
+    await token(false);
+    const fo=await shFolder(),ty=s.blob.type||'audio/mpeg',ex=(ty.split('/')[1]||'mp3').replace('mpeg','mp3').replace(/[^a-z0-9].*$/i,'')||'mp3',nm=shSafe(s.name);
+    const aid=await shUp(nm+'.'+ex,s.blob,ty,fo,p=>say('Uploading '+Math.round(p*100)+'%'));ids.push(aid);
+    let cid2='';
+    const cb=await shCoverBlob(s.cover||(albumOf(s)||{}).cover);
+    if(cb){say('Adding the cover\u2026');cid2=await shUp(nm+'-cover.jpg',cb,'image/jpeg',fo);ids.push(cid2)}
+    say('Making the link\u2026');
+    for(const i of ids)await shPub(i);
+    const m=shMap();m[s.id]={a:aid,c:cid2,t:s.name,r:artOf(s),f:featOf(s),sz:s.blob.size};shSave(m);
+    shareSheet(s,m[s.id]);
+  }catch(e){
+    for(const i of ids)gapi(DV+'/'+i,{method:'DELETE'}).catch(()=>{});
+    if(shAuthErr(e)){closeOv();toast('Connect Google Drive again first');cloudSheet();return}
+    openOv(`<h3>Could not create the link</h3><p class="dupn">${esc((e&&e.message)||'Something went wrong')}</p><div class="bt"><button type="button" class="pill acc" id="shx">Close</button></div>`);
+    $('#shx').onclick=closeOv;
+  }
+}
+function shareSheet(s,r){
+  const url=shLink(r),who=[r.r,(r.f||[]).length?'feat. '+r.f.join(', '):''].filter(Boolean).join(' ');
+  openOv(`<h3>Share song</h3><p class="dupn">Anyone with this link can play <b>${esc(r.t||s.name)}</b>${who?' by '+esc(who):''} in traXz, then add it to their library or export it.</p><input type="text" id="shl" readonly value="${esc(url)}" style="margin-bottom:12px"><div class="bt"><button type="button" class="pill" id="shoff">Stop sharing</button><button type="button" class="pill" id="shcp">Copy link</button>${navigator.share?'<button type="button" class="pill acc" id="shnat">Share\u2026</button>':''}</div>`);
+  const inp=$('#shl');inp.onfocus=()=>inp.select();
+  $('#shcp').onclick=()=>navigator.clipboard.writeText(url).then(()=>toast('Link copied'),()=>{inp.focus();inp.select();toast('Press copy on the selected link')});
+  const nat=$('#shnat');if(nat)nat.onclick=()=>navigator.share({title:r.t||s.name,text:'Listen to '+(r.t||s.name)+(who?' by '+who:''),url}).catch(()=>{});
+  $('#shoff').onclick=()=>shStop(s,r);
+}
+async function shStop(s,r){
+  try{
+    for(const i of [r.a,r.c].filter(Boolean)){try{await gapi(DV+'/'+i,{method:'DELETE'})}catch(e){if(!/Drive 404/.test((e&&e.message)||''))throw e}}
+  }catch(e){return toast(shAuthErr(e)?'Connect Google Drive again to stop sharing':'Could not stop sharing')}
+  const m=shMap();delete m[s.id];shSave(m);closeOv();toast('Sharing stopped. The link no longer works');
+}
+
+/* ---- receiver: the play card ---- */
+function shareOpen(){
+  let q;try{q=new URLSearchParams(location.search)}catch(e){return}
+  const p=q.get('play');if(p===null)return;
+  const m=/^([\w-]{10,100})(?:\.([\w-]{10,100}))?$/.exec(p);
+  const I={t:(q.get('t')||'').trim().slice(0,120)||'Shared song',a:(q.get('a')||'').trim().slice(0,120),f:(q.get('f')||'').split('|').map(x=>x.trim()).filter(Boolean).slice(0,6)};
+  const url=(id,x)=>SH_API+id+'?'+(x||'')+'key='+encodeURIComponent(GKEY);
+  try{au.pause()}catch(e){}
+  const root=document.createElement('div');root.id='shc';root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Shared song');
+  const a=new Audio();a.preload='metadata';
+  let ext='mp3',mime='audio/mpeg',blobP=null,coverP=null,dead=false,seeking=false;
+  const key=e=>{if(e.key==='Escape'){e.preventDefault();done()}};
+  const done=()=>{
+    dead=true;a.pause();a.removeAttribute('src');try{a.load()}catch(e){}
+    document.removeEventListener('keydown',key,true);root.remove();
+    try{history.replaceState(null,'',location.pathname)}catch(e){}
+  };
+  const bad=(t,msg)=>{
+    dead=true;a.pause();
+    root.innerHTML=`<div class="shk bad"><button type="button" class="ib shx" aria-label="Close">${ic('close',22)}</button><h3>${esc(t)}</h3><p class="dupn">${esc(msg)}</p><button type="button" class="pill acc" id="shbx">Close</button></div>`;
+    root.querySelector('.shx').onclick=root.querySelector('#shbx').onclick=done;
+  };
+  document.body.appendChild(root);document.addEventListener('keydown',key,true);
+  if(!m)return bad('Link not valid','This share link looks incomplete. Ask for a new one.');
+  if(!GKEY)return bad('Cannot open this song','This copy of the app is not set up to open shared songs yet.');
+  const who=I.a+(I.f.length?(I.a?' ':'')+'feat. '+I.f.join(', '):'');
+  root.innerHTML=`<div class="shk">
+    <button type="button" class="ib shx" aria-label="Decline and close">${ic('close',22)}</button>
+    <button type="button" class="pill acc sha" id="sha"><span>Add song</span></button>
+    <div class="shcv">${cover({name:I.t})}</div>
+    <button type="button" class="pill shb" id="shb"><span>Export song</span></button>
+    <div class="shti"><b>${esc(I.t)}</b>${who?`<span>${esc(who)}</span>`:''}</div>
+    <div class="shsk"><input type="range" class="rng" id="shsk" min="0" max="1000" value="0" aria-label="Seek"><div class="shtm"><span id="sht1">0:00</span><span id="sht2">0:00</span></div></div>
+    <div class="shct"><button type="button" class="ib" id="shbk" aria-label="Back 10 seconds">${ic('prev',24)}</button><button type="button" class="ib shpl" id="shpl" aria-label="Play">${ic('play',30)}</button><button type="button" class="ib" id="shfw" aria-label="Forward 10 seconds">${ic('next',24)}</button></div>
+    <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="100" aria-label="Volume"></div>
+  </div>`;
+  const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl'),vl=g('#shvl');
+  const fill=el=>el.style.setProperty('--p',(el.value/el.max*100)+'%');
+  const du=()=>isFinite(a.duration)?a.duration:0;
+  const paint=()=>{if(!seeking&&du()){sk.value=a.currentTime/du()*1000;fill(sk)}g('#sht1').textContent=fmt(a.currentTime);g('#sht2').textContent=fmt(du())};
+  a.ontimeupdate=a.onloadedmetadata=a.ondurationchange=paint;
+  a.onplay=()=>{pl.innerHTML=ic('pause',30);pl.setAttribute('aria-label','Pause')};
+  a.onpause=a.onended=()=>{pl.innerHTML=ic('play',30);pl.setAttribute('aria-label','Play')};
+  a.onerror=()=>{if(!dead)bad('Song unavailable','This song could not be loaded. The link may have been turned off, or you may be offline.')};
+  pl.onclick=()=>{if(a.paused)a.play().catch(()=>toast('Could not play this song'));else a.pause()};
+  g('#shbk').onclick=()=>{a.currentTime=Math.max(0,a.currentTime-10)};
+  g('#shfw').onclick=()=>{if(du())a.currentTime=Math.min(du(),a.currentTime+10)};
+  sk.oninput=()=>{seeking=true;fill(sk);if(du())g('#sht1').textContent=fmt(sk.value/1000*du())};
+  sk.onchange=()=>{if(du())a.currentTime=sk.value/1000*du();seeking=false};
+  vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};fill(sk);fill(vl);
+  g('.shx').onclick=done;
+  a.src=url(m[1],'alt=media&');
+  /* cover and file details load in the background; the card is usable at once */
+  const coverBlob=()=>coverP||(coverP=m[2]?fetch(url(m[2],'alt=media&')).then(r=>{if(!r.ok)throw 0;return r.blob()}):Promise.resolve(null));
+  coverBlob().then(b=>{if(b&&!dead)g('.shcv').innerHTML=cover({cover:URL.createObjectURL(b),name:I.t})}).catch(()=>{});
+  fetch(url(m[1],'fields=name,mimeType&')).then(r=>{if(!r.ok)throw r.status;return r.json()}).then(j=>{
+    const e=/\.([a-z0-9]{2,5})$/i.exec(j.name||'');if(e)ext=e[1].toLowerCase();
+    mime=/^audio\//.test(j.mimeType||'')?j.mimeType:(Z_MIME[ext]||mime);
+  }).catch(c=>{if((c===404||c===403)&&!dead)bad('Song unavailable','This song is no longer shared.')});
+  const blob=()=>blobP||(blobP=fetch(url(m[1],'alt=media&')).then(r=>{if(!r.ok)throw new Error('http '+r.status);return r.blob()}).catch(e=>{blobP=null;throw e}));
+  const busy=(b,on,txt)=>{b.disabled=on;b.style.opacity=on?.6:'';b.querySelector('span').textContent=txt};
+  g('#shb').onclick=async()=>{
+    const b=g('#shb');busy(b,true,'Saving\u2026');
+    try{const x=await blob();dlBlob(x,shSafe(I.t)+'.'+ext);toast('Song exported')}catch(e){toast('Could not download the song')}
+    if(!dead)busy(b,false,'Export song');
+  };
+  g('#sha').onclick=async()=>{
+    const b=g('#sha');busy(b,true,'Adding\u2026');
+    let x,cv=null;
+    try{x=await blob()}catch(e){busy(b,false,'Add song');return toast('Could not download the song')}
+    try{const cb=await coverBlob();if(cb)cv=await makeCover(cb)}catch(e){}
+    const f=new File([x],shSafe(I.t)+'.'+ext,{type:mime});
+    done();/* close the card first: a duplicate question from the library has to be visible */
+    const r=await addFiles([f]);
+    const s=r&&r.ids&&r.ids[0]?songById(r.ids[0]):null;
+    if(s){s.name=I.t;if(I.a)s.artist=I.a;if(I.f.length)s.feat=I.f;if(cv){s.cover=cv.data;s.ccol=cv.color}await put('songs',s);render()}
+  };
+  try{
+    an(root,[{opacity:0},{opacity:1}],{duration:220,easing:'linear'});
+    an(g('.shk'),[{opacity:0,transform:'translateY(18px) scale(.95)'},{opacity:1,transform:'none'}],{duration:380,easing:EASE_OUT});
+  }catch(e){}
+  pl.focus({preventScroll:true});
 }
 /* app update */
 function swuAct(){
@@ -9511,7 +10098,7 @@ function ui(){
   for(const o of [...songs,...albums]){
     if(o.cover&&!o.ccol){const c=await colorFromUrl(o.cover);if(c){o.ccol=c;await put(SS.has(o)?'songs':'albums',o)}}
   }
-  renderMini();lyBoot();medBootGC();shareIntake();fpInit();
+  renderMini();lyBoot();medBootGC();shareIntake();shareOpen();fpInit();
 })();
 </script>
 </body>
