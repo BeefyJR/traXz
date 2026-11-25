@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s),au=$('#au');
 /* Performance mode: Off / Auto / On. Auto switches on for weak devices, Data Saver and low battery. It only lightens the look (no frosted glass, no animated media, lighter beat effects, shorter animations); nothing is removed. */
 /* Each feature can be lightened on its own: PF lists them. Off / Auto / On set all of them together; Custom lets you pick (checked = animated). PERF.f[key] is true when that feature runs in its light form. */
-const PF=[['glass','Frosted glass','Blurred bars and sheets'],['ui','Interface animations','Sheets and list fades'],['bg','Moving background','Drifting colour blobs'],['media','GIF and video covers','Animated instead of still'],['beat','Beat effects','Glow and ripples with the music'],['trans','Song change transitions','Slide, cube and flip in the big player']];
+const PF=[['glass','Frosted glass','Blurred bars and sheets'],['ui','Interface animations','Sheets and list fades'],['bg','Moving background','Drifting color blobs'],['media','GIF and video covers','Animated instead of still'],['beat','Beat effects','Glow and ripples with the music'],['trans','Song change transitions','Slide, cube and flip in the big player']];
 const PERF={m:'off',on:false,bat:false,f:{},c:{},sig:''};
 try{const v=localStorage.getItem('tracks-perf');if(v==='on'||v==='auto'||v==='off'||v==='custom')PERF.m=v}catch(e){}
 try{const c=JSON.parse(localStorage.getItem('tracks-perf-c')||'null');if(c&&typeof c==='object')PF.forEach(k=>{PERF.c[k[0]]=!!c[k[0]]});else PF.forEach(k=>{PERF.c[k[0]]=false})}catch(e){PF.forEach(k=>{PERF.c[k[0]]=false})}
@@ -72,6 +72,7 @@ const ic=(n,s)=>{const k=n+'|'+(s||'');let v=_icC.get(k);if(v===void 0){v=`<svg 
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /* images that reach an HTML attribute must be real image data (data:image/... or blob:), never free text from a backup, a sync file or a link */
 const _SI=new Map(),SI_OK=/^(?:data:image\/[a-z0-9.+-]+(?:;[a-z0-9=.+-]+)*;base64,|data:image\/[a-z0-9.+-]+,|blob:)[^\s"'<>()\\]*$/i;
+const encU=t=>encodeURIComponent(t).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());/* encodeURIComponent leaves ' ( ) alone, which safeImg rejects */
 const safeImg=u=>{if(typeof u!=='string'||!u)return '';let r=_SI.get(u);if(r===undefined){r=SI_OK.test(u)?u:'';if(_SI.size>2000)_SI.clear();_SI.set(u,r)}return r};
 const fmt=t=>{if(!t||!isFinite(t))return '0:00';t=Math.round(t);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -5125,8 +5126,8 @@ function icSheet(){
     <div class="scd"><h4>Look</h4><div class="bgs">${sl('icsz','Icon size',ICP.size,32,60)}${sl('icgp','Spacing',ICP.gap,0,24)}</div>
     <div class="icr"><div class="icrt"><b>Shape</b></div><div class="bgst icrc">${[['circle','Circle'],['round','Rounded'],['plain','Plain']].map(p=>chip(ICP.sh===p[0],`data-sh="${p[0]}"`,p[1])).join('')}</div></div>
     <div class="icr"><div class="icrt"><b>Background</b></div><div class="bgst icrc">${[['auto','Default'],['glass','Glass'],['solid','Solid'],['none','None']].map(p=>chip(ICP.bg===p[0],`data-bgm="${p[0]}"`,p[1])).join('')}</div></div>
-    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent colour icons</b></span><span class="stog"></span></button>
-    <button type="button" class="srow" data-hdac="1" role="switch" aria-checked="${HDAC.on}"><span class="st"><b>Colour from the song</b><small>Add, Cloud, Queue and Settings follow the current song's colour, like the X in the traX logo.</small></span><span class="stog"></span></button></div>
+    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent color icons</b></span><span class="stog"></span></button>
+    <button type="button" class="srow" data-hdac="1" role="switch" aria-checked="${HDAC.on}"><span class="st"><b>Color from the song</b><small>Add, Cloud, Queue and Settings follow the current song's color, like the X in the traX logo.</small></span><span class="stog"></span></button></div>
     <div class="bt"><button type="button" class="pill mr" data-icreset="1">Reset</button><button type="button" class="pill acc" data-icdone="1">Done</button></div>`;
   };
   const pv=()=>{$('#icpv').innerHTML=icPvHtml(sel);
@@ -5245,26 +5246,26 @@ function openSettings(){
   openOv(`<div class="sthd"><div class="sth"><h3>Settings</h3><button type="button" class="pill acc" id="st-done">Done</button></div>
   <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}${t[0]==='data'&&SWU.w?'<i class="tdot"></i>':''}</button>`).join('')}</div></div>
   <section class="stp" data-p="app">
-    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button><button type="button" class="chip" data-pf="custom">Custom</button></div><p class="dupn" id="pfn" style="margin:8px 6px 2px"></p><div class="pfl" id="pfl" hidden>${PF.map(k=>`<button type="button" class="pfr" data-pfk="${k[0]}" role="switch" aria-checked="false"><span class="pft"><b>${k[1]}</b><small>${k[2]}</small></span><i class="pfs" aria-hidden="true"></i></button>`).join('')}</div></div>
+    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button><button type="button" class="chip" data-pf="custom">Custom</button></div><p class="dupn" id="pfn"></p><div class="pfl" id="pfl" hidden>${PF.map(k=>`<button type="button" class="pfr" data-pfk="${k[0]}" role="switch" aria-checked="false"><span class="pft"><b>${k[1]}</b><small>${k[2]}</small></span><i class="pfs" aria-hidden="true"></i></button>`).join('')}</div></div>
     <div class="scd"><h4>Theme</h4><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
-    <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div></div>
+    <div class="cset" id="cset" hidden><label>Background color</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote"></p></div></div>
     <div class="scd"><h4>Background</h4><div class="tgs"><label>Image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
-    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
+    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
     <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Tips on empty pages.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lay">
-    <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
-    <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn"></p></div>
+    <div class="scd"><h4>Navigation bar</h4><p class="dupn">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement <span class="xbadge">Experimental</span>',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
-    <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
-    <div class="scd"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
+    <div class="scd pco"><h4>Header buttons</h4><p class="dupn">Add, Cloud, Queue and Settings. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd mbo"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
+    <div class="scd pco"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn"></p></div>
   </section>
   <section class="stp" data-p="play">
     <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade and gapless',esc(xfSummary()))}</div>
-    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favourites, updated automatically.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favorites, updated automatically.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Player buttons</h4><button type="button" class="srow" data-onebtn="1" role="switch" aria-checked="false"><span class="st"><b>One add button</b><small>A single + in the players for Like, Album and Playlist.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lib">
@@ -5306,7 +5307,7 @@ function openSettings(){
     paintTheme();
     sh.querySelectorAll('.setg[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===LAY.m));
     const cu=curTheme()==='custom';$('#cset').hidden=!cu;
-    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));{const k_=$('#cbk');if(!k_._live&&k_.value!==CT.hex)k_.value=CT.hex}$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted to '+h+' for readable text.':'Text colour adjusts automatically.'}
+    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));{const k_=$('#cbk');if(!k_._live&&k_.value!==CT.hex)k_.value=CT.hex}$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted to '+h+' for readable text.':'Text color adjusts automatically.'}
     const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'':(LAY.m==='pc'?'Wide layout for computers.':'Compact touch layout.');
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
@@ -6953,7 +6954,7 @@ const ROTID='__rot',ROT_HALF=14/* days until a play counts half as much */,ROT_M
 let rotOn=LS('tracks-smart')==='1',rotT=null,rotPlays={},rotIds=[];
 try{rotPlays=JSON.parse(LS('tracks-plays')||'{}')||{}}catch(e){rotPlays={}}
 try{rotIds=JSON.parse(LS('tracks-rot')||'[]')||[]}catch(e){rotIds=[]}
-const ROT_COVER='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a3d'/><stop offset='.55' stop-color='#e8386d'/><stop offset='1' stop-color='#6d3bd6'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><g fill='none' stroke='#fff' stroke-width='11' stroke-linecap='round'><path d='M52 100a48 48 0 0 1 82-34' opacity='.95'/><path d='M148 100a48 48 0 0 1-82 34' opacity='.95'/></g><path d='M138 38l4 36-34-8z' fill='#fff'/><path d='M62 162l-4-36 34 8z' fill='#fff'/><path d='M90 82v36l30-18z' fill='#fff'/></svg>");
+const ROT_COVER='data:image/svg+xml,'+encU("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a3d'/><stop offset='.55' stop-color='#e8386d'/><stop offset='1' stop-color='#6d3bd6'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><g fill='none' stroke='#fff' stroke-width='11' stroke-linecap='round'><path d='M52 100a48 48 0 0 1 82-34' opacity='.95'/><path d='M148 100a48 48 0 0 1-82 34' opacity='.95'/></g><path d='M138 38l4 36-34-8z' fill='#fff'/><path d='M62 162l-4-36 34 8z' fill='#fff'/><path d='M90 82v36l30-18z' fill='#fff'/></svg>");
 const ROT={id:ROTID,name:'Rotation',cover:ROT_COVER,desc:'Your most played songs lately. It updates itself as your listening changes.',sys:true,songs:rotIds.slice()};
 function plGet(id){return id===ROTID?(rotOn?ROT:null):id===LIKEID?(LIKE.on?(LIKEPL.songs=likedIds(),LIKEPL):null):playlists.find(x=>x.id===id)}
 const rotSave=()=>LS('tracks-plays',JSON.stringify(rotPlays));
@@ -6998,7 +6999,7 @@ ICON.likeOn='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm
 const LIKEID='__liked';
 var LIKE={on:LS('tracks-like')!=='0'};/* on unless switched off in Settings */
 document.documentElement.dataset.like=LIKE.on?'on':'off';
-const LIKED_COVER='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c4dff'/><stop offset='.55' stop-color='#c04df0'/><stop offset='1' stop-color='#ff4d8d'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><path fill='#fff' transform='translate(46 46) scale(4.5)' d='"+ICON.heart+"'/></svg>");
+const LIKED_COVER='data:image/svg+xml,'+encU("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c4dff'/><stop offset='.55' stop-color='#c04df0'/><stop offset='1' stop-color='#ff4d8d'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><path fill='#fff' transform='translate(46 46) scale(4.5)' d='"+ICON.heart+"'/></svg>");
 const LIKEPL={id:LIKEID,name:'Liked Songs',cover:LIKED_COVER,desc:'Songs you have liked, newest first.',sys:true,songs:[]};
 const likedIds=()=>songs.filter(s=>s.liked).sort((a,b)=>b.liked-a.liked).map(s=>s.id);
 const likeBtn=s=>{const on=!!(s&&s.liked);return `<button class="ib lk${on?' on':''}" data-act="like" data-i="${on?1:0}" aria-pressed="${on}" aria-label="Like" title="${on?'Remove from Liked Songs':'Add to Liked Songs'}">${ic(on?'likeOn':'likeOff',22)}</button>`};
@@ -7339,7 +7340,7 @@ function shareOpen(){
     <div class="shti"><b>${esc(I.t)}</b>${who?`<span>${esc(who)}</span>`:''}</div>
     <div class="shsk"><input type="range" class="rng" id="shsk" min="0" max="1000" value="0" aria-label="Seek"><div class="shtm"><span id="sht1">0:00</span><span id="sht2">0:00</span></div></div>
     <div class="shct"><button type="button" class="ib" id="shbk" aria-label="Back 10 seconds">${ic('prev',24)}</button><button type="button" class="ib shpl" id="shpl" aria-label="Play">${ic('play',30)}</button><button type="button" class="ib" id="shfw" aria-label="Forward 10 seconds">${ic('next',24)}</button></div>
-    <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="100" aria-label="Volume"></div>
+    <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="${Math.round(uvol*100)}" aria-label="Volume"></div>
   </div>`;
   const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl'),vl=g('#shvl');
   const fill=el=>el.style.setProperty('--p',(el.value/el.max*100)+'%');
@@ -7354,7 +7355,7 @@ function shareOpen(){
   g('#shfw').onclick=()=>{if(du())a.currentTime=Math.min(du(),a.currentTime+10)};
   sk.oninput=()=>{seeking=true;fill(sk);if(du())g('#sht1').textContent=fmt(sk.value/1000*du())};
   sk.onchange=()=>{if(du())a.currentTime=sk.value/1000*du();seeking=false};
-  vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};fill(sk);fill(vl);
+  a.volume=vl.value/100;vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};fill(sk);fill(vl);
   g('.shx').onclick=done;
   a.src=url(m[1],'alt=media&');
   /* cover and file details load in the background; the card is usable at once */
@@ -7494,11 +7495,9 @@ async function saDrop(it){/* delete the Drive files first; forget the share only
 }
 function sharesSheet(){
   const items=shItems();
-  openOv(`<div class="sth"><h3>Ongoing shares</h3><button type="button" class="pill acc" id="shdn">Back</button></div>
-  <p class="dupn" style="margin:2px 2px 8px">Songs, albums and playlists you are still sharing with a link. Stopping deletes the shared copies from your Google Drive, so the link stops working. Your library is not touched.</p>
-  ${items.length?`<div class="scd shl">${items.map((it,i)=>`<div class="shr" data-i="${i}"><button type="button" class="st shro" data-a="open"${it.open?'':' disabled'}><b>${esc(it.name)}</b><small>${esc(it.sub)}${it.gone?' \u00b7 removed from your library':''}</small></button><button type="button" class="pill" data-a="cp">Copy</button><button type="button" class="pill" data-a="st">Stop</button></div>`).join('')}</div><div class="bt"><button type="button" class="pill" id="shall">Stop all (${items.length})</button></div>`:`<div class="empty" style="padding:26px 8px">You are not sharing anything.<br>Use Share on a song, album or playlist to make a link.</div>`}`);
-  const back=()=>{setTab='data';openSettings()};
-  $('#shdn').onclick=back;
+  openOv(`<h3>Ongoing shares</h3>
+  <p class="dupn">Songs, albums and playlists you are still sharing with a link. Stopping deletes the shared copies from your Google Drive, so the link stops working. Your library is not touched.</p>
+  ${items.length?`<div class="scd shl">${items.map((it,i)=>`<div class="rbr shr" data-i="${i}"><button type="button" class="rbt shro" data-a="open"${it.open?'':' disabled'}><b>${esc(it.name)}</b><span>${esc(it.sub)}${it.gone?' \u00b7 removed from your library':''}</span></button><button type="button" class="pill" data-a="cp">Copy</button><button type="button" class="pill" data-a="st">Stop</button></div>`).join('')}</div><div class="bt"><button type="button" class="pill" id="shall">Stop all (${items.length})</button></div>`:`<div class="empty" style="padding:26px 8px">You are not sharing anything.<br>Use Share on a song, album or playlist to make a link.</div>`}`);
   const fail=e=>{if(shAuthErr(e)){toast('Connect Google Drive again to stop sharing');closeOv();cloudSheet()}else toast('Could not stop sharing')};
   const root=$('#ov .sheet');/* the sheet is rebuilt on every open, so this handler goes away with it */
   root.onclick=async e=>{
@@ -7571,10 +7570,12 @@ function albumOpen(){
       <div class="sals">${T.map((t,i)=>`<button type="button" class="sar" data-i="${i}"><span class="san">${i+1}</span><span class="sat"><b>${esc(t.t)}</b>${t.a&&t.a!==M.a?`<i>${esc(t.a+(t.f.length?' feat. '+t.f.join(', '):''))}</i>`:''}</span><span class="sad">${t.d?fmt(t.d):''}</span></button>`).join('')}</div>
       <div class="shsk"><input type="range" class="rng" id="shsk" min="0" max="1000" value="0" aria-label="Seek"><div class="shtm"><span id="sht1">0:00</span><span id="sht2">0:00</span></div></div>
       <div class="shct"><button type="button" class="ib" id="shbk" aria-label="Previous song">${ic('prev',24)}</button><button type="button" class="ib shpl" id="shpl" aria-label="Play">${ic('play',30)}</button><button type="button" class="ib" id="shfw" aria-label="Next song">${ic('next',24)}</button></div>
+      <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="${Math.round(uvol*100)}" aria-label="Volume"></div>
       <button type="button" class="pill acc" id="saa" style="width:100%;justify-content:center;margin-top:14px"><span>Add ${W}</span></button>
     </div>`;
-    const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl');
+    const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl'),vl=g('#shvl');
     const fill=el=>el.style.setProperty('--p',(el.value/el.max*100)+'%');
+    a.volume=vl.value/100;fill(vl);vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};/* starts at the app's own volume */
     const du=()=>isFinite(a.duration)?a.duration:0;
     const paint=()=>{if(!seeking&&du()){sk.value=a.currentTime/du()*1000;fill(sk)}g('#sht1').textContent=fmt(a.currentTime);g('#sht2').textContent=fmt(du())};
     const mark=()=>root.querySelectorAll('.sar').forEach((e,k)=>e.classList.toggle('on',k===I));
@@ -8359,15 +8360,19 @@ function ui(){
   addEventListener('touchcancel',()=>end(false),{passive:true,capture:true});
 
   /* the phone's own back gesture / button: keep one spare history entry and use it to step back inside the app */
-  let armed=false,tried=false;
+  let armed=false,tried=false,exitAt=0;
   const arm=()=>{try{history.pushState({trax:1},'',location.href);armed=true}catch(_){}};
   const EV=['pointerup','touchend','click','keydown'];
   const first=()=>{if(tried)return;tried=true;EV.forEach(n=>removeEventListener(n,first,true));arm()};/* browsers skip history entries made before a completed tap or key press, so wait for one */
-  EV.forEach(n=>addEventListener(n,first,true));
+  const wait=()=>{tried=false;EV.forEach(n=>addEventListener(n,first,true))};
+  wait();
   addEventListener('popstate',()=>{
     if(!armed)return;
     armed=false;
     if(GEST.on&&backStep()){arm();return}
-    try{history.back()}catch(_){}/* nothing left to close: let the phone leave the app as usual */
+    /* nothing left to close. history.back() from here made some phones show a blank gray page, so the app never navigates by itself:
+       it says so once and leaves the spare entry spent, so the next back gesture is the phone's own and leaves the app cleanly. The next tap puts the spare entry back. */
+    if(Date.now()-exitAt>2500){exitAt=Date.now();toast('Swipe back again to exit')}
+    wait();
   });
 })();
