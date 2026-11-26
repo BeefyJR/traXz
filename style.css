@@ -387,6 +387,14 @@ html[data-ic=on][data-icb=glass] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gea
 html[data-ic=on][data-icb=solid] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:var(--surf2);color:var(--text);border:1px solid var(--line);box-shadow:none}
 html[data-ic=on][data-icb=none] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:transparent;border-color:transparent;box-shadow:none;color:var(--text)}
 html[data-ic=on][data-ica=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){color:var(--acc)}
+/* icon size and spacing also drive the tab buttons */
+html[data-ic=on] .tabs{gap:var(--icg,8px)}
+html[data-ic=on][data-dock=bottom] #dock .tabs{gap:var(--icg,8px)}
+html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{gap:var(--icg,8px)}
+html[data-ic=on] #dock .tab .tic{width:calc(var(--ics,44px)*.55);height:calc(var(--ics,44px)*.55)}
+html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tab{height:calc(var(--ics,44px) + 20px)}
+html[data-ic=on][data-dock=bottom] #dock .tab{min-height:calc(var(--ics,44px) + 8px)}
+html[data-ic=on][data-dock=bottom]{--dbh:max(66px,calc(var(--ics,44px)*.55 + 44px))}
 html[data-ic=on] .icoff{display:none!important}
 /* icon layout sheet */
 .icpv{display:flex;height:176px;max-width:360px;margin:2px auto 6px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(var(--bgc),.55);flex-direction:column}
@@ -1776,15 +1784,6 @@ html body .ib.lk.on{color:var(--like)!important;opacity:1!important}
   html[data-layout=pc]{--npe:min(var(--npw,360px),42vw)}
 }
 /* ===== v72: compact navigation bar (icons only) for top, left, right and bottom ===== */
-#dkg{display:none;position:absolute;z-index:9;touch-action:none;background:transparent;transition:background-color .15s}
-#dkg:hover,html.dkdrag #dkg{background:rgba(var(--ac),.55)}
-html:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #dkg{display:block}
-html[data-dock=left] #dkg{top:0;bottom:0;right:-3px;width:7px;cursor:ew-resize}
-html[data-dock=right] #dkg{top:0;bottom:0;left:-3px;width:7px;cursor:ew-resize}
-html[data-dock=bottom] #dkg{left:0;right:0;top:-3px;height:7px;cursor:ns-resize}
-html.dkdrag{user-select:none;-webkit-user-select:none}
-html.dkdrag[data-dock=bottom] body{cursor:ns-resize}html.dkdrag:is([data-dock=left],[data-dock=right]) body{cursor:ew-resize}
-html.dkdrag #app,html.dkdrag #dock .tab{transition:none!important}
 html[data-dockc=on] #dock .tab .tl{display:none}
 html[data-dockc=on] #dock .tab{padding:0;gap:0;border-radius:14px}
 html[data-dockc=on]:is([data-dock=left],[data-dock=right]) #dock .tab{height:46px}
@@ -2021,7 +2020,7 @@ html.fpe .fpsel{outline:2px solid #ff2d95!important;outline-style:solid!importan
 #fpq{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 /* free placement v2 */
 html[data-fptf=off] #top>*{transform:translate(var(--fptopx,0),var(--fptopy,0))}
-html[data-fpdf=off] #dock>:not(#dkg){transform:translate(var(--fpdockx,0),var(--fpdocky,0))}
+html[data-fpdf=off] #dock>*{transform:translate(var(--fpdockx,0),var(--fpdocky,0))}
 .fph::before{inset:-15px!important}
 html[data-fptv=on] #top>#qk{transform:translate(calc(var(--fptopx,0px) + var(--fptdw,0px)),var(--fptopy,0px))}
 html:not(.fpe) .fphd{visibility:hidden!important;pointer-events:none!important}
@@ -2135,35 +2134,14 @@ html:not([data-layout=pc]) .fbr.fx .fsz2 button{width:34px}
 .sthb .pill{padding:8px 14px}
 .srow:disabled{opacity:.5}
 .srow:disabled .ic{opacity:.6}
-/* ---- Songs toolbar, new look: one search bar + sort + select. "Classic buttons" in Settings brings the old ones back ---- */
-html[data-tbm=new] {
-  --tbh:44px;
-}
-html[data-tbm=new] #tb{gap:8px}
-html[data-tbm=new] #tb .sb{flex:1 1 auto;width:auto;min-width:0;height:var(--tbh);border-radius:calc(var(--tbh)/2);max-width:none;transition:box-shadow .18s ease,background .18s ease}
-html[data-tbm=new] #tb .sb:focus-within{box-shadow:0 0 0 2px var(--text)}
-html[data-tbm=new] #tb .sb input{display:block}
-html[data-tbm=new] #tb .sbi{width:42px;height:var(--tbh)}
-html[data-tbm=new] #tb .sbx{display:none;width:var(--tbh);height:var(--tbh)}
-html[data-tbm=new] #tb .sb input:not(:placeholder-shown)~.sbx{display:flex}
-html[data-tbm=new] #tb #flt,
-html[data-tbm=new] #tb #selbtn{display:inline-flex;position:relative;margin:0;height:var(--tbh);min-width:var(--tbh);padding:0 12px;border-radius:calc(var(--tbh)/2);justify-content:center;gap:6px;flex:none}
-html[data-tbm=new] #tb #flt{order:2}
-html[data-tbm=new] #tb #selbtn{order:3;width:auto}
-html[data-tbm=new] #tb #fl{display:none;font-size:13px;font-weight:600;white-space:nowrap}
-@media (min-width:560px){
-  html[data-tbm=new] #tb #fl{display:inline}
-}
-/* small dot on the sort button when the order is not the default */
-html[data-tbm=new] #tb #flt.chg::after{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:rgb(var(--ac));box-shadow:0 0 0 2px var(--bg)}
-html[data-tbm=new] #tb :is(#flt,#selbtn,.sbx):focus-visible{outline:2px solid var(--text);outline-offset:2px}
-@media (max-height:520px){
-  html[data-tbm=new]{--tbh:38px}
-}
-
-@media (min-width:900px){
-  html[data-tbm=new] #tb .sb{max-width:520px}
-}
+/* PC right-click Add menu: small popup at the cursor instead of the bottom sheet */
+#ov.ctx{background:transparent;align-items:flex-start;justify-content:flex-start}
+#ov.ctx .sheet{position:fixed;width:208px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:5px;border-radius:12px;border:1px solid var(--line);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+#ov.ctx .sheet h3{font-size:11px;margin:2px 8px 4px;color:var(--mute);font-weight:600;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ov.ctx .sheet .it{padding:7px 8px;font-size:13px;border-radius:7px;border-bottom:0}
+#ov.ctx .sheet .it.hi{gap:10px}
+#ov.ctx .sheet .it .ic{width:16px;height:16px}
+#ov.ctx .sheet .it:hover{background:var(--surf2)}
 
 /* Settings: Undo sits at the bottom left */
 .stfoot{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:12px 22px 4px;margin-top:10px;background:linear-gradient(transparent,rgba(var(--sfc),.96) 45%);pointer-events:none}
@@ -2176,11 +2154,6 @@ html[data-layout=pc] .stul{flex:none;max-width:100%;padding-left:4px}
 /* ---- toolbars: icon buttons 44px, clear focus rings, labelled menus ---- */
 .abar .ab:focus-visible,.abar .back:focus-visible{outline:2px solid var(--text);outline-offset:2px}
 .abar .ab[aria-haspopup]{position:relative}
-/* docked PC bars: same new bar, icon-only sort so the fixed button spots never overlap the search */
-html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,calc(100% - 2*var(--hx) - var(--hbl) - var(--hbr) - 110px));max-width:none}
-html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #fl{display:none}
-html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #flt,html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #selbtn{width:38px;min-width:38px;padding:0}
-html[data-tbm=new][data-layout=pc]{--tbh:38px}
 
 /* ---- docked PC bars at any width: search / select / sort always stay clear of Add, Cloud, Queue and Settings ----
    The old rule only moved them in windows narrower than 900px. With the side player open the main area is much narrower than the window,
@@ -2192,6 +2165,4 @@ html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #flt{right:var(--sbr)}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #selbtn{right:calc(var(--sbr) + 38px + 10px)}
 /* the search bar fills the space between the left buttons and select / sort, never more than 420px */
-html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,max(120px,calc(100% - var(--sbl) - var(--sbr) - 96px)))}
 /* with the header buttons on the bar, the logo sits in the middle of this row: stop the search before it */
-html[data-hb=dock][data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,max(120px,calc(50% - var(--sbl) - 56px)))}

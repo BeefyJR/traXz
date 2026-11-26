@@ -1510,6 +1510,7 @@ document.addEventListener('keydown',e=>{
 },true);
 function openOv(html){
   const ov=$('#ov'),was=ov.classList.contains('open');
+  ov.classList.remove('ctx');ov.oncontextmenu=null;
   ov.innerHTML=`<div class="sheet">${html}</div>`;ov.classList.add('open');
   const sh=ov.firstElementChild;
   ovLook(sh);ovA11y(sh,was);
@@ -1519,8 +1520,9 @@ function openOv(html){
 }
 function closeOv(){
   const ov=$('#ov');if(!ov.classList.contains('open'))return;
-  const g=PERF.f.ui||RM.matches?null:ov.cloneNode(true);if(g){g.className='ovg';g.removeAttribute('id');g.removeAttribute('style');g.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
-  ov.classList.remove('open');ov.innerHTML='';
+  const ctx=ov.classList.contains('ctx');
+  const g=ctx||PERF.f.ui||RM.matches?null:ov.cloneNode(true);if(g){g.className='ovg';g.removeAttribute('id');g.removeAttribute('style');g.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
+  ov.classList.remove('open','ctx');ov.innerHTML='';ov.oncontextmenu=null;
   {const f=ovFrom;ovFrom=null;if(f&&f.isConnected&&f.focus)try{f.focus({preventScroll:true})}catch(_){}}
   if(RM.matches||PERF.f.ui)return;
   document.body.appendChild(g);
@@ -1539,8 +1541,13 @@ function autoIc(it,t){const l=it.label||'';
 function choose(title,items){return new Promise(res=>{
   items.forEach(it=>{if(!it.ic&&!it.noic&&!(it.cov||it.plus||it.pl))it.ic=autoIc(it,title)});
   openOv(`<h3>${esc(title)}</h3>`+items.map((it,i)=>{const hc=it.cov||it.plus||it.pl;return `<button class="it ${hc?'hc':''} ${it.ic?'hi':''} ${it.gap?'gap':''} ${it.danger?'dg':''} ${it.sel?'sel':''}" data-i="${i}"${it.sel?' aria-current="true"':''}>${it.ic?ic(it.ic,20):''}${it.cov?`<span class="mc">${cover(it.cov)}</span>`:it.pl?`<span class="mc">${plCover(it.pl)}</span>`:it.plus?`<span class="mc"><div class="cov" style="background:var(--surf2);color:var(--mute)">+</div></span>`:''}${hc||it.ic?`<span class="lb">${esc(it.label)}</span>`:esc(it.label)}</button>`}).join(''));
+  if(ctxAt){const at=ctxAt;ctxAt=null;const ov=$('#ov'),sh=ov.firstElementChild;ov.classList.add('ctx');sh.getAnimations().forEach(x=>x.cancel());
+    const w=sh.offsetWidth,h=sh.offsetHeight,m=8;
+    sh.style.left=Math.max(m,Math.min(at.x,innerWidth-w-m))+'px';sh.style.top=Math.max(m,Math.min(at.y,innerHeight-h-m))+'px';
+    an(sh,[{opacity:0,transform:'scale(.96)'},{opacity:1,transform:'none'}],{duration:140,easing:EASE_OUT})}
   $('#ov .sheet').onclick=e=>{const b=e.target.closest('[data-i]');if(!b)return;closeOv();res(items[b.dataset.i].value)};
   $('#ov').onclick=e=>{if(e.target.id==='ov'){closeOv();res(null)}};
+  $('#ov').oncontextmenu=e=>{if($('#ov').classList.contains('ctx')){e.preventDefault();closeOv();res(null)}};
 })}
 function ask(title,val,ok){return new Promise(res=>{
   openOv(`<h3>${esc(title)}</h3><input type="text" id="qi" maxlength="80"><div class="bt"><button class="pill" id="qc">Cancel</button><button class="pill acc" id="qo">${ok||'Save'}</button></div>`);
@@ -3790,13 +3797,11 @@ async function purgePl(ids){
 
 /* search and filter */
 function openSearch(){
-  if(tbNew()){$('#sq').focus();return}
   const sb=$('#sb');if(sb.classList.contains('open'))return;
   const w=$('#tb').clientWidth-40;$('#tb').classList.add('so');sb.classList.add('open');
   an(sb,[{width:'44px'},{width:w+'px'}],{duration:320,easing:EASE_OUT});$('#sq').focus();
 }
 function closeSearch(){
-  if(tbNew()){if(view.q||$('#sq').value){clearTimeout(sqT);$('#sq').value='';view.q='';render()}$('#sq').focus();return}
   const sb=$('#sb');if(!sb.classList.contains('open'))return;
   clearTimeout(sqT);$('#sq').value='';view.q='';$('#sq').blur();
   const a=an(sb,[{width:sb.offsetWidth+'px'},{width:'44px'}],{duration:260,easing:EASE,fill:'forwards'});
@@ -5221,8 +5226,7 @@ function icSheet(){
       return `<div class="icr${sel===k?' on':''}" data-rk="${k}"><div class="icrt"><span class="icri">${ic(IC_ICON[k],22)}</span><b>${IC_NAME[k]}</b><span class="icrm"><button type="button" class="ib" data-mv="${k}" data-d="-1" aria-label="Move ${IC_NAME[k]} earlier"${i<1?' disabled':''}>${ic('up',20)}</button><button type="button" class="ib" data-mv="${k}" data-d="1" aria-label="Move ${IC_NAME[k]} later"${i>=g.length-1?' disabled':''}>${ic('down',20)}</button></span></div><div class="bgst icrc">${IC_POS.filter(p=>!(k==='gear'&&p[0]==='off')).map(p=>chip(ICP.pos[k]===p[0],`data-pos="${p[0]}" data-k="${k}"`,p[1])).join('')}</div></div>`};
     const trow=(t,i)=>`<div class="icr"><div class="icrt"><span class="icri">${ic(IC_TAB[t][0],22)}</span><b>${IC_TAB[t][1]}</b><span class="icrm"><button type="button" class="ib" data-tmv="${t}" data-d="-1" aria-label="Move ${IC_TAB[t][1]} earlier"${i<1?' disabled':''}>${ic('up',20)}</button><button type="button" class="ib" data-tmv="${t}" data-d="1" aria-label="Move ${IC_TAB[t][1]} later"${i>=2?' disabled':''}>${ic('down',20)}</button></span></div></div>`;
     const sl=(id,l,v,mn,mx)=>`<div class="fop"><span>${l}</span><input type="range" class="rng" id="${id}" min="${mn}" max="${mx}" value="${v}" style="--p:${(v-mn)/(mx-mn)*100}%" aria-label="${l}"><b>${v}px</b></div>`;
-    return preHtml()+`<div class="scd"><button type="button" class="srow" data-icon="1" role="switch" aria-checked="${ICP.on}"><span class="st"><b>Use my layout</b><small>Off keeps the standard layout.</small></span><span class="stog"></span></button></div>
-    <div class="scd"><h4>Buttons</h4>${ICP.ord.map(row).join('')}</div>
+    return preHtml()+`<div class="scd"><h4>Buttons</h4>${ICP.ord.map(row).join('')}</div>
     <div class="scd"><h4>Tabs</h4>${ICP.tabs.map(trow).join('')}</div>
     <div class="scd"><h4>Look</h4><div class="bgs">${sl('icsz','Icon size',ICP.size,32,60)}${sl('icgp','Spacing',ICP.gap,0,24)}</div>
     <div class="icr"><div class="icrt"><b>Shape</b></div><div class="bgst icrc">${[['circle','Circle'],['round','Rounded'],['plain','Plain']].map(p=>chip(ICP.sh===p[0],`data-sh="${p[0]}"`,p[1])).join('')}</div></div>
@@ -5243,7 +5247,6 @@ function icSheet(){
     if(preClick(t,paint))return;
     const p=t.closest('.pvi');if(p){sel=p.dataset.pk;paint();const r=sh.querySelector(`[data-rk="${sel}"]`);if(r)r.scrollIntoView({block:'nearest',behavior:'smooth'});return}
     const rw=t.closest('[data-rk]');if(rw&&!t.closest('.chip,.ib')){sel=rw.dataset.rk;paint();return}
-    if(t.closest('[data-icon]')){ICP.on=!ICP.on;icSave();try{hbPlace()}catch(_){}if(typeof npApply==='function')try{npApply()}catch(_){}paint();return}
     if(t.closest('[data-icreset]')){const d=icDef();Object.assign(ICP,d,{on:false});icSave();try{hbPlace()}catch(_){}if(typeof npApply==='function')try{npApply()}catch(_){}sel='plus';paint();toast('Standard layout restored');return}
     const c=t.closest('[data-pos]');if(c){ICP.pos[c.dataset.k]=c.dataset.pos;sel=c.dataset.k;apply();paint();return}
     const m=t.closest('[data-mv]');if(m&&!m.disabled){const k=m.dataset.mv,d=+m.dataset.d,g=ICP.ord.filter(x=>icEff(x)===icEff(k)),i=g.indexOf(k),o=g[i+d];if(o){swap(ICP.ord,k,0);const a=ICP.ord.indexOf(k),b=ICP.ord.indexOf(o);ICP.ord[a]=o;ICP.ord[b]=k}sel=k;apply();paint();return}
@@ -5295,22 +5298,7 @@ function setDockC(on){/* Settings switch: icons only <-> normal size */
   dockSync();if(typeof npApply==='function')npApply();
 }
 (function(){
-  const dock=$('#dock');if(!dock||$('#dkg'))return;
-  dock.insertAdjacentHTML('afterbegin','<div id="dkg" role="separator" aria-label="Drag to resize the bar" title="Drag to make the bar smaller"></div>');
-  const g=$('#dkg');let st=null;
-  g.addEventListener('pointerdown',e=>{
-    if(e.button)return;const d=getDock(),r=dock.getBoundingClientRect();
-    st={id:e.pointerId,d,r,mx:dkMax()};g.setPointerCapture(e.pointerId);document.documentElement.classList.add('dkdrag');e.preventDefault();
-  });
-  g.addEventListener('pointermove',e=>{
-    if(!st||e.pointerId!==st.id)return;
-    const {d,r,mx}=st;let v=d==='left'?e.clientX-r.left:d==='right'?r.right-e.clientX:r.bottom-e.clientY;
-    const mn=d==='bottom'?54:58;v=Math.round(Math.min(mx,Math.max(mn,v)));
-    LS(dkKey(),v>=mx-2?'':String(v));dockSync();
-  });
-  const end=e=>{if(!st||(e&&e.pointerId!==st.id))return;st=null;document.documentElement.classList.remove('dkdrag');dockSync();if(typeof npApply==='function')npApply()};
-  g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
-  g.addEventListener('dblclick',()=>{LS(dkKey(),'');dockSync();if(typeof npApply==='function')npApply()});/* double-click: back to normal size */
+  const dock=$('#dock');if(!dock)return;
   document.querySelectorAll('.tab').forEach(t=>{t.title=t.textContent.trim()});
   dockSync();
 })();
@@ -5332,12 +5320,28 @@ tpbApply();
 const BGP=['#000000','#1c1c1e','#0f172a','#102a1f','#2b1220','#241638','#f4ecd8','#e3f2e9','#dbeafe','#fde7ef'];
 let setTab='app';
 const HINT={on:LS('tracks-hints')!=='0'};
-/* Songs toolbar: new search bar + sort + select (default), or the classic round buttons */
-const TBL={on:LS('tracks-tbl')==='1'};
-function tbmApply(){document.documentElement.dataset.tbm=TBL.on?'legacy':'new';const sb=document.getElementById('sb');if(sb){sb.classList.toggle('open',!TBL.on);const t=document.getElementById('tb');if(t)t.classList.remove('so')}}
-const tbNew=()=>document.documentElement.dataset.tbm==='new';
+/* Songs toolbar: the classic round search, select and sort buttons */
+function tbmApply(){document.documentElement.dataset.tbm='legacy';const sb=document.getElementById('sb');if(sb){sb.classList.remove('open');const t=document.getElementById('tb');if(t)t.classList.remove('so')}}
 tbmApply();
 const GEST={on:LS('tracks-gest')!=='0'};
+/* PC: right-click empty space opens the Add / Create menu at the cursor; right-click a song, album, playlist or folder opens its 3-dots menu */
+const RCA={on:LS('tracks-rcadd')!=='0'};
+const RCI={on:LS('tracks-rcitem')!=='0'};
+let ctxAt=null;
+document.addEventListener('contextmenu',e=>{
+  if((!RCA.on&&!RCI.on)||document.documentElement.dataset.layout!=='pc'||e.defaultPrevented)return;
+  const t=e.target;if(!t||!t.closest||!t.closest('#main'))return;
+  if($('#ov').classList.contains('open')||$('#full').classList.contains('open')||qOpen||selMode||gMode)return;
+  const it=t.closest('.row,.acard,.fcard');
+  if(it){
+    if(!RCI.on)return;
+    const d=it.querySelector('.k[data-act=menu],.alm,.fm');if(!d)return;
+    e.preventDefault();ctxAt={x:e.clientX,y:e.clientY};d.click();ctxAt=null;return;
+  }
+  if(!RCA.on||t.closest('button,a,input,textarea,select,label,video,img,[data-act],[contenteditable]'))return;
+  const p=$('#plus');if(!p||p.classList.contains('off'))return;
+  e.preventDefault();ctxAt={x:e.clientX,y:e.clientY};p.click();ctxAt=null;
+},true);
 const HDAC={on:LS('tracks-hdac')!=='0'};
 const hdacApply=()=>document.documentElement.setAttribute('data-hdac',HDAC.on?'on':'off');
 hdacApply();
@@ -5359,7 +5363,6 @@ function openSettings(){
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
     <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
-    <div class="scd"><h4>Songs toolbar</h4><button type="button" class="srow" data-tbl="1" role="switch" aria-checked="false"><span class="st"><b>Classic buttons</b><small>Use the old round search, select and sort buttons instead of the new search bar.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Tips on empty pages.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lay">
@@ -5367,6 +5370,7 @@ function openSettings(){
     <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement <span class="xbadge">Experimental</span>',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
     <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd"><h4>Right-click menu</h4><button type="button" class="srow" data-rca="1" role="switch" aria-checked="true"><span class="st"><b>Right-click to add</b><small>PC only. Right-click empty space to open the Add / Create menu at the cursor.</small></span><span class="stog"></span></button><button type="button" class="srow" data-rci="1" role="switch" aria-checked="true"><span class="st"><b>Right-click songs, albums and playlists</b><small>PC only. Opens the same menu as the 3 dots.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
@@ -5420,7 +5424,7 @@ function openSettings(){
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
     const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);const one_=sh.querySelector('[data-onebtn]');if(one_)one_.setAttribute('aria-checked',!!ONE.on);
-    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);{const tl=sh.querySelector('[data-tbl]');if(tl)tl.setAttribute('aria-checked',!!TBL.on)}uPaint();const gs_=sh.querySelector('[data-gest]');if(gs_)gs_.setAttribute('aria-checked',!!GEST.on);
+    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);uPaint();const gs_=sh.querySelector('[data-gest]');if(gs_)gs_.setAttribute('aria-checked',!!GEST.on);{const rc_=sh.querySelector('[data-rca]');if(rc_)rc_.setAttribute('aria-checked',!!RCA.on);const ri_=sh.querySelector('[data-rci]');if(ri_)ri_.setAttribute('aria-checked',!!RCI.on)}
     const lr_=sh.querySelector('[data-lrl]');if(lr_)lr_.setAttribute('aria-checked',!!LRL.on);
     tbPaint();dkPaint();tpPaint();npPaint();pfPaint();
   };
@@ -5428,7 +5432,6 @@ function openSettings(){
   sh.onclick=e=>{
     if(e.target.closest('#st-done')){closeOv();return}
     {const u_=e.target.closest('[data-uundo]');if(u_){if(!u_.disabled)uUndo();return}}
-    {const tl_=e.target.closest('[data-tbl]');if(tl_){TBL.on=!TBL.on;LS('tracks-tbl',TBL.on?'1':'0');tbmApply();paint();return}}
     const tb=e.target.closest('[data-tab]');if(tb){setTab=tb.dataset.tab;paint();sh.scrollTop=0;return}
     const tw_=e.target.closest('#tpsw .swb');if(tw_){TPB.c=tw_.dataset.c||'';tpbSave();tpbApply();paint();return}
     const hbm_=e.target.closest('#hbst .chip');if(hbm_){setHbm(hbm_.dataset.hbm);paint();return}
@@ -5438,6 +5441,8 @@ function openSettings(){
     const w=e.target.closest('#cbsw .swb');if(w){setCustomBg(w.dataset.c,true);paint();return}
     const lrl_=e.target.closest('[data-lrl]');if(lrl_){LRL.on=!LRL.on;LS('tracks-lrclib',LRL.on?'1':'0');paint();return}
     const hn=e.target.closest('[data-hint]');if(hn){HINT.on=!HINT.on;LS('tracks-hints',HINT.on?'1':'0');hintApply();paint();return}
+    const rci_=e.target.closest('[data-rci]');if(rci_){RCI.on=!RCI.on;LS('tracks-rcitem',RCI.on?'1':'0');paint();return}
+    const rca_=e.target.closest('[data-rca]');if(rca_){RCA.on=!RCA.on;LS('tracks-rcadd',RCA.on?'1':'0');paint();return}
     const gsb_=e.target.closest('[data-gest]');if(gsb_){GEST.on=!GEST.on;LS('tracks-gest',GEST.on?'1':'0');paint();return}
     const dkc_=e.target.closest('[data-dkc]');if(dkc_){setDockC(document.documentElement.dataset.dockc!=='on');paint();return}
     const npb_=e.target.closest('[data-npset]');
@@ -8370,7 +8375,7 @@ function ui(){
   $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off" enterkeyhint="search" aria-label="Search songs"><button class="sbx" data-act="clearsearch" aria-label="Clear search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
   tbmApply();
   $('#sq').oninput=()=>{view.q=$('#sq').value;clearTimeout(sqT);if(songs.length<400)render();else sqT=setTimeout(render,160)};
-  $('#sq').onblur=()=>{if(!$('#sq').value&&!tbNew())closeSearch()};
+  $('#sq').onblur=()=>{if(!$('#sq').value)closeSearch()};
   $('#mini').innerHTML=`<video class="mbv mv" muted loop playsinline preload="none" disablepictureinpicture tabindex="-1" aria-hidden="true"></video><button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div>${likeBtn()}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div>
   <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button><button class="ib nmb mnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',17)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
   $('#app').insertAdjacentHTML('beforeend',`<div id="vp"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="vol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div>`);
