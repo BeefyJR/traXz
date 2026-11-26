@@ -1,7 +1,7 @@
 const $=s=>document.querySelector(s),au=$('#au');
 /* Performance mode: Off / Auto / On. Auto switches on for weak devices, Data Saver and low battery. It only lightens the look (no frosted glass, no animated media, lighter beat effects, shorter animations); nothing is removed. */
 /* Each feature can be lightened on its own: PF lists them. Off / Auto / On set all of them together; Custom lets you pick (checked = animated). PERF.f[key] is true when that feature runs in its light form. */
-const PF=[['glass','Frosted glass','Blurred bars and sheets'],['ui','Interface animations','Sheets and list fades'],['bg','Moving background','Drifting color blobs'],['media','GIF and video covers','Animated instead of still'],['beat','Beat effects','Glow and ripples with the music'],['trans','Song change transitions','Slide, cube and flip in the big player']];
+const PF=[['glass','Frosted glass','Blurred bars and sheets'],['ui','Interface animations','Sheets and list fades'],['bg','Moving background','Drifting colour blobs'],['media','GIF and video covers','Animated instead of still'],['beat','Beat effects','Glow and ripples with the music'],['trans','Song change transitions','Slide, cube and flip in the big player']];
 const PERF={m:'off',on:false,bat:false,f:{},c:{},sig:''};
 try{const v=localStorage.getItem('tracks-perf');if(v==='on'||v==='auto'||v==='off'||v==='custom')PERF.m=v}catch(e){}
 try{const c=JSON.parse(localStorage.getItem('tracks-perf-c')||'null');if(c&&typeof c==='object')PF.forEach(k=>{PERF.c[k[0]]=!!c[k[0]]});else PF.forEach(k=>{PERF.c[k[0]]=false})}catch(e){PF.forEach(k=>{PERF.c[k[0]]=false})}
@@ -72,7 +72,6 @@ const ic=(n,s)=>{const k=n+'|'+(s||'');let v=_icC.get(k);if(v===void 0){v=`<svg 
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /* images that reach an HTML attribute must be real image data (data:image/... or blob:), never free text from a backup, a sync file or a link */
 const _SI=new Map(),SI_OK=/^(?:data:image\/[a-z0-9.+-]+(?:;[a-z0-9=.+-]+)*;base64,|data:image\/[a-z0-9.+-]+,|blob:)[^\s"'<>()\\]*$/i;
-const encU=t=>encodeURIComponent(t).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());/* encodeURIComponent leaves ' ( ) alone, which safeImg rejects */
 const safeImg=u=>{if(typeof u!=='string'||!u)return '';let r=_SI.get(u);if(r===undefined){r=SI_OK.test(u)?u:'';if(_SI.size>2000)_SI.clear();_SI.set(u,r)}return r};
 const fmt=t=>{if(!t||!isFinite(t))return '0:00';t=Math.round(t);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -1564,8 +1563,9 @@ function songsList(){
   if(A)return l.filter(s=>isMainArt(s,A)).sort(S).concat(l.filter(s=>!isMainArt(s,A)&&hasFeat(s,A)).sort(S));
   return l.sort(S);
 }
-const fbar=(back,title,subt,extra)=>`<div class="abar fbr"><button class="back" data-act="back" aria-label="Back to ${back}">${ic('arrow',24)}</button><div class="ft"><h2>${esc(title)}</h2><span>${subt}</span></div><div class="abtns">${extra}</div></div>`;
-const fszBtns=()=>`<div class="fsz2" role="group" aria-label="Cover size">${[['s','szs','Small'],['m','szm','Medium'],['l','szl','Large']].map(z=>`<button data-act="fsize" data-s="${z[0]}" class="${fsz===z[0]?'on':''}" aria-label="${z[2]} covers" title="${z[2]}">${ic(z[1],18)}</button>`).join('')}<button data-act="fcustom" class="${fsz==='c'?'on':''}" aria-label="Custom size" title="Custom size">${ic('tune',18)}</button></div>`;
+const fbar=(back,title,subt,extra)=>`<div class="abar fbr${extra?' fx':''}"><button class="back" data-act="back" aria-label="Back to ${back}">${ic('arrow',24)}</button><div class="ft"><h2>${esc(title)}</h2><span>${subt}</span></div><div class="abtns">${extra}</div></div>`;
+const FSZ_LAB={s:'Small',m:'Medium',l:'Large',c:'Custom'},FSZ_IC={s:'szs',m:'szm',l:'szl',c:'tune'};
+const fszBtns=()=>{const k=FSZ_LAB[fsz]?fsz:'m';return `<button class="ab" data-act="fszmenu" aria-haspopup="dialog" aria-label="Cover size: ${FSZ_LAB[k]}" title="Cover size: ${FSZ_LAB[k]}">${ic(FSZ_IC[k],21)}</button>`}
 const FC={mn:64,mx:420,v:Math.min(420,Math.max(64,+LS('tracks-fcw')||160))};
 const gridOpen=()=>`<div class="grid ${({s:'g3',l:'g1',c:'gc'}[fsz]||'')}${gMode?' gsm':''}"${fsz==='c'?` style="--gcw:${FC.v}px"`:''}>`;
 function fcApply(){const g=document.querySelector('#main .grid');if(!g)return;g.classList.remove('g3','g1');g.classList.add('gc');g.style.setProperty('--gcw',FC.v+'px')}
@@ -1610,7 +1610,7 @@ function renderSongs(m){
   const step=()=>{if(tok!==_rsTok)return;const j=Math.min(N,i+160);m.insertAdjacentHTML('beforeend',l.slice(i,j).map((s,k)=>mk(s,i+k)).join(''));i=j;if(i<N)tm=setTimeout(step,12);else _rsPend=null};
   _rsPend=done;tm=setTimeout(step,0);
 }
-const szBar=(n)=>`<div class="abar fbr szr">${gBtn(n)}${n>1?`<button class="ab" data-act="reorder" aria-label="Reorder" title="Reorder">${ic('reorder',21)}</button>`:''}${fszBtns()}</div>`;
+const szBar=(n)=>`<div class="abar fbr szr">${fszBtns()}${gBtn(n)}${n>1?`<button class="ab" data-act="reorder" aria-label="Reorder" title="Reorder">${ic('reorder',21)}</button>`:''}</div>`;
 var fsz='m';try{fsz=localStorage.getItem('tracks-fsize')||'m'}catch(e){}
 function renderAlbums(m){
   const inF=view.folder?folders.find(f=>f.id===view.folder):null;
@@ -1619,7 +1619,7 @@ function renderAlbums(m){
   const cnt=new Map();for(const x of songs)if(x.album)cnt.set(x.album,(cnt.get(x.album)||0)+1);
   let h='';
   if(!inF)$('#fb').innerHTML=szBar(list.length);
-  if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+gBtn(list.length)+`<button class="ab" data-act="reorder" aria-label="Reorder albums" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="folderedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
+  if(inF)$('#fb').innerHTML=fbar('Albums',inF.name,`${list.length} ${list.length===1?'album':'albums'}`,fszBtns()+`<span class="ftl">`+gBtn(list.length)+`<button class="ab" data-act="fmore" aria-haspopup="dialog" aria-label="More folder options" title="More">${ic('dots',22)}</button></span>`);
   h+=gridOpen()+(inF?'':folders.map(foldCard).join(''))+
     list.map(a=>{const n=cnt.get(a.id)||0;return `<div class="acard${gMode&&gSet.has(a.id)?' gon':''}" data-gid="${a.id}">${gMode?`<span class="gck">${gSet.has(a.id)?ic('check',15):''}</span>`:''}<button class="card" data-act="open" data-id="${a.id}">${cover(a)}<b>${esc(a.name)}</b><span>${(a.artist||albFeat(a).length)?esc((a.artist||'')+(albFeat(a).length?(a.artist?' ':'')+'feat. '+albFeat(a).join(', '):''))+' \u00b7 ':''}${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="almenu" data-id="${a.id}" aria-label="Album options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
   if(!list.length&&(inF||!folders.length))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create an album here.':'No albums yet.<br>Tap + to create an album or a folder.'}</div>`;
@@ -1655,7 +1655,7 @@ function render(){
   $('#app').classList.toggle('inalb',!!(view.album&&view.tab==='albums'));
   {const pb=$('#plus'),off=!!((view.tab==='albums'&&view.album)||(PT&&view.pl));pb.style.visibility='visible';pb.classList.toggle('off',off);pb.setAttribute('aria-disabled',off?'true':'false')}
   $('#plus').setAttribute('aria-label',view.tab==='songs'?'Import songs':'Create');
-  const fl=$('#fl');if(fl)fl.textContent=SORTS[sortKey][0];
+  const fl=$('#fl');if(fl)fl.textContent=SORTS[sortKey][0];{const ft=$('#flt');if(ft){ft.setAttribute('aria-label','Sort songs: '+SORTS[sortKey][0]);ft.title='Sort: '+SORTS[sortKey][0];ft.classList.toggle('chg',sortKey!=='added')}}
   $('#fb').innerHTML='';
   if(view.tab==='songs')renderSongs(m);else if(PT)renderPlaylists(m);else if(view.album)renderAlbum(m);else renderAlbums(m);
   m.scrollTop=navd?0:keep;
@@ -2701,12 +2701,12 @@ function npQPaint(){
   const sc=$('#npl');if(!sc||!sc.classList.contains('npq'))return;
   const keep=sc.scrollTop,s=songById(cur);
   const ci=queue.indexOf(ctxCur),ctx=ci<0?[]:queue.slice(ci+1).map((id,j)=>({id,i:ci+1+j}));
-  let h=NP.q?'<div class="npqh"><span>Queue</span><button type="button" class="pill" data-act="qclear">Clear</button></div>':'<div class="npqh"><span>No lyrics for this song</span><span style="display:flex;gap:6px"><button type="button" class="pill" data-npa="lyfind">Find on LRCLIB</button><button type="button" class="pill" data-npa="lyload">Add .lrc file</button></span></div>';
+  let h=NP.q?'<div class="npqh"><span>Queue</span><span style="display:flex;gap:6px"><button type="button" class="pill" data-act="qundo" aria-label="Undo last queue change" title="Undo" disabled>'+ic('undo',16)+'Undo</button><button type="button" class="pill" data-act="qclear">Clear all</button></span></div>':'<div class="npqh"><span>No lyrics for this song</span><span style="display:flex;gap:6px"><button type="button" class="pill" data-npa="lyfind">Find on LRCLIB</button><button type="button" class="pill" data-npa="lyload">Add .lrc file</button></span></div>';
   h+='<div class="qs">Now playing</div>'+(s?qrow(s,'now',0):'<div class="empty">Nothing is playing.</div>');
-  if(upNext.length)h+=`<div class="qs">Next in queue<span>${upNext.length}</span></div>`+upNext.map((id,i)=>{const x=songById(id);return x?qrow(x,'up',i):''}).join('');
+  if(upNext.length)h+=`<div class="qs">Next in queue<span class="qcl"><i>${upNext.length}</i><button type="button" class="pill" data-act="qclearnext" aria-label="Clear the songs I added">Clear</button></span></div>`+upNext.map((id,i)=>{const x=songById(id);return x?qrow(x,'up',i):''}).join('');
   if(ctx.length)h+=`<div class="qs">Next up<span>${ctx.length}</span></div>`+ctx.map(o=>{const x=songById(o.id);return x?qrow(x,'ctx',o.i):''}).join('');
   if(!upNext.length&&!ctx.length)h+='<div class="empty">The queue is empty.<br>Use Play next or Add to queue on any song.</div>';
-  sc.innerHTML=h;sc.scrollTop=keep;
+  sc.innerHTML=h;sc.scrollTop=keep;qUndoPaint();
 }
 function npQToggle(){NP.q=NP.q?0:1;npQApply()}
 function npQApply(){
@@ -3513,13 +3513,21 @@ async function songMenu(id,plId){
   if(r==='share')exportSong(s);
   if(r==='sharelink')shareSong(s);
   if(r==='move')await moveSong(s);
-  if(r==='unalbum'){s.album=null;await put('songs',s)}
+  if(r==='unalbum'){
+    const ab=albums.find(x=>x.id===s.album);
+    if(!await confirmBox('Remove from album?','\u201c'+esc(s.name)+'\u201d will be taken out of '+(ab?'\u201c'+esc(ab.name)+'\u201d':'its album')+'. The song stays in your library.','Remove'))return;
+    const prev=s.album;s.album=null;await put('songs',s);
+    uPush('Removed "'+s.name+'" from its album',async()=>{const x=songById(id);if(x){x.album=prev;await put('songs',x)}});toast('Removed from album. Undo is in Settings')}
   if(r==='toplaylist')await addToPlaylist([id]);
-  if(r==='plrm'&&pl0){await rowOut(id);pl0.songs=(pl0.songs||[]).filter(x=>x!==id);await put('playlists',pl0);toast('Removed from '+pl0.name)}
+  if(r==='plrm'&&pl0){
+    if(!await confirmBox('Remove from playlist?','\u201c'+esc(s.name)+'\u201d will be taken out of \u201c'+esc(pl0.name)+'\u201d. The song stays in your library.','Remove'))return;
+    await rowOut(id);const old=(pl0.songs||[]).slice(),pid=pl0.id;pl0.songs=old.filter(x=>x!==id);await put('playlists',pl0);
+    uPush('Removed "'+s.name+'" from "'+pl0.name+'"',async()=>{const p=playlists.find(x=>x.id===pid);if(p){p.songs=old;await put('playlists',p)}});toast('Removed from '+pl0.name+'. Undo is in Settings')}
   if(r==='delete'){
+    if(!await confirmBox('Delete \u201c'+esc(s.name)+'\u201d?','It will be removed from your library, playlists and the queue. You can undo it from Settings until you close the app.','Delete'))return;
     await rowOut(id);
-    songs=songs.filter(x=>x.id!==id);await del('songs',id);await purgePl([id]);queue=queue.filter(x=>x!==id);upNext=upNext.filter(x=>x!==id);
-    if(cur===id){au.pause();au.removeAttribute('src');cur=null;closeFull()}
+    const sn=snapSongs([id]);await dropSongs([id]);
+    uPush('Deleted song "'+s.name+'"',()=>restoreSongs(sn));toast('Deleted. Undo is in Settings');
   }
   render();
 }
@@ -3628,7 +3636,7 @@ function renderPlaylists(m){
   const inF=view.pf?pfolders.find(f=>f.id===view.pf):null;
   const list=playlists.filter(p=>(p.folderId||null)===(inF?inF.id:null)).sort(byOrd);
   if(!inF)$('#fb').innerHTML=szBar(list.length);
-  if(inF)$('#fb').innerHTML=fbar('Playlists',inF.name,`${list.length} ${list.length===1?'playlist':'playlists'}`,fszBtns()+gBtn(list.length)+`<button class="ab" data-act="reorder" aria-label="Reorder playlists" title="Reorder">${ic('reorder',21)}</button><button class="ab" data-act="pfedit" data-id="${inF.id}" aria-label="Customize folder">${ic('palette',21)}</button>`);
+  if(inF)$('#fb').innerHTML=fbar('Playlists',inF.name,`${list.length} ${list.length===1?'playlist':'playlists'}`,fszBtns()+`<span class="ftl">`+gBtn(list.length)+`<button class="ab" data-act="fmore" aria-haspopup="dialog" aria-label="More folder options" title="More">${ic('dots',22)}</button></span>`);
   let h=gridOpen()+(inF||!LIKE.on?'':likedCard())+(inF||!rotOn?'':rotCard())+(inF?'':pfolders.map(pfoldCard).join(''))+
     list.map(p=>{const n=plSongs(p.id).length;return `<div class="acard${gMode&&gSet.has(p.id)?' gon':''}" data-gid="${p.id}">${gMode?`<span class="gck">${gSet.has(p.id)?ic('check',15):''}</span>`:''}<button class="card" data-act="openpl" data-id="${p.id}">${plCover(p)}<b>${esc(p.name)}</b><span>${n} ${n===1?'song':'songs'}</span></button><button class="alm" data-act="plcard" data-id="${p.id}" aria-label="Playlist options">${ic('dots',20)}</button></div>`}).join('')+'</div>';
   if(!list.length&&(inF||!pfolders.length)&&!((rotOn||LIKE.on)&&!inF))h+=`<div class="empty">${inF?'This folder is empty.<br>Tap + to create a playlist here.':'No playlists yet.<br>Tap + to create a playlist or a folder.<br>Songs you add stay in their albums.'}</div>`;
@@ -3703,11 +3711,59 @@ async function plMove(p){
   else if(r==='__none'){p.folderId=null;await put('playlists',p)}
   else if(r){p.folderId=r;await put('playlists',p)}
 }
+/* ---- confirm box and library undo ----
+   Every delete / remove below records how to put things back. Settings has an Undo button that replays the newest entry.
+   The history lives until the app is closed (deleted songs keep their audio in memory so they can come back). */
+function confirmBox(title,msg,ok){return new Promise(res=>{
+  openOv(`<h3>${esc(title)}</h3><p class="dupn" style="margin:2px 6px 14px">${msg}</p><div class="bt"><button type="button" class="pill" id="cfc">Cancel</button><button type="button" class="pill dgr" id="cfo">${esc(ok||'Remove')}</button></div>`);
+  const done=v=>{closeOv();res(v)};
+  $('#cfc').onclick=()=>done(false);$('#cfo').onclick=()=>done(true);
+  $('#ov').onclick=e=>{if(e.target.id==='ov')done(false)};
+})}
+const uHist=[];
+function uPush(label,run){uHist.push({label,run});if(uHist.length>10)uHist.shift();uPaint()}
+function uPaint(){
+  const top=uHist[uHist.length-1];
+  document.querySelectorAll('[data-uundo]').forEach(b=>{b.disabled=!top;b.title=top?'Undo: '+top.label:'Nothing to undo'});
+  const l=document.getElementById('st-ulab');if(l)l.textContent=top?top.label+(uHist.length>1?' ('+uHist.length+' steps)':''):'Nothing to undo';
+}
+async function uUndo(){
+  const x=uHist.pop();uPaint();if(!x)return toast('Nothing to undo');
+  try{await x.run();toast('Undone: '+x.label)}catch(e){toast('Could not undo')}
+  uPaint();try{render()}catch(_){}
+}
+const untomb=(st,id)=>{const t=tomb();if(t[st+':'+id]){delete t[st+':'+id];LS('tracks-tomb',JSON.stringify(t))}};
+function snapSongs(ids){
+  const set=new Set(ids);
+  return {songs:songs.filter(x=>set.has(x.id)),pls:playlists.filter(p=>(p.songs||[]).some(i=>set.has(i))).map(p=>({id:p.id,songs:p.songs.slice()}))};
+}
+async function restoreSongs(sn){
+  for(const x of sn.songs)if(!songs.some(y=>y.id===x.id)){untomb('songs',x.id);songs.push(x);await put('songs',x)}
+  for(const o of sn.pls){const p=playlists.find(y=>y.id===o.id);if(p){p.songs=o.songs.slice();await put('playlists',p)}}
+}
+async function dropSongs(ids){
+  const set=new Set(ids);
+  for(const id of ids)await del('songs',id);
+  await purgePl(ids);
+  songs=songs.filter(x=>!set.has(x.id));queue=queue.filter(x=>!set.has(x));upNext=upNext.filter(x=>!set.has(x));
+  if(set.has(cur)){au.pause();au.removeAttribute('src');cur=null;closeFull()}
+}
 async function plDelete(p){
-  const r=await choose('Delete "'+p.name+'"?',[{label:'Delete playlist, keep songs',value:1,danger:true}]);
+  const ids=(p.songs||[]).filter(i=>songById(i)),n=ids.length;
+  const opts=[{label:'Delete playlist, keep songs',value:'keep',danger:true}];
+  if(n&&!p.sys)opts.push({label:'Delete playlist and its '+n+(n===1?' song':' songs'),value:'all',danger:true});
+  const r=await choose('Delete "'+p.name+'"?',opts);
   if(!r)return;
+  if(r==='all'&&!await confirmBox('Delete '+n+(n===1?' song':' songs')+' too?','This removes '+(n===1?'the song':'these songs')+' from your library, from other playlists and from the queue. You can undo it from Settings until you close the app.','Delete all'))return;
+  const pc=Object.assign({},p,{songs:(p.songs||[]).slice()}),sn=r==='all'?snapSongs(ids):null;
   playlists=playlists.filter(x=>x.id!==p.id);await del('playlists',p.id);
   if(view.pl===p.id){view.pl=null;view.pf=p.folderId||null}
+  if(sn)await dropSongs(ids);
+  uPush(r==='all'?'Deleted playlist "'+p.name+'" and its songs':'Deleted playlist "'+p.name+'"',async()=>{
+    untomb('playlists',pc.id);if(!playlists.some(x=>x.id===pc.id))playlists.push(pc);await put('playlists',pc);
+    if(sn)await restoreSongs(sn);
+  });
+  toast(r==='all'?'Deleted playlist and songs. Undo is in Settings':'Deleted playlist. Undo is in Settings');
 }
 async function plMenu(id,card){
   const p=playlists.find(x=>x.id===id);if(!p)return;
@@ -3734,11 +3790,13 @@ async function purgePl(ids){
 
 /* search and filter */
 function openSearch(){
+  if(tbNew()){$('#sq').focus();return}
   const sb=$('#sb');if(sb.classList.contains('open'))return;
   const w=$('#tb').clientWidth-40;$('#tb').classList.add('so');sb.classList.add('open');
   an(sb,[{width:'44px'},{width:w+'px'}],{duration:320,easing:EASE_OUT});$('#sq').focus();
 }
 function closeSearch(){
+  if(tbNew()){if(view.q||$('#sq').value){clearTimeout(sqT);$('#sq').value='';view.q='';render()}$('#sq').focus();return}
   const sb=$('#sb');if(!sb.classList.contains('open'))return;
   clearTimeout(sqT);$('#sq').value='';view.q='';$('#sq').blur();
   const a=an(sb,[{width:sb.offsetWidth+'px'},{width:'44px'}],{duration:260,easing:EASE,fill:'forwards'});
@@ -4706,6 +4764,18 @@ document.addEventListener('click',async e=>{
   if(act==='folderedit'){const f=await folderForm(folders.find(x=>x.id===id));render();return}
   if(act==='reorder'){return reorderSheet(view.tab==='playlists')}
   if(act==='fcustom')return fcSheet();
+  if(act==='fszmenu'){
+    const r=await choose('Cover size',[{label:'Small',value:'s',ic:'szs',sel:fsz==='s'},{label:'Medium',value:'m',ic:'szm',sel:fsz==='m'||!FSZ_LAB[fsz]},{label:'Large',value:'l',ic:'szl',sel:fsz==='l'},{label:'Custom\u2026',value:'c',ic:'tune',sel:fsz==='c'}]);
+    if(!r)return;if(r==='c'){fsz='c';try{localStorage.setItem('tracks-fsize','c')}catch(e){}render();return fcSheet()}
+    fsz=r;try{localStorage.setItem('tracks-fsize',fsz)}catch(e){}return render()}
+  if(act==='fmore'){
+    const P=view.tab==='playlists',f=P?pfolders.find(x=>x.id===view.pf):folders.find(x=>x.id===view.folder);if(!f)return;
+    const n=(P?playlists:albums).filter(x=>(x.folderId||null)===f.id).length,items=[];
+    if(n>1)items.push({label:P?'Reorder playlists':'Reorder albums',value:'reorder',ic:'reorder'});
+    items.push({label:'Customize folder',value:P?'pfedit':'folderedit',ic:'palette'});
+    const r=await choose(f.name,items);
+    if(r){const t=document.createElement('button');t.dataset.act=r;t.dataset.id=f.id;t.style.display='none';document.body.appendChild(t);t.click();t.remove()}
+    return}
   if(act==='fsize'){fsz=b.dataset.s;try{localStorage.setItem('tracks-fsize',fsz)}catch(e){}return render()}
   if(act==='addsongs')return pickSongs(id);
   if(act==='almenu'){
@@ -4733,8 +4803,23 @@ document.addEventListener('click',async e=>{
     return render();
   }
   if(act==='delalbum'){
-    const a=albums.find(x=>x.id===id),r=await choose('Delete "'+a.name+'"?',[{label:'Delete album, keep songs',value:'keep',danger:true}]);
-    if(r){albums=albums.filter(x=>x.id!==id);await del('albums',id);for(const s of songs)if(s.album===id){s.album=null;await put('songs',s)}view.album=null;render()}return}
+    const a=albums.find(x=>x.id===id);if(!a)return;
+    const own=songs.filter(x=>x.album===id),n=own.length;
+    const opts=[{label:'Delete album, keep songs',value:'keep',danger:true}];
+    if(n)opts.push({label:'Delete album and its '+n+(n===1?' song':' songs'),value:'all',danger:true});
+    const r=await choose('Delete "'+a.name+'"?',opts);
+    if(!r)return;
+    if(r==='all'&&!await confirmBox('Delete '+n+(n===1?' song':' songs')+' too?','This removes '+(n===1?'the song':'these songs')+' from your library, from playlists and from the queue. You can undo it from Settings until you close the app.','Delete all'))return;
+    const ac=Object.assign({},a),ids=own.map(x=>x.id),sn=r==='all'?snapSongs(ids):null;
+    albums=albums.filter(x=>x.id!==id);await del('albums',id);
+    if(sn)await dropSongs(ids);else for(const x of own){x.album=null;await put('songs',x)}
+    view.album=null;
+    uPush(r==='all'?'Deleted album "'+a.name+'" and its songs':'Deleted album "'+a.name+'"',async()=>{
+      untomb('albums',ac.id);if(!albums.some(x=>x.id===ac.id))albums.push(ac);await put('albums',ac);
+      if(sn){await restoreSongs(sn)}else for(const sid of ids){const x=songById(sid);if(x){x.album=ac.id;await put('songs',x)}}
+    });
+    toast(r==='all'?'Deleted album and songs. Undo is in Settings':'Deleted album. Undo is in Settings');
+    render();return}
   if(act==='minihide'||act==='minishow'){const h=act==='minihide';$('#app').classList.toggle('mh',h);LS('tracks-mh',h?'1':null);return}
   if(act==='sharealb'){const a=albums.find(x=>x.id===id);if(a)shareColl('album',a);return}
   if(act==='allelse')return addAllElsewhere(albumSongs(id).map(s=>s.id));
@@ -4767,9 +4852,15 @@ document.addEventListener('click',async e=>{
   if(act==='selexit'){selMode=false;selSet.clear();return render()}
   if(act==='selrow'){if(selSet.has(id))selSet.delete(id);else selSet.add(id);const ck=b.querySelector('.ck'),on=selSet.has(id);ck.classList.toggle('on',on);ck.innerHTML=on?ic('check',14):'';return updateBar()}
   if(act==='selrm'){if(!selSet.size)return toast('Select songs first');const ids=[...selSet];
-    if(view.tab==='playlists'&&view.pl){const p=playlists.find(x=>x.id===view.pl);if(p){p.songs=(p.songs||[]).filter(x=>!selSet.has(x));await put('playlists',p)}}
-    else for(const id of ids){const s=songById(id);if(s){s.album=null;await put('songs',s)}}
-    toast('Removed '+ids.length+(ids.length===1?' song':' songs'));selMode=false;selSet.clear();return render()}
+    const inPl=view.tab==='playlists'&&view.pl,pl=inPl?playlists.find(x=>x.id===view.pl):null,al=!inPl?albums.find(x=>x.id===view.album):null;
+    const what=pl?'playlist':'album',nm=(pl||al||{}).name||'this list',n=ids.length;
+    if(!await confirmBox('Remove '+n+(n===1?' song':' songs')+'?','They will be taken out of the '+what+' \u201c'+esc(nm)+'\u201d. The songs stay in your library.','Remove'))return;
+    if(pl){const old=(pl.songs||[]).slice(),pid=pl.id;pl.songs=old.filter(x=>!selSet.has(x));await put('playlists',pl);
+      uPush('Removed '+n+(n===1?' song':' songs')+' from "'+pl.name+'"',async()=>{const p=playlists.find(x=>x.id===pid);if(p){p.songs=old;await put('playlists',p)}})}
+    else{const prev=ids.map(id=>{const x=songById(id);return x?[id,x.album]:null}).filter(Boolean);
+      for(const id of ids){const x=songById(id);if(x){x.album=null;await put('songs',x)}}
+      uPush('Removed '+n+(n===1?' song':' songs')+' from "'+nm+'"',async()=>{for(const [id,a] of prev){const x=songById(id);if(x){x.album=a;await put('songs',x)}}})}
+    toast('Removed '+n+(n===1?' song':' songs')+'. Undo is in Settings');selMode=false;selSet.clear();return render()}
   if(act==='selall'){const l=curList();if(l.every(s=>selSet.has(s.id)))selSet.clear();else l.forEach(s=>selSet.add(s.id));render();return updateBar()}
   if(act==='selqueue'){if(!selSet.size)return toast('Select songs first');qaddMany(selIds(),false);selMode=false;selSet.clear();return render()}
   if(act==='seldel'){if(!selSet.size)return toast('Select songs first');if(await bulkDelete([...selSet])){selMode=false;selSet.clear()}return render()}
@@ -4784,11 +4875,13 @@ document.addEventListener('click',async e=>{
   if(act==='settings')return openSettings();
   if(act==='qopen'){if(b.closest('#npb')&&npOn())return npQToggle();return openQ()}
   if(act==='qclose')return closeQ();
-  if(act==='qshuf'){const ci=queue.indexOf(ctxCur);queue=queue.slice(0,ci+1).concat(shuf(queue.slice(ci+1)));shuf(upNext);renderQueue();return toast('Queue shuffled')}
-  if(act==='qclear'){upNext=[];const ci=queue.indexOf(ctxCur);if(ci>=0)queue=queue.slice(0,ci+1);renderQueue();return toast('Queue cleared')}
-  if(act==='qplay'){const k=b.dataset.k,i=+b.dataset.i;if(k==='up'){const sid=upNext[i];upNext=upNext.slice(i+1);return playSong(sid,null,true)}if(k==='ctx')return playSong(queue[i]);return}
-  if(act==='qtop'){const k=b.dataset.k,i=+b.dataset.i;if(k==='up'){const x=upNext.splice(i,1)[0];upNext.unshift(x)}else{const x=queue.splice(i,1)[0];upNext.unshift(x)}return renderQueue()}
-  if(act==='qrm'){const k=b.dataset.k,i=+b.dataset.i;if(k==='up')upNext.splice(i,1);else queue.splice(i,1);return renderQueue()}
+  if(act==='qundo')return qUndo();
+  if(act==='qclearnext'){if(!upNext.length)return toast('Nothing to clear');qSnap();upNext=[];saveLast(true);renderQueue();return toast('Cleared the songs you added')}
+  if(act==='qshuf'){qSnap();const ci=queue.indexOf(ctxCur);queue=queue.slice(0,ci+1).concat(shuf(queue.slice(ci+1)));shuf(upNext);renderQueue();return toast('Queue shuffled')}
+  if(act==='qclear'){qSnap();upNext=[];const ci=queue.indexOf(ctxCur);if(ci>=0)queue=queue.slice(0,ci+1);renderQueue();return toast('Queue cleared')}
+  if(act==='qplay'){const k=b.dataset.k,i=+b.dataset.i;if(k==='up'){qSnap();const sid=upNext[i];upNext=upNext.slice(i+1);return playSong(sid,null,true)}if(k==='ctx')return playSong(queue[i]);return}
+  if(act==='qtop'){qSnap();const k=b.dataset.k,i=+b.dataset.i;if(k==='up'){const x=upNext.splice(i,1)[0];upNext.unshift(x)}else{const x=queue.splice(i,1)[0];upNext.unshift(x)}return renderQueue()}
+  if(act==='qrm'){qSnap();const k=b.dataset.k,i=+b.dataset.i;if(k==='up')upNext.splice(i,1);else queue.splice(i,1);return renderQueue()}
   if(act==='albqueue'){const l=albumSongs(id).map(s=>s.id);if(!l.length)return toast('Album is empty');return qaddMany(l,false)}
   if(act==='vol'){if(b.closest('#mini')){const m=$('#mini');miniVol(!m.classList.contains('vm'));if(m.classList.contains('vm'))vpTimer();return}return toggleVp(b)}
   if(act==='next')return step(1);
@@ -4833,16 +4926,27 @@ function toggleVp(btn){
 })();
 
 /* queue */
+/* undo history: a snapshot of the queue is taken before every change, so Undo can bring back removed, cleared, shuffled or moved songs */
+const qHist=[];
+function qSnap(){qHist.push({q:queue.slice(),u:upNext.slice(),o:shOrig.slice()});if(qHist.length>40)qHist.shift();qUndoPaint()}
+function qUndoPaint(){document.querySelectorAll('[data-act=qundo]').forEach(b=>{b.disabled=!qHist.length})}
+function qUndo(){
+  const x=qHist.pop();qUndoPaint();if(!x)return toast('Nothing to undo');
+  const ok=a=>a.filter(i=>songById(i));
+  queue=ok(x.q);upNext=ok(x.u);shOrig=ok(x.o);
+  if(ctxCur!=null&&songById(ctxCur)&&!queue.includes(ctxCur))queue.unshift(ctxCur);
+  saveLast(true);renderQueue();toast('Undone');
+}
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function qadd(id,next){
   if(!songById(id))return;
   if(cur===null){playSong(id,[id]);return}
-  if(next)upNext.unshift(id);else upNext.push(id);
+  qSnap();if(next)upNext.unshift(id);else upNext.push(id);
   toast(next?'Playing next':'Added to queue');if(qOpen)renderQueue();npQRefresh();
 }
 function qaddMany(ids,next){
   if(cur===null){playSong(ids[0],ids);return}
-  upNext=next?ids.concat(upNext):upNext.concat(ids);
+  qSnap();upNext=next?ids.concat(upNext):upNext.concat(ids);
   toast(`Added ${ids.length} ${ids.length===1?'song':'songs'} to the queue`);if(qOpen)renderQueue();npQRefresh();
 }
 function qrow(s,k,i){
@@ -4853,10 +4957,10 @@ function renderQueue(){
   const l=$('#ql');if(!l)return;const keep=l.scrollTop,s=songById(cur);
   const ci=queue.indexOf(ctxCur),ctx=ci<0?[]:queue.slice(ci+1).map((id,j)=>({id,i:ci+1+j}));
   let h=s?`<div class="scd"><h4>Now playing</h4>${qrow(s,'now',0)}</div>`:'<div class="scd"><h4>Now playing</h4><div class="empty">Nothing is playing.</div></div>';
-  if(upNext.length)h+=`<div class="scd"><h4>Next in queue<span>${upNext.length}</span></h4>`+upNext.map((id,i)=>{const x=songById(id);return x?qrow(x,'up',i):''}).join('')+'</div>';
+  if(upNext.length)h+=`<div class="scd"><h4>Next in queue<span class="qcl"><i>${upNext.length}</i><button type="button" class="pill" data-act="qclearnext" aria-label="Clear the songs I added">Clear</button></span></h4>`+upNext.map((id,i)=>{const x=songById(id);return x?qrow(x,'up',i):''}).join('')+'</div>';
   if(ctx.length)h+=`<div class="scd"><h4>Next up<span>${ctx.length}</span></h4>`+ctx.map(o=>{const x=songById(o.id);return x?qrow(x,'ctx',o.i):''}).join('')+'</div>';
   if(!upNext.length&&!ctx.length)h+='<div class="empty">The queue is empty.<br>Use Play next or Add to queue on any song.</div>';
-  l.innerHTML=h;l.scrollTop=keep;npQRefresh();
+  l.innerHTML=h;l.scrollTop=keep;npQRefresh();qUndoPaint();
 }
 function openQ(set){
   qOpen=true;const p=$('#qp');p.getAnimations().forEach(x=>x.cancel());p.classList.toggle('qset',set===true);p.classList.add('open');renderQueue();
@@ -4954,12 +5058,9 @@ function bulkTag(ids){return new Promise(res=>{
 
 async function bulkDelete(ids){
   const r=await choose('Delete '+ids.length+(ids.length===1?' song?':' songs?'),[{label:'Delete from library',value:1,danger:true}]);if(!r)return false;
-  const set=new Set(ids);
-  for(const id of ids)await del('songs',id);
-  await purgePl(ids);
-  songs=songs.filter(s=>!set.has(s.id));queue=queue.filter(x=>!set.has(x));upNext=upNext.filter(x=>!set.has(x));
-  if(set.has(cur)){au.pause();au.removeAttribute('src');cur=null;closeFull()}
-  toast('Deleted '+ids.length+(ids.length===1?' song':' songs'));return true;
+  const sn=snapSongs(ids);await dropSongs(ids);
+  uPush('Deleted '+ids.length+(ids.length===1?' song':' songs'),()=>restoreSongs(sn));
+  toast('Deleted '+ids.length+(ids.length===1?' song':' songs')+'. Undo is in Settings');return true;
 }
 function selIds(){const l=curList().filter(s=>selSet.has(s.id)).map(s=>s.id);return l.concat([...selSet].filter(id=>!l.includes(id)))}
 
@@ -5126,8 +5227,8 @@ function icSheet(){
     <div class="scd"><h4>Look</h4><div class="bgs">${sl('icsz','Icon size',ICP.size,32,60)}${sl('icgp','Spacing',ICP.gap,0,24)}</div>
     <div class="icr"><div class="icrt"><b>Shape</b></div><div class="bgst icrc">${[['circle','Circle'],['round','Rounded'],['plain','Plain']].map(p=>chip(ICP.sh===p[0],`data-sh="${p[0]}"`,p[1])).join('')}</div></div>
     <div class="icr"><div class="icrt"><b>Background</b></div><div class="bgst icrc">${[['auto','Default'],['glass','Glass'],['solid','Solid'],['none','None']].map(p=>chip(ICP.bg===p[0],`data-bgm="${p[0]}"`,p[1])).join('')}</div></div>
-    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent color icons</b></span><span class="stog"></span></button>
-    <button type="button" class="srow" data-hdac="1" role="switch" aria-checked="${HDAC.on}"><span class="st"><b>Color from the song</b><small>Add, Cloud, Queue and Settings follow the current song's color, like the X in the traX logo.</small></span><span class="stog"></span></button></div>
+    <button type="button" class="srow" data-acc="1" role="switch" aria-checked="${ICP.acc}"><span class="st"><b>Accent colour icons</b></span><span class="stog"></span></button>
+    <button type="button" class="srow" data-hdac="1" role="switch" aria-checked="${HDAC.on}"><span class="st"><b>Colour from the song</b><small>Add, Cloud, Queue and Settings follow the current song's colour, like the X in the traX logo.</small></span><span class="stog"></span></button></div>
     <div class="bt"><button type="button" class="pill mr" data-icreset="1">Reset</button><button type="button" class="pill acc" data-icdone="1">Done</button></div>`;
   };
   const pv=()=>{$('#icpv').innerHTML=icPvHtml(sel);
@@ -5231,6 +5332,11 @@ tpbApply();
 const BGP=['#000000','#1c1c1e','#0f172a','#102a1f','#2b1220','#241638','#f4ecd8','#e3f2e9','#dbeafe','#fde7ef'];
 let setTab='app';
 const HINT={on:LS('tracks-hints')!=='0'};
+/* Songs toolbar: new search bar + sort + select (default), or the classic round buttons */
+const TBL={on:LS('tracks-tbl')==='1'};
+function tbmApply(){document.documentElement.dataset.tbm=TBL.on?'legacy':'new';const sb=document.getElementById('sb');if(sb){sb.classList.toggle('open',!TBL.on);const t=document.getElementById('tb');if(t)t.classList.remove('so')}}
+const tbNew=()=>document.documentElement.dataset.tbm==='new';
+tbmApply();
 const GEST={on:LS('tracks-gest')!=='0'};
 const HDAC={on:LS('tracks-hdac')!=='0'};
 const hdacApply=()=>document.documentElement.setAttribute('data-hdac',HDAC.on?'on':'off');
@@ -5246,26 +5352,27 @@ function openSettings(){
   openOv(`<div class="sthd"><div class="sth"><h3>Settings</h3><button type="button" class="pill acc" id="st-done">Done</button></div>
   <div class="stt" role="tablist">${TABS.map(t=>`<button type="button" role="tab" data-tab="${t[0]}">${t[1]}${t[0]==='data'&&SWU.w?'<i class="tdot"></i>':''}</button>`).join('')}</div></div>
   <section class="stp" data-p="app">
-    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button><button type="button" class="chip" data-pf="custom">Custom</button></div><p class="dupn" id="pfn"></p><div class="pfl" id="pfl" hidden>${PF.map(k=>`<button type="button" class="pfr" data-pfk="${k[0]}" role="switch" aria-checked="false"><span class="pft"><b>${k[1]}</b><small>${k[2]}</small></span><i class="pfs" aria-hidden="true"></i></button>`).join('')}</div></div>
+    <div class="scd"><h4>Performance</h4><div class="bgst" id="pfst"><button type="button" class="chip" data-pf="off">Off</button><button type="button" class="chip" data-pf="auto">Auto</button><button type="button" class="chip" data-pf="on">On</button><button type="button" class="chip" data-pf="custom">Custom</button></div><p class="dupn" id="pfn" style="margin:8px 6px 2px"></p><div class="pfl" id="pfl" hidden>${PF.map(k=>`<button type="button" class="pfr" data-pfk="${k[0]}" role="switch" aria-checked="false"><span class="pft"><b>${k[1]}</b><small>${k[2]}</small></span><i class="pfs" aria-hidden="true"></i></button>`).join('')}</div></div>
     <div class="scd"><h4>Theme</h4><div class="setr">${opt('data-t','light','sun','Light')}${opt('data-t','dark','moon','Dark')}${opt('data-t','custom','palette','Custom')}</div>
-    <div class="cset" id="cset" hidden><label>Background color</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote"></p></div></div>
+    <div class="cset" id="cset" hidden><label>Background colour</label><div class="sw" id="cbsw">${BGP.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Background ${c}"></button>`).join('')}<label class="swc" aria-label="Custom colour"><input type="color" id="cbk">${ic('palette',16)}</label></div><p class="dupn" id="cnote" style="margin:2px 6px 2px"></p></div></div>
     <div class="scd"><h4>Background</h4><div class="tgs"><label>Image, GIF or video</label><div class="cvrow"><div class="thumb" id="tbth"></div><div class="cvb"><span id="tbcap" style="font-size:12px;color:var(--mute)"></span><button type="button" class="pill" id="tbip"></button><button type="button" class="pill" id="tbcr">Crop and position</button><button type="button" class="pill" id="tbir">Remove</button></div></div>
     <div id="tbmore" hidden><button type="button" class="srow" id="tbon" role="switch" aria-checked="false"><span class="st"><b>Show behind the app</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Dim</span><input type="range" class="rng" id="tbd" min="0" max="90" aria-label="Dim"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tbb" min="0" max="30" aria-label="Blur"><b></b></div></div></div></div></div>
     <div class="scd"><h4>Top bar</h4><div class="sw" id="tpsw"><button type="button" class="swb auto" data-c="" aria-label="Automatic color">${ic('close',14)}</button>${PAL.map(c=>`<button type="button" class="swb" data-c="${c}" style="background:${c}" aria-label="Color ${c}"></button>`).join('')}<label class="swc" aria-label="Custom color"><input type="color" id="tpcc">${ic('palette',16)}</label></div><div class="bgs"><div class="fop"><span>Transparency</span><input type="range" class="rng" id="tpt" min="0" max="100" aria-label="Transparency"><b></b></div><div class="fop"><span>Blur</span><input type="range" class="rng" id="tpb" min="0" max="40" aria-label="Blur"><b></b></div></div><div class="bt" style="margin-top:6px"><button type="button" class="pill" id="tpr">Reset top bar</button></div></div>
-    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
+    <div class="scd"><h4>Animated media</h4><div class="bgst" id="anst"><button type="button" class="chip" data-v="all">Everywhere</button><button type="button" class="chip" data-v="big">Players and album pages</button><button type="button" class="chip" data-v="off">Off</button></div><p class="dupn" style="margin:8px 6px 2px">GIF and video covers and backgrounds. Turn off to save battery.</p></div>
+    <div class="scd"><h4>Songs toolbar</h4><button type="button" class="srow" data-tbl="1" role="switch" aria-checked="false"><span class="st"><b>Classic buttons</b><small>Use the old round search, select and sort buttons instead of the new search bar.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Hints</h4><button type="button" class="srow" data-hint="1" role="switch" aria-checked="true"><span class="st"><b>Show empty-page hints</b><small>Tips on empty pages.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lay">
-    <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn"></p></div>
-    <div class="scd"><h4>Navigation bar</h4><p class="dupn">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Layout mode</h4><div class="setr">${opt('data-m','auto','devices','Auto')}${opt('data-m','phone','phone','Phone')}${opt('data-m','pc','desk','PC')}</div><p class="dupn" id="setn" style="margin:6px 6px 2px"></p></div>
+    <div class="scd"><h4>Navigation bar</h4><p class="dupn" style="margin:2px 6px 8px">Where the tabs sit.</p><div class="setr s4">${opt('data-d','top','dkt','Top')}${opt('data-d','left','dkl','Left')}${opt('data-d','right','dkr','Right')}${opt('data-d','bottom','dkb','Bottom')}</div><button type="button" class="srow" data-dkc="1" role="switch" aria-checked="false"><span class="st"><b>Compact bar</b><small>Icons only.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Presets, icons and placement</h4>${row('icl','Layout and placement','Presets, icon layout and free placement <span class="xbadge">Experimental</span>',ICP.on||Object.keys(FP.p).length?'On':'')}</div>
-    <div class="scd pco"><h4>Header buttons</h4><p class="dupn">Add, Cloud, Queue and Settings. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
-    <div class="scd mbo"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
-    <div class="scd pco"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn"></p></div>
+    <div class="scd"><h4>Header buttons</h4><p class="dupn" style="margin:2px 6px 8px">Add, Cloud, Queue and Settings. PC only. Icon layout overrides this.</p><div class="bgst" id="hbst"><button type="button" class="chip" data-hbm="auto">Small windows</button><button type="button" class="chip" data-hbm="on">Always on bar</button><button type="button" class="chip" data-hbm="off">Never</button></div></div>
+    <div class="scd"><h4>Gestures</h4><button type="button" class="srow" data-gest="1" role="switch" aria-checked="true"><span class="st"><b>Swipe from edge to go back</b><small>Swipe in from the left or right edge of the screen to go back one step. Also makes the phone's own back gesture move through the app.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
   <section class="stp" data-p="play">
     <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade and gapless',esc(xfSummary()))}</div>
-    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favorites, updated automatically.</small></span><span class="stog"></span></button></div>
+    <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favourites, updated automatically.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Player buttons</h4><button type="button" class="srow" data-onebtn="1" role="switch" aria-checked="false"><span class="st"><b>One add button</b><small>A single + in the players for Like, Album and Playlist.</small></span><span class="stog"></span></button></div>
   </section>
   <section class="stp" data-p="lib">
@@ -5279,7 +5386,8 @@ function openSettings(){
     <div class="scd"><h4>Backup file</h4>${row('bkfull','Save full backup','Everything in one file')}${row('bksmall','Save small backup','Playlists and details, no songs')}${row('imp','Restore from backup','Pick a backup file')}</div>
     <div class="scd"><h4>Protection</h4><button type="button" class="srow" data-x="persist"><span class="st"><b>Keep library on this device</b><small id="stos">Checking\u2026</small></span><span class="sv" id="stov"></span>${chev}</button></div>
     ${SWU.w?'':appCard}
-  </section>`);
+  </section>
+  <div class="stfoot"><button type="button" class="pill" data-uundo="1" aria-label="Undo last change" disabled>${ic('undo',16)}Undo</button><span class="stul" id="st-ulab">Nothing to undo</span></div>`);
   const sh=$('#ov .sheet');sh.classList.add('setsh');
   const dkPaint=()=>{sh.querySelectorAll('[data-dkc]').forEach(b=>b.setAttribute('aria-checked',String(document.documentElement.dataset.dockc==='on')));const d=getDock();sh.querySelectorAll('.setg[data-d]').forEach(b=>b.classList.toggle('on',b.dataset.d===d));sh.querySelectorAll('#anst .chip').forEach(c=>c.classList.toggle('on',c.dataset.v===ANIM.m));sh.querySelectorAll('#hbst .chip').forEach(c=>c.classList.toggle('on',c.dataset.hbm===HBM.m))};
   const tpPaint=()=>{
@@ -5307,18 +5415,20 @@ function openSettings(){
     paintTheme();
     sh.querySelectorAll('.setg[data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===LAY.m));
     const cu=curTheme()==='custom';$('#cset').hidden=!cu;
-    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));{const k_=$('#cbk');if(!k_._live&&k_.value!==CT.hex)k_.value=CT.hex}$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted to '+h+' for readable text.':'Text color adjusts automatically.'}
+    if(cu){const h=CT.shown||CT.hex;sh.querySelectorAll('#cbsw .swb').forEach(b=>b.classList.toggle('on',b.dataset.c===CT.hex));{const k_=$('#cbk');if(!k_._live&&k_.value!==CT.hex)k_.value=CT.hex}$('#cbsw .swc').classList.toggle('on',!BGP.includes(CT.hex));$('#cnote').textContent=CT.adj?'Adjusted to '+h+' for readable text.':'Text colour adjusts automatically.'}
     const n=$('#setn');if(n)n.textContent=LAY.m==='auto'?'':(LAY.m==='pc'?'Wide layout for computers.':'Compact touch layout.');
     sh.querySelectorAll('.stt button').forEach(b=>{const on=b.dataset.tab===setTab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
     sh.querySelectorAll('.stp').forEach(p=>p.hidden=p.dataset.p!==setTab);
     const sp=sh.querySelector('[data-sp]');if(sp)sp.setAttribute('aria-checked',!!rotOn);const lk_=sh.querySelector('[data-lk]');if(lk_)lk_.setAttribute('aria-checked',!!LIKE.on);const one_=sh.querySelector('[data-onebtn]');if(one_)one_.setAttribute('aria-checked',!!ONE.on);
-    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);const gs_=sh.querySelector('[data-gest]');if(gs_)gs_.setAttribute('aria-checked',!!GEST.on);
+    const hn=sh.querySelector('[data-hint]');if(hn)hn.setAttribute('aria-checked',!!HINT.on);{const tl=sh.querySelector('[data-tbl]');if(tl)tl.setAttribute('aria-checked',!!TBL.on)}uPaint();const gs_=sh.querySelector('[data-gest]');if(gs_)gs_.setAttribute('aria-checked',!!GEST.on);
     const lr_=sh.querySelector('[data-lrl]');if(lr_)lr_.setAttribute('aria-checked',!!LRL.on);
     tbPaint();dkPaint();tpPaint();npPaint();pfPaint();
   };
   paint();stoPaint();
   sh.onclick=e=>{
     if(e.target.closest('#st-done')){closeOv();return}
+    {const u_=e.target.closest('[data-uundo]');if(u_){if(!u_.disabled)uUndo();return}}
+    {const tl_=e.target.closest('[data-tbl]');if(tl_){TBL.on=!TBL.on;LS('tracks-tbl',TBL.on?'1':'0');tbmApply();paint();return}}
     const tb=e.target.closest('[data-tab]');if(tb){setTab=tb.dataset.tab;paint();sh.scrollTop=0;return}
     const tw_=e.target.closest('#tpsw .swb');if(tw_){TPB.c=tw_.dataset.c||'';tpbSave();tpbApply();paint();return}
     const hbm_=e.target.closest('#hbst .chip');if(hbm_){setHbm(hbm_.dataset.hbm);paint();return}
@@ -6954,7 +7064,9 @@ const ROTID='__rot',ROT_HALF=14/* days until a play counts half as much */,ROT_M
 let rotOn=LS('tracks-smart')==='1',rotT=null,rotPlays={},rotIds=[];
 try{rotPlays=JSON.parse(LS('tracks-plays')||'{}')||{}}catch(e){rotPlays={}}
 try{rotIds=JSON.parse(LS('tracks-rot')||'[]')||[]}catch(e){rotIds=[]}
-const ROT_COVER='data:image/svg+xml,'+encU("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a3d'/><stop offset='.55' stop-color='#e8386d'/><stop offset='1' stop-color='#6d3bd6'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><g fill='none' stroke='#fff' stroke-width='11' stroke-linecap='round'><path d='M52 100a48 48 0 0 1 82-34' opacity='.95'/><path d='M148 100a48 48 0 0 1-82 34' opacity='.95'/></g><path d='M138 38l4 36-34-8z' fill='#fff'/><path d='M62 162l-4-36 34 8z' fill='#fff'/><path d='M90 82v36l30-18z' fill='#fff'/></svg>");
+/* SVG covers: ' ( ) ! * must be percent-encoded too, or safeImg() refuses the data URI and the cover never shows */
+const svgUri=x=>'data:image/svg+xml,'+encodeURIComponent(x).replace(/[!'()*]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
+const ROT_COVER=svgUri("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff7a3d'/><stop offset='.55' stop-color='#e8386d'/><stop offset='1' stop-color='#6d3bd6'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><g fill='none' stroke='#fff' stroke-width='11' stroke-linecap='round'><path d='M52 100a48 48 0 0 1 82-34' opacity='.95'/><path d='M148 100a48 48 0 0 1-82 34' opacity='.95'/></g><path d='M138 38l4 36-34-8z' fill='#fff'/><path d='M62 162l-4-36 34 8z' fill='#fff'/><path d='M90 82v36l30-18z' fill='#fff'/></svg>");
 const ROT={id:ROTID,name:'Rotation',cover:ROT_COVER,desc:'Your most played songs lately. It updates itself as your listening changes.',sys:true,songs:rotIds.slice()};
 function plGet(id){return id===ROTID?(rotOn?ROT:null):id===LIKEID?(LIKE.on?(LIKEPL.songs=likedIds(),LIKEPL):null):playlists.find(x=>x.id===id)}
 const rotSave=()=>LS('tracks-plays',JSON.stringify(rotPlays));
@@ -6999,7 +7111,7 @@ ICON.likeOn='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm
 const LIKEID='__liked';
 var LIKE={on:LS('tracks-like')!=='0'};/* on unless switched off in Settings */
 document.documentElement.dataset.like=LIKE.on?'on':'off';
-const LIKED_COVER='data:image/svg+xml,'+encU("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c4dff'/><stop offset='.55' stop-color='#c04df0'/><stop offset='1' stop-color='#ff4d8d'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><path fill='#fff' transform='translate(46 46) scale(4.5)' d='"+ICON.heart+"'/></svg>");
+const LIKED_COVER=svgUri("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c4dff'/><stop offset='.55' stop-color='#c04df0'/><stop offset='1' stop-color='#ff4d8d'/></linearGradient><radialGradient id='r' cx='.3' cy='.2' r='.9'><stop offset='0' stop-color='#fff' stop-opacity='.28'/><stop offset='1' stop-color='#fff' stop-opacity='0'/></radialGradient></defs><rect width='200' height='200' fill='url(#g)'/><rect width='200' height='200' fill='url(#r)'/><path fill='#fff' transform='translate(46 46) scale(4.5)' d='"+ICON.heart+"'/></svg>");
 const LIKEPL={id:LIKEID,name:'Liked Songs',cover:LIKED_COVER,desc:'Songs you have liked, newest first.',sys:true,songs:[]};
 const likedIds=()=>songs.filter(s=>s.liked).sort((a,b)=>b.liked-a.liked).map(s=>s.id);
 const likeBtn=s=>{const on=!!(s&&s.liked);return `<button class="ib lk${on?' on':''}" data-act="like" data-i="${on?1:0}" aria-pressed="${on}" aria-label="Like" title="${on?'Remove from Liked Songs':'Add to Liked Songs'}">${ic(on?'likeOn':'likeOff',22)}</button>`};
@@ -7340,7 +7452,7 @@ function shareOpen(){
     <div class="shti"><b>${esc(I.t)}</b>${who?`<span>${esc(who)}</span>`:''}</div>
     <div class="shsk"><input type="range" class="rng" id="shsk" min="0" max="1000" value="0" aria-label="Seek"><div class="shtm"><span id="sht1">0:00</span><span id="sht2">0:00</span></div></div>
     <div class="shct"><button type="button" class="ib" id="shbk" aria-label="Back 10 seconds">${ic('prev',24)}</button><button type="button" class="ib shpl" id="shpl" aria-label="Play">${ic('play',30)}</button><button type="button" class="ib" id="shfw" aria-label="Forward 10 seconds">${ic('next',24)}</button></div>
-    <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="${Math.round(uvol*100)}" aria-label="Volume"></div>
+    <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="100" aria-label="Volume"></div>
   </div>`;
   const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl'),vl=g('#shvl');
   const fill=el=>el.style.setProperty('--p',(el.value/el.max*100)+'%');
@@ -7355,7 +7467,7 @@ function shareOpen(){
   g('#shfw').onclick=()=>{if(du())a.currentTime=Math.min(du(),a.currentTime+10)};
   sk.oninput=()=>{seeking=true;fill(sk);if(du())g('#sht1').textContent=fmt(sk.value/1000*du())};
   sk.onchange=()=>{if(du())a.currentTime=sk.value/1000*du();seeking=false};
-  a.volume=vl.value/100;vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};fill(sk);fill(vl);
+  vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};fill(sk);fill(vl);
   g('.shx').onclick=done;
   a.src=url(m[1],'alt=media&');
   /* cover and file details load in the background; the card is usable at once */
@@ -7495,9 +7607,11 @@ async function saDrop(it){/* delete the Drive files first; forget the share only
 }
 function sharesSheet(){
   const items=shItems();
-  openOv(`<h3>Ongoing shares</h3>
-  <p class="dupn">Songs, albums and playlists you are still sharing with a link. Stopping deletes the shared copies from your Google Drive, so the link stops working. Your library is not touched.</p>
-  ${items.length?`<div class="scd shl">${items.map((it,i)=>`<div class="rbr shr" data-i="${i}"><button type="button" class="rbt shro" data-a="open"${it.open?'':' disabled'}><b>${esc(it.name)}</b><span>${esc(it.sub)}${it.gone?' \u00b7 removed from your library':''}</span></button><button type="button" class="pill" data-a="cp">Copy</button><button type="button" class="pill" data-a="st">Stop</button></div>`).join('')}</div><div class="bt"><button type="button" class="pill" id="shall">Stop all (${items.length})</button></div>`:`<div class="empty" style="padding:26px 8px">You are not sharing anything.<br>Use Share on a song, album or playlist to make a link.</div>`}`);
+  openOv(`<div class="sth"><h3>Ongoing shares</h3><button type="button" class="pill acc" id="shdn">Back</button></div>
+  <p class="dupn" style="margin:2px 2px 8px">Songs, albums and playlists you are still sharing with a link. Stopping deletes the shared copies from your Google Drive, so the link stops working. Your library is not touched.</p>
+  ${items.length?`<div class="scd shl">${items.map((it,i)=>`<div class="shr" data-i="${i}"><button type="button" class="st shro" data-a="open"${it.open?'':' disabled'}><b>${esc(it.name)}</b><small>${esc(it.sub)}${it.gone?' \u00b7 removed from your library':''}</small></button><button type="button" class="pill" data-a="cp">Copy</button><button type="button" class="pill" data-a="st">Stop</button></div>`).join('')}</div><div class="bt"><button type="button" class="pill" id="shall">Stop all (${items.length})</button></div>`:`<div class="empty" style="padding:26px 8px">You are not sharing anything.<br>Use Share on a song, album or playlist to make a link.</div>`}`);
+  const back=()=>{setTab='data';openSettings()};
+  $('#shdn').onclick=back;
   const fail=e=>{if(shAuthErr(e)){toast('Connect Google Drive again to stop sharing');closeOv();cloudSheet()}else toast('Could not stop sharing')};
   const root=$('#ov .sheet');/* the sheet is rebuilt on every open, so this handler goes away with it */
   root.onclick=async e=>{
@@ -7570,12 +7684,10 @@ function albumOpen(){
       <div class="sals">${T.map((t,i)=>`<button type="button" class="sar" data-i="${i}"><span class="san">${i+1}</span><span class="sat"><b>${esc(t.t)}</b>${t.a&&t.a!==M.a?`<i>${esc(t.a+(t.f.length?' feat. '+t.f.join(', '):''))}</i>`:''}</span><span class="sad">${t.d?fmt(t.d):''}</span></button>`).join('')}</div>
       <div class="shsk"><input type="range" class="rng" id="shsk" min="0" max="1000" value="0" aria-label="Seek"><div class="shtm"><span id="sht1">0:00</span><span id="sht2">0:00</span></div></div>
       <div class="shct"><button type="button" class="ib" id="shbk" aria-label="Previous song">${ic('prev',24)}</button><button type="button" class="ib shpl" id="shpl" aria-label="Play">${ic('play',30)}</button><button type="button" class="ib" id="shfw" aria-label="Next song">${ic('next',24)}</button></div>
-      <div class="shvl">${ic('vol',18)}<input type="range" class="rng" id="shvl" min="0" max="100" value="${Math.round(uvol*100)}" aria-label="Volume"></div>
       <button type="button" class="pill acc" id="saa" style="width:100%;justify-content:center;margin-top:14px"><span>Add ${W}</span></button>
     </div>`;
-    const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl'),vl=g('#shvl');
+    const g=s=>root.querySelector(s),sk=g('#shsk'),pl=g('#shpl');
     const fill=el=>el.style.setProperty('--p',(el.value/el.max*100)+'%');
-    a.volume=vl.value/100;fill(vl);vl.oninput=()=>{a.volume=vl.value/100;fill(vl)};/* starts at the app's own volume */
     const du=()=>isFinite(a.duration)?a.duration:0;
     const paint=()=>{if(!seeking&&du()){sk.value=a.currentTime/du()*1000;fill(sk)}g('#sht1').textContent=fmt(a.currentTime);g('#sht2').textContent=fmt(du())};
     const mark=()=>root.querySelectorAll('.sar').forEach((e,k)=>e.classList.toggle('on',k===I));
@@ -8255,9 +8367,10 @@ function ui(){
   $('#app').insertAdjacentHTML('beforeend',`<div id="selbar"><div class="sr"><button class="ib" data-act="selexit" aria-label="Done">${ic('close',22)}</button><span id="selc">0 selected</span><button class="pill" data-act="selall">All</button></div><div class="sg"><button class="ib" data-act="selalbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="selpl" aria-label="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="selqueue" aria-label="Add to queue">${ic('qm',23)}</button><button class="ib" data-act="selcolor" aria-label="Change color">${ic('palette',22)}</button><button class="ib" data-act="seltag" aria-label="Tag artist and album">${ic('tag',22)}</button><button class="ib" id="selrm" data-act="selrm" aria-label="Remove from this list">${ic('minus',22)}</button><button class="ib" data-act="seldel" aria-label="Delete songs">${ic('trash',22)}</button><button class="ib gb" data-act="gmove" aria-label="Move to folder">${ic('move',22)}</button><button class="ib gb" data-act="gpos" aria-label="Change position">${ic('reorder',22)}</button><button class="ib gb" data-act="gdel" aria-label="Delete">${ic('trash',22)}</button></div></div>`);
   $('#gear').innerHTML=ic('gear',24);paintTheme();applyLayout();
   new ResizeObserver(()=>document.documentElement.style.setProperty('--tp',$('#top').offsetHeight+'px')).observe($('#top'));
-  $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off"><button class="sbx" data-act="clearsearch" aria-label="Close search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
+  $('#tb').innerHTML=`<div class="sb" id="sb"><button class="sbi" data-act="search" aria-label="Search">${ic('search',22)}</button><input id="sq" type="search" placeholder="Search songs, artists, albums" autocomplete="off" enterkeyhint="search" aria-label="Search songs"><button class="sbx" data-act="clearsearch" aria-label="Clear search">${ic('close',20)}</button></div><button class="pill" id="selbtn" data-act="select" aria-label="Select songs">${ic('sel',20)}</button><button class="pill" id="flt" data-act="filter">${ic('filter',18)}<span id="fl"></span></button>`;
+  tbmApply();
   $('#sq').oninput=()=>{view.q=$('#sq').value;clearTimeout(sqT);if(songs.length<400)render();else sqT=setTimeout(render,160)};
-  $('#sq').onblur=()=>{if(!$('#sq').value)closeSearch()};
+  $('#sq').onblur=()=>{if(!$('#sq').value&&!tbNew())closeSearch()};
   $('#mini').innerHTML=`<video class="mbv mv" muted loop playsinline preload="none" disablepictureinpicture tabindex="-1" aria-hidden="true"></video><button class="mhide" data-act="minihide" aria-label="Hide player">${ic('chev',18)}</button><div class="m1"><div class="mcv" id="mc"></div><div class="t"><b id="mt"></b><span id="ms"></span></div>${likeBtn()}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div>
   <div class="m3"><span id="mct">0:00</span><input type="range" class="rng" id="msk" min="0" max="1000" value="0" style="--f:rgb(var(--ac))" aria-label="Seek"><span id="mdt">0:00</span></div><div class="m2"><button class="ib" data-act="vol" data-vi data-s="22" aria-label="Volume">${ic('vol',22)}</button><div class="mvs"><input type="range" class="rng" id="mvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:rgb(var(--ac))" aria-label="Volume"><button class="ib mt2" data-act="mute" aria-label="Mute or unmute">${ic('volx',16)}</button><button class="ib nmb mnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',17)}</button></div><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="mp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',22)}</button></div>`;
   $('#app').insertAdjacentHTML('beforeend',`<div id="vp"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="vol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></div>`);
@@ -8265,7 +8378,7 @@ function ui(){
   $('#mvl').oninput=e=>{setVol(e.target.value/100);vpTimer()};nmPaint();
   $('#msk').oninput=e=>{if(vD())vSeek(e.target.value/1000*vD());e.target.style.setProperty('--p',(e.target.value/10)+'%');$('#mct').textContent=fmt(vT())};
   $('#msk').onpointerdown=()=>{seeking=true};
-  $('#app').insertAdjacentHTML('beforeend',`<div id="qp"><div class="qh"><h3>Queue</h3><div class="qa"><button class="ovx" data-act="qshuf" aria-label="Shuffle upcoming songs">${ic('shuffle',18)}</button><button class="pill" data-act="qclear">Clear</button><button class="ovx" data-act="qclose" aria-label="Close queue">${ic('close',16)}</button></div></div><div id="ql"></div></div>`);
+  $('#app').insertAdjacentHTML('beforeend',`<div id="qp"><div class="qh"><h3>Queue</h3><div class="qa"><button class="ovx" data-act="qshuf" aria-label="Shuffle upcoming songs">${ic('shuffle',18)}</button><button class="ovx" id="qundo" data-act="qundo" aria-label="Undo last queue change" title="Undo" disabled>${ic('undo',18)}</button><button class="pill" data-act="qclear" title="Remove everything after the current song">Clear all</button><button class="ovx" data-act="qclose" aria-label="Close queue">${ic('close',16)}</button></div></div><div id="ql"></div></div>`);
   $('#mini .m1').addEventListener('click',e=>{if(e.target.closest('[data-act]'))return;openFull()});
   $('#app').insertAdjacentHTML('beforeend',`<aside id="np" aria-label="Now playing"><div class="npg" id="npg" role="separator" aria-orientation="vertical" aria-label="Drag to resize the panel" title="Drag to resize (double-click to reset)"></div><div class="npge" id="npge"></div><div class="nph"><b>Now playing</b><span class="nphr"><button class="ib" data-npa="full" aria-label="Open full player" title="Full screen player">${ic('npx',22)}</button></span></div><div class="npc" id="npc" data-npa="full"></div><div class="npi"><div class="npn"><h2 id="npt"></h2><p id="nps"></p></div>${likeBtn()}${oneBtn()}</div><div class="npl" id="npl"></div></aside><div id="npb"><div class="nl"><div class="nc" id="nbc" data-npa="full"></div><div class="nt"><b id="nbt"></b><span id="nbs"></span></div><div class="npa">${likeBtn()}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album" title="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist" title="Add to playlist">${ic('plist',22)}</button><button class="ib" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib npm" data-act="npmore" aria-label="More options" title="Like, add to album or playlist, edit details">${ic('dots',22)}</button></div></div><div class="nm"><div class="nctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',24)}</button><button class="ib mp" id="nbp" data-act="toggle" aria-label="Play or pause"></button><button class="ib" data-act="next" aria-label="Next">${ic('next',24)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div><div class="nsk"><span id="nbct">0:00</span><input type="range" class="rng" id="nbsk" min="0" max="1000" value="0" aria-label="Seek"><span id="nbdt">0:00</span></div></div><div class="nr"><button class="ib${NP.ly?' on':''}" data-npa="ly" aria-label="Show lyrics" title="Lyrics">${ic('mic',22)}</button><button class="ib nmb pnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib" data-act="qopen" aria-label="Queue" title="Queue (hold for the full queue)">${ic('qm',22)}<svg class="qring" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17"/></svg></button><span class="nvg"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="nbvl" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%" aria-label="Volume"></span></div></div>`);
   $('#np').addEventListener('click',npClick);$('#npb').addEventListener('click',npClick);$('#npb').addEventListener('wheel',npbWheel,{passive:false});nmPaint();
@@ -8360,19 +8473,15 @@ function ui(){
   addEventListener('touchcancel',()=>end(false),{passive:true,capture:true});
 
   /* the phone's own back gesture / button: keep one spare history entry and use it to step back inside the app */
-  let armed=false,tried=false,exitAt=0;
+  let armed=false,tried=false;
   const arm=()=>{try{history.pushState({trax:1},'',location.href);armed=true}catch(_){}};
   const EV=['pointerup','touchend','click','keydown'];
   const first=()=>{if(tried)return;tried=true;EV.forEach(n=>removeEventListener(n,first,true));arm()};/* browsers skip history entries made before a completed tap or key press, so wait for one */
-  const wait=()=>{tried=false;EV.forEach(n=>addEventListener(n,first,true))};
-  wait();
+  EV.forEach(n=>addEventListener(n,first,true));
   addEventListener('popstate',()=>{
     if(!armed)return;
     armed=false;
     if(GEST.on&&backStep()){arm();return}
-    /* nothing left to close. history.back() from here made some phones show a blank gray page, so the app never navigates by itself:
-       it says so once and leaves the spare entry spent, so the next back gesture is the phone's own and leaves the app cleanly. The next tap puts the spare entry back. */
-    if(Date.now()-exitAt>2500){exitAt=Date.now();toast('Swipe back again to exit')}
-    wait();
+    try{history.back()}catch(_){}/* nothing left to close: let the phone leave the app as usual */
   });
 })();

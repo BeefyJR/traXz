@@ -2114,21 +2114,84 @@ html.fpd #fpbar{opacity:.18;pointer-events:none;transition:opacity .12s}
 .shr .pill{flex:none;padding:8px 13px;font-size:13px}
 .shr .pill[disabled]{opacity:.6;pointer-events:none}
 
-/* Settings: every note under a control uses one spacing, instead of per-note inline margins */
-.setsh .scd .dupn{margin:8px 2px 2px}
-.setsh .scd>h4+.dupn{margin:2px 2px 10px}
+/* ---- folder header: title row + tools row (phones) ---- */
+.fbr .ftl{display:flex;align-items:center;gap:8px}
+html:not([data-layout=pc]) .fbr.fx{flex-wrap:wrap;row-gap:10px}
+html:not([data-layout=pc]) .fbr.fx .ft{flex:1 1 0}
+html:not([data-layout=pc]) .fbr.fx .ft h2{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+html:not([data-layout=pc]) .fbr.fx .abtns{order:3;flex:1 0 100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+html:not([data-layout=pc]) .fbr.fx .fsz2 button{width:34px}
+/* ---- queue: undo + clear the songs I added ---- */
+.qcl{display:inline-flex;align-items:center;gap:10px}
+.qcl i{font-style:normal}
+.qcl .pill{padding:5px 12px;font-size:12px;text-transform:none;letter-spacing:0}
+#qp .pill{white-space:nowrap}
+.ovx:disabled,.pill:disabled{opacity:.35;pointer-events:none}
+.npqh .pill{white-space:nowrap}
 
-/* Settings > Backup > Ongoing shares: same card and row look as the other sheets */
-.shl{padding-bottom:4px}
-.shl .shr:last-child{border-bottom:0}
-.shr .shro{text-align:left;background:none;color:var(--text);padding:0;border:0;font:inherit;cursor:pointer}
-.shr .shro:disabled{opacity:1;cursor:default}
-.shr .shro:not(:disabled):active{opacity:.6}
-.shr .pill{padding:8px 14px;font-size:13px}
+/* ---- confirm button, settings header ---- */
+.pill.dgr{background:#d93a3a;color:#fff}
+.sthb{display:flex;align-items:center;gap:8px}
+.sthb .pill{padding:8px 14px}
+.srow:disabled{opacity:.5}
+.srow:disabled .ic{opacity:.6}
+/* ---- Songs toolbar, new look: one search bar + sort + select. "Classic buttons" in Settings brings the old ones back ---- */
+html[data-tbm=new] {
+  --tbh:44px;
+}
+html[data-tbm=new] #tb{gap:8px}
+html[data-tbm=new] #tb .sb{flex:1 1 auto;width:auto;min-width:0;height:var(--tbh);border-radius:calc(var(--tbh)/2);max-width:none;transition:box-shadow .18s ease,background .18s ease}
+html[data-tbm=new] #tb .sb:focus-within{box-shadow:0 0 0 2px var(--text)}
+html[data-tbm=new] #tb .sb input{display:block}
+html[data-tbm=new] #tb .sbi{width:42px;height:var(--tbh)}
+html[data-tbm=new] #tb .sbx{display:none;width:var(--tbh);height:var(--tbh)}
+html[data-tbm=new] #tb .sb input:not(:placeholder-shown)~.sbx{display:flex}
+html[data-tbm=new] #tb #flt,
+html[data-tbm=new] #tb #selbtn{display:inline-flex;position:relative;margin:0;height:var(--tbh);min-width:var(--tbh);padding:0 12px;border-radius:calc(var(--tbh)/2);justify-content:center;gap:6px;flex:none}
+html[data-tbm=new] #tb #flt{order:2}
+html[data-tbm=new] #tb #selbtn{order:3;width:auto}
+html[data-tbm=new] #tb #fl{display:none;font-size:13px;font-weight:600;white-space:nowrap}
+@media (min-width:560px){
+  html[data-tbm=new] #tb #fl{display:inline}
+}
+/* small dot on the sort button when the order is not the default */
+html[data-tbm=new] #tb #flt.chg::after{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:rgb(var(--ac));box-shadow:0 0 0 2px var(--bg)}
+html[data-tbm=new] #tb :is(#flt,#selbtn,.sbx):focus-visible{outline:2px solid var(--text);outline-offset:2px}
+@media (max-height:520px){
+  html[data-tbm=new]{--tbh:38px}
+}
 
-/* shared album: volume bar under the transport buttons */
-#shc .sak .shvl{margin:8px auto 0}
+@media (min-width:900px){
+  html[data-tbm=new] #tb .sb{max-width:520px}
+}
 
-/* Settings: PC-only cards show only in the PC layout, phone-only cards only in the phone layout */
-html[data-layout=pc] .setsh .mbo{display:none!important}
-html:not([data-layout=pc]) .setsh .pco{display:none!important}
+/* Settings: Undo sits at the bottom left */
+.stfoot{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:12px 22px 4px;margin-top:10px;background:linear-gradient(transparent,rgba(var(--sfc),.96) 45%);pointer-events:none}
+.stfoot>*{pointer-events:auto}
+.stfoot .pill:disabled{opacity:.45}
+.stul{min-width:0;flex:1;font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html[data-layout=pc] .stfoot{grid-column:1;grid-row:1;align-self:end;position:relative;margin:0;padding:14px 14px 18px;flex-direction:column;align-items:flex-start;gap:6px;background:none;z-index:6}
+html[data-layout=pc] .stul{flex:none;max-width:100%;padding-left:4px}
+
+/* ---- toolbars: icon buttons 44px, clear focus rings, labelled menus ---- */
+.abar .ab:focus-visible,.abar .back:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+.abar .ab[aria-haspopup]{position:relative}
+/* docked PC bars: same new bar, icon-only sort so the fixed button spots never overlap the search */
+html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,calc(100% - 2*var(--hx) - var(--hbl) - var(--hbr) - 110px));max-width:none}
+html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #fl{display:none}
+html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #flt,html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #selbtn{width:38px;min-width:38px;padding:0}
+html[data-tbm=new][data-layout=pc]{--tbh:38px}
+
+/* ---- docked PC bars at any width: search / select / sort always stay clear of Add, Cloud, Queue and Settings ----
+   The old rule only moved them in windows narrower than 900px. With the side player open the main area is much narrower than the window,
+   so the buttons collided at 900px and up. Now the offset is the larger of the content margin and the room the header buttons need. */
+html:not([data-hb=dock])[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]){--hbl:calc(44px + 10px + 44px + 14px);--hbr:calc(44px + 10px)}
+html:not([data-hb=dock])[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]):not([data-np=on]){--hbr:calc(44px + 10px + 56px)}
+html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]){--sbl:max(calc(var(--px) + 12px),calc(var(--hx) + var(--hbl)));--sbr:max(calc(var(--px) + 12px),calc(var(--hx) + var(--hbr)))}
+html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb{left:var(--sbl)}
+html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #flt{right:var(--sbr)}
+html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb #selbtn{right:calc(var(--sbr) + 38px + 10px)}
+/* the search bar fills the space between the left buttons and select / sort, never more than 420px */
+html[data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,max(120px,calc(100% - var(--sbl) - var(--sbr) - 96px)))}
+/* with the header buttons on the bar, the logo sits in the middle of this row: stop the search before it */
+html[data-hb=dock][data-tbm=new][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb .sb.open{width:min(420px,max(120px,calc(50% - var(--sbl) - 56px)))}
