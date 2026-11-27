@@ -66,6 +66,7 @@ ICON.up='M7 14l5-5 5 5z';
 ICON.eye='M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z';
 ICON.eyeoff='M2 4.27L3.27 3 21 20.73 19.73 22l-2.9-2.9A11.4 11.4 0 0112 19.5C7 19.5 2.73 16.39 1 12a11.7 11.7 0 013.6-4.9L2 4.27zM12 7a5 5 0 015 5c0 .65-.13 1.26-.36 1.83L14.8 12A3 3 0 0012 9l-1.1-1.1c.33-.6.7-.9 1.1-.9zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65a3 3 0 003 3c.22 0 .44-.03.65-.08l1.55 1.55A5 5 0 017.53 9.8zM12 4.5c5 0 9.27 3.11 11 7.5a11.8 11.8 0 01-2.67 3.9l-1.43-1.43A9.6 9.6 0 0020.8 12 9.8 9.8 0 0012 6.5c-.7 0-1.4.07-2.05.2L8.4 5a11.9 11.9 0 013.6-.5z';
 ICON.reset='M12 5V2L8 6l4 4V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z';
+ICON.out='M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z';
 ICON.move='M10 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-8l-2-2zm4 7l4 4-4 4v-3H8v-2h6v-3z';
 const _icC=new Map();
 const ic=(n,s)=>{const k=n+'|'+(s||'');let v=_icC.get(k);if(v===void 0){v=`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false" ${s?`style="width:${s}px;height:${s}px"`:''}><path d="${ICON[n]}"/></svg>`;_icC.set(k,v)}return v};
@@ -378,7 +379,7 @@ function fxGraph(){
   if(fxAN)return true;if(!fxOK)return false;
   try{
     const C=window.AudioContext||window.webkitAudioContext;if(!C){fxOK=false;return false}
-    fxAC=new C({latencyHint:'interactive'});const src=fxAC.createMediaElementSource(au);
+    fxAC=new C({latencyHint:'interactive'});try{if(OUT.id&&fxAC.setSinkId)fxAC.setSinkId(OUT.id).catch(()=>{})}catch(_){}const src=fxAC.createMediaElementSource(au);
     fxAN=fxAC.createAnalyser();fxAN.fftSize=2048;fxAN.smoothingTimeConstant=0;   /* spectrum, for the bars; no built-in smoothing so nothing lags */
     fxAS=fxAC.createAnalyser();fxAS.fftSize=8192;fxAS.smoothingTimeConstant=.72; /* fine, smoothed spectrum, only drawn in the frequency picker */
     fxDly=fxAC.createDelay(.5);fxGain=fxAC.createGain();   /* fxGain = volume normalization */
@@ -1524,7 +1525,7 @@ function closeOv(){
   const g=ctx||PERF.f.ui||RM.matches?null:ov.cloneNode(true);if(g){g.className='ovg';g.removeAttribute('id');g.removeAttribute('style');g.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'))}
   ov.classList.remove('open','ctx');ov.innerHTML='';ov.oncontextmenu=null;
   {const f=ovFrom;ovFrom=null;if(f&&f.isConnected&&f.focus)try{f.focus({preventScroll:true})}catch(_){}}
-  if(!g)return;
+  if(RM.matches||PERF.f.ui)return;
   document.body.appendChild(g);
   an(g.firstElementChild,[{transform:'none'},{transform:'translateY(100%)'}],{duration:260,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});
   an(g,[{opacity:1},{opacity:0}],{duration:260,easing:'linear',fill:'forwards'});
@@ -1707,7 +1708,7 @@ function renderFull(){
   const s=songById(cur);if(!s)return closeFull();
   const p=vD()?vT()/vD():0;
   const oc=$('#fc .cov'),ghost=(oc&&fullFor!==null&&fullFor!==s.id)?mvGhost(oc.cloneNode(true)):null;
-  $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><div class="tbm"><button class="ib tbmb" data-act="tbmenu" aria-haspopup="menu" aria-expanded="false" aria-label="Player options" title="Player options">${ic('tune',22)}</button><div class="tbmp" role="menu" aria-hidden="true"><button class="tbmi" role="menuitem" data-act="bgopts">${ic('image',24)}<span>Background</span></button><button class="tbmi" role="menuitem" data-act="tropts">${ic('trans',24)}<span>Transition</span></button><button class="tbmi" role="menuitem" data-act="fxopts">${ic('fxi',24)}<span>Beat effects</span></button><button class="tbmi" role="menuitem" data-act="lyedit">${ic('mic',24)}<span>Sync lyrics</span></button></div></div><button class="ib nmb fnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib flyb${lyOn?' on':''}" data-act="lyrics" aria-pressed="${lyOn}" aria-label="Lyrics" title="Lyrics (L)">${ic('mic',22)}</button></div><div class="fcv${lyOn?' ly':''}">${cover(songCover(s),s.name,true)}<div class="lyp" aria-hidden="${lyOn?'false':'true'}"><div class="lys" id="lys"></div></div></div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
+  $('#fc').innerHTML=`<div class="ftop"><button class="ib" data-act="closefull" aria-label="Close player">${ic('down',30)}</button><div class="tbm"><button class="ib tbmb" data-act="tbmenu" aria-haspopup="menu" aria-expanded="false" aria-label="Player options" title="Player options">${ic('tune',22)}</button><div class="tbmp" role="menu" aria-hidden="true"><button class="tbmi" role="menuitem" data-act="bgopts">${ic('image',24)}<span>Background</span></button><button class="tbmi" role="menuitem" data-act="tropts">${ic('trans',24)}<span>Transition</span></button><button class="tbmi" role="menuitem" data-act="fxopts">${ic('fxi',24)}<span>Beat effects</span></button><button class="tbmi" role="menuitem" data-act="outdev">${ic('out',24)}<span>Output device</span></button><button class="tbmi" role="menuitem" data-act="lyedit">${ic('mic',24)}<span>Sync lyrics</span></button></div></div><button class="ib nmb fnm" data-act="norm" aria-pressed="false" aria-label="Normalize volume" title="Normalize volume">${ic('norm',22)}</button><button class="ib fedit" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button><button class="ib flyb${lyOn?' on':''}" data-act="lyrics" aria-pressed="${lyOn}" aria-label="Lyrics" title="Lyrics (L)">${ic('mic',22)}</button></div><div class="fcv${lyOn?' ly':''}">${cover(songCover(s),s.name,true)}<div class="lyp" aria-hidden="${lyOn?'false':'true'}"><div class="lys" id="lys"></div></div></div><div class="fti"><h2>${esc(s.name)}</h2><p>${subHtml(s)}</p></div>
   <div class="fsk"><input type="range" class="rng seek" id="sk" min="0" max="1000" value="${Math.round(p*1000)}" style="--p:${p*100}%" aria-label="Seek"><div class="tm"><span id="ct">${fmt(vT())}</span><span id="dt2">${fmt(vD()||effDur(s))}</span></div></div>
   <div class="ctl"><button class="ib tg" data-act="shuffle" aria-label="Shuffle"></button><button class="ib" data-act="prev" aria-label="Previous">${ic('prev',28)}</button><button class="ib big" id="fp" data-k="${au.paused?'play':'pause'}" data-act="toggle" aria-label="Play or pause">${ic(au.paused?'play':'pause',34)}</button><button class="ib" data-act="next" aria-label="Next">${ic('next',28)}</button><button class="ib tg" data-act="repeat" aria-label="Repeat"></button></div>
   <div class="fbot"><div class="fg">${likeBtn(s)}${oneBtn()}<button class="ib" data-act="minialbum" aria-label="Add to album">${ic('album',22)}</button><button class="ib" data-act="miniplaylist" aria-label="Add to playlist">${ic('plist',22)}</button></div><div class="fvol"><button class="ib mt" data-act="mute" data-vi data-s="20" aria-label="Mute or unmute">${ic('vol',20)}</button><input type="range" class="rng" id="fvol" min="0" max="100" value="${Math.round(uvol*100)}" style="--p:${Math.round(uvol*100)}%;--f:#fff;--t:rgba(255,255,255,.28)" aria-label="Volume"></div><div class="fr"><button class="ib" data-act="qopen" aria-label="Queue">${ic('qm',24)}</button><button class="ib pcx" data-act="editfull" aria-label="Edit song details" title="Edit song details">${ic('edit',22)}</button></div></div>`;
@@ -4878,6 +4879,7 @@ document.addEventListener('click',async e=>{
   if(act==='cloud')return cloudSheet();
   if(act==='theme')return setTheme(b.dataset.t,true);
   if(act==='settings')return openSettings();
+  if(act==='outdev')return outSheet();
   if(act==='qopen'){if(b.closest('#npb')&&npOn())return npQToggle();return openQ()}
   if(act==='qclose')return closeQ();
   if(act==='qundo')return qUndo();
@@ -5375,6 +5377,7 @@ function openSettings(){
     <div class="scd"><h4>Side player</h4><button type="button" class="srow" data-npset="main" role="switch" aria-checked="false"><span class="st"><b>Spotify style player</b><small>PC only. Cover and lyrics on the right.</small></span><span class="stog"></span></button><div id="npmore"><button type="button" class="srow" data-npset="ly" role="switch" aria-checked="true"><span class="st"><b>Show lyrics under the cover</b></span><span class="stog"></span></button><div class="bgs"><div class="fop"><span>Panel width</span><input type="range" class="rng" id="npwr" min="280" max="900" aria-label="Panel width"><b></b></div></div></div><p class="dupn" id="npn" style="margin:6px 6px 2px"></p></div>
   </section>
   <section class="stp" data-p="play">
+    <div class="scd"><h4>Audio output</h4>${row('outdev','Output device','Phone speaker, Bluetooth earbuds, headphones\u2026',esc(outName()))}</div>
     <div class="scd"><h4>Transitions</h4>${row('xfopen','Song transitions','Crossfade and gapless',esc(xfSummary()))}</div>
     <div class="scd"><h4>Playlists</h4><button type="button" class="srow" data-lk="1" role="switch" aria-checked="true"><span class="st"><b>Liked Songs playlist</b><small>Heart button and a Liked Songs playlist. Likes are kept if you turn it off.</small></span><span class="stog"></span></button><button type="button" class="srow" data-sp="1" role="switch" aria-checked="false"><span class="st"><b>Rotation playlist</b><small>Your recent favourites, updated automatically.</small></span><span class="stog"></span></button></div>
     <div class="scd"><h4>Player buttons</h4><button type="button" class="srow" data-onebtn="1" role="switch" aria-checked="false"><span class="st"><b>One add button</b><small>A single + in the players for Like, Album and Playlist.</small></span><span class="stog"></span></button></div>
@@ -5465,6 +5468,7 @@ function openSettings(){
       else if(k==='lyscan')lyScanAll(true);
       else if(k==='lyfind')lyFindAll();
       else if(k==='lymass'){closeOv();setTimeout(lyMassPick,60)}
+      else if(k==='outdev'){closeOv();setTimeout(outSheet,380)}
       else if(k==='xfopen'){closeOv();setTimeout(xfSheet,380)}
       else if(k==='icl'){closeOv();setTimeout(icSheet,380)}else if(k==='fpe'){closeOv();setTimeout(()=>fpEdit(true),380)}
       else if(k==='rfbulk'){closeOv();rfBulkPick()}
@@ -5676,7 +5680,7 @@ function xfPlan(a,b){
 const xfLead=p=>!p?0:(p.kind==='cross'?p.W:p.out);
 
 /* second player: holds the end of the song that is fading out */
-function xfGhost(s){const g=new Audio();g.preload='auto';g.src=URL.createObjectURL(s.blob);g.volume=0;return g}
+function xfGhost(s){const g=new Audio();try{if(OUT.id&&g.setSinkId)g.setSinkId(OUT.id).catch(()=>{})}catch(_){}g.preload='auto';g.src=URL.createObjectURL(s.blob);g.volume=0;return g}
 function xfPre(s){if(!s||!s.blob||XF.preId===s.id)return;xfDropPre();XF.pre=xfGhost(s);XF.preId=s.id;try{XF.pre.load()}catch(_){}}
 function xfDropPre(){const g=XF.pre;XF.pre=null;XF.preId=null;if(g){try{g.pause();URL.revokeObjectURL(g.src);g.removeAttribute('src')}catch(_){}}}
 function xfDropGhost(){clearInterval(XF.iv);XF.iv=0;XF.live=0;const g=XF.g;XF.g=null;XF.gp=0;if(g){try{g.pause();URL.revokeObjectURL(g.src);g.removeAttribute('src')}catch(_){}}}
@@ -8106,7 +8110,7 @@ function cmLoadImg(f){return new Promise((ok,no)=>{
     const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(im,0,0,w,h);
     const t=document.createElement('canvas'),tk=80/Math.max(w,h);t.width=Math.max(1,Math.round(w*tk));t.height=Math.max(1,Math.round(h*tk));t.getContext('2d').drawImage(c,0,0,t.width,t.height);
     const ar=h/w;
-    ok({type:'img',name:((f.name||'Image').replace(/\.[^.]+$/,'').slice(0,24))||'Image',im:c,thumb:t.toDataURL('image/png'),ar,x:50,y:50,size:Math.round(Math.min(60,60/ar)),rot:0,op:100,rad:0,flip:false,hid:false,bb:null});
+    ok({type:'img',name:((f.name||'Image').replace(/\.[^.]+$/,'').slice(0,24))||'Image',im:c,thumb:t.toDataURL('image/png'),ar,x:50,y:50,size:Math.round(Math.min(60,60/ar)),sz0:Math.round(Math.min(60,60/ar)),rot:0,op:100,rad:0,flip:false,hid:false,bb:null});
   };
   im.onerror=()=>{URL.revokeObjectURL(u);no()};im.src=u;
 })}
@@ -8131,7 +8135,7 @@ function cmGuideDraw(x,S,W){
   A.x.forEach(g=>line(g,0,g,W));A.y.forEach(g=>line(0,g,W,g));
   x.restore();
 }
-const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',x:null,y:null,rot:0,pv:i?'c':'b',size:i?36:46,tc:'auto',gc:'auto',fx:['shadow'],fa:50,gr:false,g1:null,g2:null,ga:90,bb:null});
+const cmLayer=(i,t,u)=>({title:t||'',sub:u||'',font:'sans',x:null,y:null,rot:0,pv:i?'c':'b',size:i?36:46,sz0:i?36:46,tc:'auto',gc:'auto',fx:['shadow'],fa:50,gr:false,g1:null,g2:null,ga:90,bb:null});
 function covMaker(o){return new Promise(res=>{
   o=o||{};
   const S={style:'mesh',pal:0,c:CM_PAL[0].slice(),seed:(Math.random()*1e6|0)+1,T:[cmLayer(0,(o.title||'').slice(0,80),(o.sub||'').slice(0,80))],k:0,grain:18,dim:35,ifx:[],ifa:50,igc:'auto',img:null,imgUrl:null,tab:'bg',snap:true,grid:false,ga:null,drag:false};
@@ -8216,7 +8220,7 @@ function covMaker(o){return new Promise(res=>{
   let done=false;
   const kd=ev=>{if(ev.key==='Escape'){ev.stopPropagation();fin(null)}};
   const fin=v=>{if(done)return;done=true;document.removeEventListener('keydown',kd,true);if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);e.remove();res(v)};
-  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmga',T.ga==null?90:T.ga,'\u00b0',0,360],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].concat(T.type==='img'?[['#cmmz',T.size,'%',5,200],['#cmmx',T.x==null?50:T.x,'%',0,100],['#cmmy',T.y==null?50:T.y,'%',0,100],['#cmmr',T.rot||0,'\u00b0',-180,180],['#cmmo',T.op==null?100:T.op,'%',0,100],['#cmmc',T.rad||0,'%',0,50]]:[]).forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u})};
+  const sl=()=>{const T=cur();[['#cmsr',T.rot,'\u00b0',-180,180],['#cmga',T.ga==null?90:T.ga,'\u00b0',0,360],['#cmz',T.size,'',20,90],['#cmfa',T.fa==null?50:T.fa,'%',0,100],['#cmg',S.grain,'%',0,100],['#cmia',S.ifa==null?50:S.ifa,'%',0,100],['#cmd2',S.dim,'%',0,85]].concat(T.type==='img'?[['#cmmz',T.size,'%',5,200],['#cmmx',T.x==null?50:T.x,'%',0,100],['#cmmy',T.y==null?50:T.y,'%',0,100],['#cmmr',T.rot||0,'\u00b0',-180,180],['#cmmo',T.op==null?100:T.op,'%',0,100],['#cmmc',T.rad||0,'%',0,50]]:[]).forEach(([id,v,u,mn,mx])=>{const i=q(id);i.value=v;i.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');i.parentNode.querySelector('b').textContent=Math.round(v)+u});q('#cmz').dataset.def=T.sz0||46;q('#cmmz').dataset.def=T.sz0||(T.type==='img'?T.size:50)};
   const EYE1='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12 5C7 5 3 9.5 2 12c1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7zm0 11.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9zm0-7a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>',EYE0='<svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="M12 5C7 5 3 9.5 2 12c1 2.5 5 7 10 7s9-4.5 10-7c-1-2.5-5-7-10-7zm0 11.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" opacity=".35"/><path d="M3.2 4.6l1.4-1.4 16.2 16.2-1.4 1.4z"/></svg>',GRIP='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M5 7h14v2H5zm0 4h14v2H5zm0 4h14v2H5z"/></svg>',LOCK='<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17 9V7a5 5 0 00-10 0v2H5v12h14V9h-2zM9 7a3 3 0 016 0v2H9V7z"/></svg>';
   const lay=()=>{
     const n=S.T.length;let h='';
@@ -8490,3 +8494,113 @@ function ui(){
     try{history.back()}catch(_){}/* nothing left to close: let the phone leave the app as usual */
   });
 })();
+
+
+/* ===== Audio output device =====
+   Chrome and Edge (desktop and Android) can send sound to a chosen output with setSinkId. Safari and iOS cannot:
+   there the system decides (Control Centre, AirPlay), so the sheet offers the AirPlay picker when the browser has one. */
+const OUT={id:LS('tracks-outdev')||'',label:LS('tracks-outlbl')||''};
+const outCan=()=>typeof au.setSinkId==='function';
+const outName=()=>OUT.id?(OUT.label||'Selected device'):'System default';
+async function outApply(){
+  if(!outCan())return true;
+  try{await au.setSinkId(OUT.id||'')}catch(e){return false}
+  try{if(fxAC&&fxAC.setSinkId)await fxAC.setSinkId(OUT.id||'')}catch(e){}
+  return true;
+}
+async function outDevices(){
+  try{return(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audiooutput'&&d.deviceId!=='communications')}catch(e){return[]}
+}
+const outKind=l=>/bluetooth|buds|airpods|earphone|earbud|headset|headphone|hands-?free/i.test(l)?'Bluetooth or headphones':/speaker|built-?in|internal|phone|earpiece/i.test(l)?'Speaker':/hdmi|display|tv|monitor/i.test(l)?'Screen or TV':/usb|dock|dac/i.test(l)?'USB audio':'Audio output';
+function outSave(id,label){OUT.id=id||'';OUT.label=id?(label||''):'';LS('tracks-outdev',OUT.id||null);LS('tracks-outlbl',OUT.label||null)}
+async function outPick(id,label){
+  const prev={id:OUT.id,label:OUT.label};
+  outSave(id,label);
+  const ok=await outApply();
+  if(!ok){outSave(prev.id,prev.label);await outApply();toast('Could not switch to that device');return false}
+  toast(id?'Playing on '+(label||'the selected device'):'Playing on the system default');
+  return true;
+}
+function outSheet(){
+  const known=outCan(),pick=typeof navigator.mediaDevices?.selectAudioOutput==='function',air=typeof au.webkitShowPlaybackTargetPicker==='function';
+  openOv(`<h3>Output device</h3><div class="scd" id="outl"><p class="dupn" style="margin:6px">Looking for devices\u2026</p></div><div id="outx"></div><div class="bt"><button type="button" class="pill acc" id="outdn">Done</button></div>`);
+  const sh=$('#ov .sheet');if(!sh)return;
+  const L=()=>sh.querySelector('#outl'),X=()=>sh.querySelector('#outx');
+  const row=(id,t,d,on)=>`<button type="button" class="srow" data-od="${esc(id)}" data-ol="${esc(t)}" role="radio" aria-checked="${on}"><span class="st"><b>${esc(t)}</b>${d?`<small>${esc(d)}</small>`:''}</span><span class="sv">${on?'Playing here':''}</span></button>`;
+  let busy=false;
+  const paint=async()=>{
+    if(!L())return;
+    const dev=known?await outDevices():[];if(!L())return;
+    const named=dev.filter(d=>d.label),seen=new Set();
+    let h=row('','System default','Phone or computer speaker, or whatever the system is connected to',!OUT.id);
+    named.forEach(d=>{if(d.deviceId==='default'||seen.has(d.deviceId))return;seen.add(d.deviceId);h+=row(d.deviceId,d.label,outKind(d.label),OUT.id===d.deviceId)});
+    if(OUT.id&&!seen.has(OUT.id))h+=row(OUT.id,OUT.label||'Selected device','Not seen right now',true);
+    L().innerHTML=h;
+    const nameless=dev.length>0&&!named.length;let x='';
+    if(known&&pick)x+=`<div class="bt" style="margin-top:6px"><button type="button" class="pill" id="outsel">Choose another device\u2026</button></div>`;
+    if(known&&!pick&&(!named.length||nameless))x+=`<div class="bt" style="margin-top:6px"><button type="button" class="pill" id="outperm">Show device names</button></div><p class="dupn" style="margin:6px">Your browser only shows names after the microphone permission is allowed. Nothing is recorded.</p>`;
+    if(air)x+=`<div class="bt" style="margin-top:6px"><button type="button" class="pill" id="outair">${ic('out',16)}AirPlay and Bluetooth\u2026</button></div>`;
+    if(!known)x+=`<p class="dupn" style="margin:8px 6px">${air?'This browser lets the system choose the speaker. Use the button above, or the audio output control in your phone settings.':'This browser cannot switch the speaker from inside the app. Connect your Bluetooth earbuds or speaker in the phone settings, and sound moves there automatically.'}</p>`;
+    X().innerHTML=x;
+  };
+  sh.addEventListener('click',async e=>{
+    if(e.target.closest('#outdn')){closeOv();return}
+    if(busy)return;
+    const r=e.target.closest('[data-od]');
+    if(r){if(!known){toast('This browser cannot switch the output');return}busy=true;await outPick(r.dataset.od,r.dataset.ol);busy=false;paint();return}
+    if(e.target.closest('#outsel')){busy=true;try{const d=await navigator.mediaDevices.selectAudioOutput();if(d&&d.deviceId)await outPick(d.deviceId,d.label)}catch(_){}busy=false;paint();return}
+    if(e.target.closest('#outperm')){busy=true;try{const st=await navigator.mediaDevices.getUserMedia({audio:true});st.getTracks().forEach(t=>t.stop())}catch(_){toast('Permission was not given')}busy=false;paint();return}
+    if(e.target.closest('#outair')){try{au.webkitShowPlaybackTargetPicker()}catch(_){}return}
+  });
+  sh.addEventListener('outrefresh',paint);
+  paint();
+}
+/* an output that disappears (earbuds switched off) falls back to the system default */
+try{navigator.mediaDevices&&navigator.mediaDevices.addEventListener('devicechange',async()=>{
+  if(OUT.id){const d=await outDevices();if(d.length&&!d.some(x=>x.deviceId===OUT.id)){outSave('','');await outApply();toast('Output device disconnected. Using the system default')}}
+  const b=$('#outl')&&$('#ov .sheet');if(b)b.dispatchEvent(new CustomEvent('outrefresh'));
+})}catch(_){}
+if(OUT.id)outApply().then(ok=>{if(!ok){outSave('','')}});
+
+/* ===== Reset buttons next to sliders =====
+   Every adjustment slider gets the round reset arrow; volume, seek, scroll and preview sliders never do.
+   A reset sets the default and fires the slider's own input and change events, so each sheet reacts as if you dragged there. */
+const RST_DEF={cpz:100,cpx:500,cpy:500,fcr:160,fco:100,icsz:44,icgp:8,tbd:55,tbb:0,tpt:22,tpb:18,npwr:360,cmd2:35,cmg:18,cmia:50,cmga:90,cmfa:50,cmsr:0,cmmx:50,cmmy:50,cmmr:0,cmmo:100,cmmc:0};
+const RST_NAME={cpz:'Zoom',cpx:'X',cpy:'Y'};
+function rstClick(btn){
+  const f=btn.closest('.fop'),i=f&&f.querySelector('input.rng');if(!i)return;
+  const id=i.id;
+  if(id==='tpt'||id==='tpb'){/* top bar: back to untouched, not to a stored number */
+    TPB[id==='tpt'?'t':'b']=null;tpbSave();tpbApply();
+    const v=RST_DEF[id],mx=id==='tpt'?100:40;i.value=v;i.style.setProperty('--p',(v/mx*100)+'%');const b=f.querySelector('b');if(b)b.textContent=v+(id==='tpt'?'%':'px');return;
+  }
+  let d=i.dataset.def!=null&&i.dataset.def!==''?+i.dataset.def:RST_DEF[id];
+  if(d==null||!isFinite(d))return;
+  d=Math.min(+i.max,Math.max(+i.min,d));
+  i.value=d;
+  i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));
+  try{navigator.vibrate&&navigator.vibrate(6)}catch(_){}
+}
+function rstScan(){
+  document.querySelectorAll('.fop').forEach(f=>{
+    if(f.querySelector('.rsb'))return;
+    const i=f.querySelector('input.rng');if(!i||!i.id)return;
+    if(!(i.id in RST_DEF)&&i.dataset.def==null&&i.id!=='cmz'&&i.id!=='cmmz')return;
+    const lb=i.getAttribute('aria-label')||RST_NAME[i.id]||'slider';
+    const b=document.createElement('button');b.type='button';b.className='rsb';b.dataset.rg='1';
+    b.setAttribute('aria-label','Reset '+lb+' to default');b.title='Reset to default';b.innerHTML=ic('rst',16);
+    f.appendChild(b);
+  });
+}
+{
+  let q=0;const sched=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;try{rstScan()}catch(_){}})};
+  const hit=n=>n.nodeType===1&&(n.classList.contains('fop')||n.querySelector('.fop'));
+  const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(hit(n)){sched();return}});
+  mo.observe(document.body,{childList:true});
+  const ov=document.getElementById('ov');if(ov)mo.observe(ov,{childList:true,subtree:true});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest&&e.target.closest('.rsb[data-rg]');if(!b)return;
+    e.preventDefault();e.stopPropagation();rstClick(b);
+  },true);
+  sched();
+}
