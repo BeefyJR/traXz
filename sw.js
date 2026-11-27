@@ -6,7 +6,7 @@
 const VERSION=new URL(self.location).searchParams.get('v')||'0';
 const PFX='trax-',C=PFX+VERSION,SHARE=PFX+'share';
 const SHELL='./index.html';
-const CORE=['./style.css','./app.js','./splash.js'];/* the page's own code: required, cached together with the page */
+const CORE=['./style.css','./splash.js','./js/01-core.js','./js/02-state.js','./js/03-effects.js','./js/04-storage.js','./js/05-media.js','./js/06-ui.js','./js/07-lyrics.js','./js/08-playback.js','./js/09-import.js','./js/10-actions.js','./js/11-gestures.js','./js/12-placement.js','./js/13-controls.js','./js/14-transitions.js','./js/15-trim.js','./js/16-library.js','./js/17-covermaker.js','./js/18-init.js'];/* the page's own code: required, cached together with the page */
 const ASSETS=['./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 const RT_MAX=40;                  /* other same-origin files kept at most */
 const SHARE_TTL=24*3600*1000;     /* shared songs nobody imported are dropped after a day */

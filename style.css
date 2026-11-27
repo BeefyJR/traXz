@@ -202,7 +202,7 @@ header{padding:14px 20px 6px;display:flex;align-items:center;justify-content:spa
 #ql{flex:1;overflow-y:auto;padding:0 20px 30px;overscroll-behavior:contain}
 .qs{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:18px 0 4px}
 header{padding-top:46px}
-#logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:29px;overflow:visible;z-index:15;pointer-events:none;color:var(--text);fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transition:color .3s}
+#logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:29px;overflow:visible;z-index:15;pointer-events:none;color:var(--text);fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transition:color .3s,left .43s cubic-bezier(.16,1,.3,1)}
 #logo .x{stroke:rgb(var(--lac,var(--ac)))}
 html[data-hdac=on] :is(#plus,#cb,#qk,#gear){color:rgb(var(--lac,var(--ac)))!important;transition:color .3s}
 #gbk{position:fixed;top:50%;left:0;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:rgb(var(--ac));color:#fff;display:none;align-items:center;justify-content:center;z-index:1000;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.35);will-change:transform,opacity}
@@ -379,7 +379,7 @@ html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock{justify-content:sp
 html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{margin:auto 0}
 html[data-ic=on][data-dock=bottom] #dock{gap:8px}
 html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){position:static;inset:auto;width:var(--ics,44px);height:var(--ics,44px);min-width:0;margin:0!important;flex:none;align-items:center;justify-content:center}
-html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear) :is(.ic,svg){width:calc(var(--ics,44px)*.52)!important;height:calc(var(--ics,44px)*.52)!important}
+html[data-ic=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear) :is(.ic,svg){width:calc(var(--ics,44px)*var(--icgs,.52))!important;height:calc(var(--ics,44px)*var(--icgs,.52))!important}
 html[data-ic=on][data-icsh=circle] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:50%}
 html[data-ic=on][data-icsh=round] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:calc(var(--ics,44px)*.3)}
 html[data-ic=on][data-icsh=plain] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:12px;background:transparent;border-color:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--text)}
@@ -388,13 +388,13 @@ html[data-ic=on][data-icb=solid] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gea
 html[data-ic=on][data-icb=none] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:transparent;border-color:transparent;box-shadow:none;color:var(--text)}
 html[data-ic=on][data-ica=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){color:var(--acc)}
 /* icon size and spacing also drive the tab buttons */
-html[data-ic=on] .tabs{gap:var(--icg,8px)}
-html[data-ic=on][data-dock=bottom] #dock .tabs{gap:var(--icg,8px)}
-html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{gap:var(--icg,8px)}
-html[data-ic=on] #dock .tab .tic{width:calc(var(--ics,44px)*.55);height:calc(var(--ics,44px)*.55)}
-html[data-ic=on]:is([data-dock=left],[data-dock=right]) #dock .tab{height:calc(var(--ics,44px) + 20px)}
-html[data-ic=on][data-dock=bottom] #dock .tab{min-height:calc(var(--ics,44px) + 8px)}
-html[data-ic=on][data-dock=bottom]{--dbh:max(66px,calc(var(--ics,44px)*.55 + 44px))}
+html[data-ic=on][data-ict=on] .tabs{gap:var(--icg,8px)}
+html[data-ic=on][data-ict=on][data-dock=bottom] #dock .tabs{gap:var(--icg,8px)}
+html[data-ic=on][data-ict=on]:is([data-dock=left],[data-dock=right]) #dock .tabs{gap:var(--icg,8px)}
+html[data-ic=on][data-ict=on] #dock .tab .tic{width:calc(var(--ics,44px)*.55);height:calc(var(--ics,44px)*.55)}
+html[data-ic=on][data-ict=on]:is([data-dock=left],[data-dock=right]) #dock .tab{height:calc(var(--ics,44px) + 20px)}
+html[data-ic=on][data-ict=on][data-dock=bottom] #dock .tab{min-height:calc(var(--ics,44px) + 8px)}
+html[data-ic=on][data-ict=on][data-dock=bottom]{--dbh:max(66px,calc(var(--ics,44px)*.55 + 44px))}
 html[data-ic=on] .icoff{display:none!important}
 /* icon layout sheet */
 .icpv{display:flex;height:176px;max-width:360px;margin:2px auto 6px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(var(--bgc),.55);flex-direction:column}
@@ -454,7 +454,10 @@ html.fcdrag #main .grid *{transition:none!important}
 #fb .fh{position:static;margin:0;padding:0 16px 6px;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0}
 /* v6 album bar lives in the header, right under ALBUMS / SONGS */
 #fb .abar{margin:0;padding:2px 20px 8px}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important;animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+.b1,.b2,.b3,.bgr,.nmb.busy .ic{animation:none!important}}
+/* screen-reader announcements: present to assistive tech, invisible on screen */
+.srlive{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 
 /* v7: cover-matched players, album artist, covers in album picker, swipe-select */
 #mini::after{content:"";position:absolute;inset:-20%;z-index:-1;background:var(--mcv,none) center/cover no-repeat;filter:blur(22px) saturate(1.35);opacity:.5;pointer-events:none}
@@ -1516,6 +1519,9 @@ html.npdrag,html.npdrag *{cursor:ew-resize!important;user-select:none!important;
 html[data-layout=pc] #app:has(#qp.open) #logo{opacity:1}
 /* expanded player: the logo is centered on the whole screen, not on the area left over by the side bars */
 #app:has(#full.open) #logo{left:50%}
+/* while the player slides away the logo already glides back (and changes colour) instead of waiting for it to be gone, then jumping */
+#app:has(#full.open.closing) #logo{left:calc(50% + (var(--dl) - var(--dr))/2);color:var(--text)}
+html[data-hb=dock][data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #app:has(#full.open.closing):not(:has(#tb.so)):not(:has(#qp.open)) #logo{opacity:1!important}
 
 /* ===== v63: every popup shares the settings look (large title, section cards, rounded controls) ===== */
 :is(#ov,.ovg) .sheet:not(.setsh){max-width:520px;width:min(520px,100%);max-height:92dvh;padding:0 0 calc(24px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:rgba(var(--sfc),.94)}
@@ -2192,3 +2198,67 @@ html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #
   .rsb{width:40px;height:40px}
   .rsb .ic{width:18px;height:18px}
 }
+
+/* ===== v3 look: more shapes, backgrounds, shadows, borders and colours for the buttons; tabs follow the size and spacing and get their own styles ===== */
+html[data-ic=on][data-icsh=squircle] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:34%}
+html[data-ic=on][data-icsh=square] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-radius:6px}
+html[data-ic=on][data-icb=outline] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:transparent;color:var(--text);border:2px solid var(--icbase,var(--acc));box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-ic=on][data-icb=soft] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:color-mix(in srgb,var(--icbase,var(--acc)) 24%,transparent);color:var(--icbase,var(--acc));border-color:transparent;box-shadow:none}
+html[data-ic=on][data-icb=accent] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:var(--icbase,var(--acc));color:#fff!important;border-color:transparent;box-shadow:none}
+html[data-ic=on][data-icb=gradient] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:linear-gradient(145deg,color-mix(in srgb,var(--icbase,var(--acc)) 75%,#fff),color-mix(in srgb,var(--icbase,var(--acc)) 80%,#000));color:#fff!important;border-color:transparent;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+html[data-ic=on][data-icb=neon] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:transparent;color:var(--icbase,var(--acc));border:1.5px solid var(--icbase,var(--acc));box-shadow:0 0 8px var(--icbase,var(--acc)),inset 0 0 6px color-mix(in srgb,var(--icbase,var(--acc)) 45%,transparent)}
+html[data-ic=on][data-iccol=on]:is([data-icb=auto],[data-icb=glass],[data-icb=solid]) :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){background:var(--icbase);color:#fff!important;border-color:transparent}
+html[data-ic=on][data-icbw=on]:not([data-icb=outline]):not([data-icb=neon]) :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border:var(--icbw) solid var(--line)}
+html[data-ic=on][data-icbw=on]:is([data-icb=outline],[data-icb=neon]) :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){border-width:var(--icbw)}
+html[data-ic=on][data-icsd=none] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){box-shadow:none}
+html[data-ic=on][data-icsd=soft] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){box-shadow:0 2px 8px rgba(0,0,0,.25)}
+html[data-ic=on][data-icsd=strong] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){box-shadow:0 6px 18px rgba(0,0,0,.5)}
+html[data-ic=on][data-icsd=glow] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){box-shadow:0 0 14px var(--icbase,var(--acc))}
+html[data-ic=on][data-icink=on] :is(#ihl,#ihr,#hbx,#hby)>:is(#plus,#cb,#qk,#gear){color:var(--ici)!important}
+/* tabs in the top bar: size, spacing and style */
+html[data-ic=on][data-ict=on][data-dock=top][data-layout] .tabs{gap:calc(var(--icg,8px)*2)}
+html[data-ic=on][data-ict=on][data-dock=top][data-layout] .tabs .tab{font-size:min(calc(var(--ics,44px)*.64),max(15px,4.6vw))}
+html[data-ic=on][data-ict=on][data-dockc=on][data-dock=top][data-layout] .tabs .tab{width:calc(var(--ics,44px)*1.2);height:var(--ics,44px)}
+html[data-ic=on][data-ict=on][data-dockc=on][data-dock=top][data-layout] .tab .tic{width:calc(var(--ics,44px)*.6);height:calc(var(--ics,44px)*.6)}
+html[data-ic=on][data-ict=on] #dock .tab{font-size:max(9px,calc(var(--ics,44px)*.25))}
+html[data-ic=on]:is([data-icts=pill],[data-icts=outline],[data-icts=soft])[data-dock=top] .tabs .tab{padding:4px 14px;border:2px solid transparent;border-radius:999px}
+html[data-ic=on][data-icts=pill][data-dock=top] .tabs .tab.on{background:var(--text);color:var(--bg);opacity:1}
+html[data-ic=on][data-icts=outline][data-dock=top] .tabs .tab.on{border-color:var(--acc);opacity:1}
+html[data-ic=on][data-icts=soft][data-dock=top] .tabs .tab.on{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);opacity:1}
+html[data-ic=on][data-icts=under][data-dock=top] .tabs .tab{border-radius:0}
+html[data-ic=on][data-icts=under][data-dock=top] .tabs .tab.on{box-shadow:inset 0 -3px 0 var(--acc);opacity:1}
+/* tabs in a side or bottom bar */
+html[data-ic=on][data-icts=pill] #dock .tab.on{background:var(--text);color:var(--bg);border-radius:999px;opacity:1}
+html[data-ic=on][data-icts=outline] #dock .tab.on{background:transparent;border:2px solid var(--acc);opacity:1}
+html[data-ic=on][data-icts=soft] #dock .tab.on{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);opacity:1}
+html[data-ic=on][data-icts=under] #dock .tab.on{background:transparent;border-radius:0;box-shadow:inset 0 -3px 0 var(--acc);opacity:1}
+html[data-ic=on][data-icts=under][data-dock=left] #dock .tab.on{box-shadow:inset 3px 0 0 var(--acc)}
+html[data-ic=on][data-icts=under][data-dock=right] #dock .tab.on{box-shadow:inset -3px 0 0 var(--acc)}
+/* the Queue button stays when the side player is on, if you ask for it (Settings, Layout) */
+html[data-qkv=on][data-layout=pc][data-np=on] .qk{display:flex}
+html[data-qkv=on][data-hb=dock][data-np=on] #hby .qk{display:flex}
+/* live preview in the layout sheet */
+.icpv .pvi{border-width:var(--pvbw,1px)}
+.icpv[data-sh=squircle] .pvi{border-radius:34%}
+.icpv[data-sh=square] .pvi{border-radius:4px}
+.icpv[data-bg=outline] .pvi{background:transparent;border:var(--pvbw,2px) solid var(--pvc,var(--acc))}
+.icpv[data-bg=soft] .pvi{background:color-mix(in srgb,var(--pvc,var(--acc)) 24%,transparent);color:var(--pvc,var(--acc));border-color:transparent}
+.icpv[data-bg=accent] .pvi{background:var(--pvc,var(--acc));color:#fff;border-color:transparent}
+.icpv[data-bg=gradient] .pvi{background:linear-gradient(145deg,color-mix(in srgb,var(--pvc,var(--acc)) 75%,#fff),color-mix(in srgb,var(--pvc,var(--acc)) 80%,#000));color:#fff;border-color:transparent}
+.icpv[data-bg=neon] .pvi{background:transparent;color:var(--pvc,var(--acc));border:var(--pvbw,1.5px) solid var(--pvc,var(--acc));box-shadow:0 0 8px var(--pvc,var(--acc))}
+.icpv[style*="--pvc"]:is([data-bg=auto],[data-bg=glass],[data-bg=solid]) .pvi{background:var(--pvc);color:#fff;border-color:transparent}
+.icpv[data-psd=none] .pvi{box-shadow:none}
+.icpv[data-psd=soft] .pvi{box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.icpv[data-psd=strong] .pvi{box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.icpv[data-psd=glow] .pvi{box-shadow:0 0 12px var(--pvc,var(--acc))}
+.icpv[style*="--pvk"] .pvi{color:var(--pvk)!important}
+.icpv[data-pts=pill] .pvt b:first-child{background:var(--text);color:var(--bg);border-radius:99px;padding:1px 8px}
+.icpv[data-pts=outline] .pvt b:first-child{border:1.5px solid var(--acc);border-radius:99px;padding:0 7px}
+.icpv[data-pts=soft] .pvt b:first-child{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);border-radius:99px;padding:1px 8px}
+.icpv[data-pts=under] .pvt b:first-child{box-shadow:inset 0 -2px 0 var(--acc)}
+.icpv[data-pts=pill] .pvtb span:first-child{background:var(--text);color:var(--bg);border-radius:99px}
+.icpv[data-pts=outline] .pvtb span:first-child{border:1.5px solid var(--acc);border-radius:99px}
+.icpv[data-pts=soft] .pvtb span:first-child{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);border-radius:99px}
+.icpv[data-pts=under] .pvtb span:first-child{box-shadow:inset 0 -2px 0 var(--acc)}
+.iccp{width:44px;height:32px;padding:0;border:2px solid var(--line);border-radius:10px;background:none;cursor:pointer;opacity:.55}.iccp.set{opacity:1}
+.icrm{align-items:center;gap:8px}
