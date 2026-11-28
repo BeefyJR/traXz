@@ -202,8 +202,8 @@ header{padding:14px 20px 6px;display:flex;align-items:center;justify-content:spa
 #ql{flex:1;overflow-y:auto;padding:0 20px 30px;overscroll-behavior:contain}
 .qs{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin:18px 0 4px}
 header{padding-top:46px}
-#logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:29px;overflow:visible;z-index:15;pointer-events:none;color:var(--text);fill:none;stroke:currentColor;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transition:color .3s,left .43s cubic-bezier(.16,1,.3,1)}
-#logo .x{stroke:rgb(var(--lac,var(--ac)))}
+#logo{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:62px;height:38px;overflow:visible;z-index:15;pointer-events:none;color:var(--text);fill:currentColor;stroke:none;transition:color .3s,left .43s cubic-bezier(.16,1,.3,1)}
+#logo .x{fill:rgb(var(--lac,var(--ac)))}
 html[data-hdac=on] :is(#plus,#cb,#qk,#gear){color:rgb(var(--lac,var(--ac)))!important;transition:color .3s}
 #gbk{position:fixed;top:50%;left:0;width:46px;height:46px;margin-top:-23px;border-radius:50%;background:rgb(var(--ac));color:#fff;display:none;align-items:center;justify-content:center;z-index:1000;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.35);will-change:transform,opacity}
 #gbk svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
@@ -1394,7 +1394,7 @@ html[data-tpt=light] #top,html[data-tpt=light] #dock{--text:#fff;--mute:rgba(255
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]){--ht:30px;--hrh:44px}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #top header{padding-top:var(--ht);padding-bottom:8px}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) .hr{height:var(--hrh)}
-html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #logo{top:2px;width:80px;height:25px}
+html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #logo{top:3px;width:68px;height:42px}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) .qk{top:var(--ht)}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #cb{margin-right:auto!important}
 html[data-layout=pc]:is([data-dock=left],[data-dock=right],[data-dock=bottom]) #tb{position:absolute;top:var(--ht);left:0;right:0;height:var(--hrh);max-height:var(--hrh);padding:0;gap:12px;align-items:center;justify-content:center;overflow:visible;z-index:2}
@@ -1650,7 +1650,7 @@ html[data-layout=pc] #qp #ql .scd .row:hover{background:rgba(128,128,128,.08)}
   html:not([data-layout=pc]) header{padding-top:4px}
   html:not([data-layout=pc]) .hr{height:38px}
   html:not([data-layout=pc]) .hr .plus,html:not([data-layout=pc]) .hr .gear{width:38px;height:38px}
-  html:not([data-layout=pc]) #logo{top:9px;width:76px;height:24px}
+  html:not([data-layout=pc]) #logo{top:4px;width:66px;height:41px}
   html:not([data-layout=pc]) .tabs{padding-top:0;padding-bottom:2px}
   html:not([data-layout=pc]) header .tab{font-size:clamp(13px,3.9vw,19px);padding:2px 0}
   html:not([data-layout=pc]) .qk{top:38px}
@@ -1867,7 +1867,7 @@ html[data-hb=dock][data-dock=top] .tab{font-size:clamp(12px,3.2vw,18px);padding:
 }
 /* ===== v77: traX logo stays visible in small windows, and the Add / Cloud / Queue / Settings buttons can be put on the navigation bar from Settings ===== */
 /* top bar with the buttons on it: in a roomy window the logo gets its own strip above the tabs; compact windows keep the single row without it */
-html[data-hb=dock][data-dock=top] #logo{top:6px;width:80px;height:25px}
+html[data-hb=dock][data-dock=top] #logo{top:4px;width:60px;height:37px}
 html[data-hb=dock][data-dock=top] #top header{padding-top:34px}
 @media (max-width:899px),(max-height:759px){
   html[data-hb=dock][data-dock=top] #logo{display:none}
